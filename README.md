@@ -1,6 +1,7 @@
 # Flutter-App-developement
-flutter app development repo for group assignment 
-title
+
+**TITLE: 
+**DESCRIPTION: 
 
 |  Group Members        |     ID        |
 |-----------------------|---------------|
