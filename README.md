@@ -1,6 +1,6 @@
 # Flutter-App-developement
 
-##  TITLE: Movie info app
+##  TITLE: Popcorn Picks
 
 ## DESCRIPTION: an app that provides an information about movies 
 
