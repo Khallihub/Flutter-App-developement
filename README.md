@@ -1,8 +1,8 @@
 # Flutter-App-developement
 
-##  TITLE: 
+##  TITLE: Movie info app
 
-## DESCRIPTION: 
+## DESCRIPTION: an app that provides an information about movies 
 
 |  Group Members        |     ID        |
 |-----------------------|---------------|
