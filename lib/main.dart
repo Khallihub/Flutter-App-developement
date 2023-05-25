@@ -1,23 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:picstash/presentation/screens/login_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'application/bloc_observer.dart';
+import 'application/post_bloc/blocs.dart';
+import 'domain/repositories/post_repository.dart';
+import 'infrastructure/data_ providers/post_data_provider.dart';
+import 'presentation/screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  final postRepository = PostRepository(
+    PostDataProvider(),
+  );
+  BlocOverrides.runZoned(
+    () => runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<PostBloc>(
+            create: (context) => PostBloc(postRepository: postRepository),
+          ),
+          // Add other bloc providers if needed
+        ],
+        child: MyApp(
+          postRepository: postRepository,
+        ),
+      ),
+    ),
+    blocObserver: SimpleBlocObserver(),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final PostRepository postRepository;
 
-  // This widget is the root of your application.
+  const MyApp({super.key, required this.postRepository});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PicStash',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return RepositoryProvider.value(
+      value: postRepository,
+      child: BlocProvider(
+        create: (context) => PostBloc(postRepository: postRepository)
+          ..add(const PostLoadEvent()),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(primaryColor: Colors.teal),
+          home: const Home(),
+        ),
       ),
-      home: const LogIn(),
     );
   }
 }

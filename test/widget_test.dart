@@ -7,13 +7,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:picstash/domain/repositories/post_repository.dart';
+import 'package:picstash/infrastructure/data_%20providers/post_data_provider.dart';
 
 import 'package:picstash/main.dart';
 
 void main() {
+  final postRepository = PostRepository(
+    PostDataProvider(),);
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(postRepository: postRepository,));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
