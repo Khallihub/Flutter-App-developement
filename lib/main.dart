@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picstash/auth/screens/login_screen.dart';
+import 'package:picstash/presentation/screens/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
