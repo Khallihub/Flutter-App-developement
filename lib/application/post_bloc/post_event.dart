@@ -56,7 +56,7 @@ class PostDeleteEvent extends PostEvent {
 }
 
 class PostCommentEvent extends PostEvent {
-  final int id;
+  final String id;
   final String comment;
 
   const PostCommentEvent(this.id, this.comment);
@@ -69,27 +69,26 @@ class PostCommentEvent extends PostEvent {
 }
 
 class PostLikedEvent extends PostEvent {
-  final int id;
-  final Post post;
-
-  const PostLikedEvent(this.id, this.post);
-
-  @override
-  List<Object> get props => [id, post];
+  final String id;
+  final String userName;
+  const PostLikedEvent(this.id, this.userName);
 
   @override
-  String toString() => 'Post Liked {post Id: ${post.id}}';
+  List<Object> get props => [id, userName];
+
+  @override
+  String toString() => 'Post Liked {post Id: $userName}';
 }
 
 class PostDislikedEvent extends PostEvent {
-  final int id;
-  final Post post;
+  final String id;
+  final String userName;
 
-  const PostDislikedEvent(this.id, this.post);
-
-  @override
-  List<Object> get props => [id, post];
+  const PostDislikedEvent(this.id, this.userName);
 
   @override
-  String toString() => 'Post Disliked {post Id: ${post.id}}';
+  List<Object> get props => [id, userName];
+
+  @override
+  String toString() => 'Post Disliked {post Id: $userName}';
 }

@@ -17,7 +17,7 @@ class PostDataProvider {
               "author": post.author,
               "createdAt": post.createdAt,
               "categories": post.categories,
-              "sourceURL": post.sourceUrl,
+              "sourceURL": post.sourceURL,
             }));
 
     if (response.statusCode == 201) {
@@ -37,7 +37,7 @@ class PostDataProvider {
           "title": post.title,
           "description": post.description,
           "categories": post.categories,
-          "sourceURL": post.sourceUrl,
+          "sourceURL": post.sourceURL,
         }));
 
     if (response.statusCode == 200) {

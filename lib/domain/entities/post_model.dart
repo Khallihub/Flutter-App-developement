@@ -9,7 +9,7 @@ class Post {
   final dislikes;
   final categories;
   final shareCount;
-  final sourceUrl;
+  final sourceURL;
 
   Post(
     this.id, {
@@ -22,6 +22,6 @@ class Post {
     required this.dislikes,
     required this.categories,
     required this.shareCount,
-    required this.sourceUrl,
+    required this.sourceURL,
   });
 }
