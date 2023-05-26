@@ -1,5 +1,5 @@
-import 'package:picstash/domain/value_objects/email_address.dart';
-import 'package:picstash/domain/value_objects/password.dart';
+import '../value_objects/email_address.dart';
+import '../value_objects/password.dart';
 
 class LoginModel {
   final EmailAddress emailAddress;
