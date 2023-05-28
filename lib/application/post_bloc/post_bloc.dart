@@ -43,7 +43,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<PostLikedEvent>((event, emit) async {
       try {
         await postRepository
-            .likeUnlike({event.id, event.userName} as Map<String, String>);
+            .likeUnlike({"id": event.id, "userName" : event.userName});
         final posts = await postRepository.fetchAll();
         emit(PostOperationSuccess(posts: posts));
       } catch (error) {
@@ -54,7 +54,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<PostDislikedEvent>((event, emit) async {
       try {
         await postRepository.dislikeUndislike(
-            {event.id, event.userName} as Map<String, String>);
+            {"id": event.id, "userName" : event.userName});
         final posts = await postRepository.fetchAll();
         emit(PostOperationSuccess(posts: posts));
       } catch (error) {
@@ -62,12 +62,33 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     });
 
-    on<PostCommentEvent>((event, emit) async {
+    on<PostCommentedEvent>((event, emit) async {
+      print("PostCommentedEvent");
       try {
-        await postRepository
-            .comment({event.id, event.comment} as Map<String, String>);
+        await postRepository.comment({
+          "id": event.id,
+          "userName": event.username,
+          "comment": event.comment
+        });
         final posts = await postRepository.fetchAll();
         emit(PostOperationSuccess(posts: posts));
+      } catch (error) {
+        emit(PostOperationFailure(error));
+      }
+    });
+
+    on<PostCommentLoadedEvent> ((event, emit) async {
+      try {
+        print('PostCommentLoadedEvent');
+        final comments = await postRepository.fetchComments({"id": event.id});
+        print("comments on ${comments}");
+        final comment = [];
+        for  (int i = 0; i < comments.length; i+=1) {
+          comment.add(comments[i]);
+        }
+        print(comment);
+        // final posts = await postRepository.fetchAll();
+        emit(PostCommentsLoadedState(comments: comment));
       } catch (error) {
         emit(PostOperationFailure(error));
       }
@@ -77,7 +98,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   FutureOr<void> postLoadEvent(
       PostLoadEvent event, Emitter<PostState> emit) async {
     emit(PostLoadingState());
-    print('PostLoadEvent');
     try {
       final posts = await postRepository.fetchAll();
       emit(PostOperationSuccess(posts: posts));

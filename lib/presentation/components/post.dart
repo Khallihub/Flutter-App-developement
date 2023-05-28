@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
@@ -16,12 +17,12 @@ class PostWidget extends StatefulWidget {
   final String avatarUrl;
   final String date;
   final String imageUrl;
-  final  likes;
-  final  dislikes;
+  final likes;
+  final dislikes;
   final comments;
 
   const PostWidget({
-    super.key,
+    Key? key,
     required this.id,
     required this.avatarUrl,
     required this.username,
@@ -33,16 +34,24 @@ class PostWidget extends StatefulWidget {
     required this.name,
     required this.title,
     required this.description,
-  });
+  }) : super(key: key);
 
   @override
   State<PostWidget> createState() => _PostWidgetState();
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  late PostBloc postBloc;
+
+  @override
+  void initState() {
+    postBloc = BlocProvider.of(context);
+    super.initState();
+  }
+
   bool more = false;
-  final PostBloc postBloc =
-      PostBloc(postRepository: PostRepository(PostDataProvider()));
+  // final PostBloc postBloc =
+  //     PostBloc(postRepository: PostRepository(PostDataProvider()));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -109,11 +118,15 @@ class _PostWidgetState extends State<PostWidget> {
                     onPressed: () {
                       postBloc.add(PostLikedEvent(widget.id, widget.username));
                     },
-                    icon: Icon(UniconsLine.thumbs_up,
-                        color: Theme.of(context).iconTheme.color)),
+                    icon: widget.likes.contains(widget.username)
+                        ? const Icon(UniconsLine.thumbs_up)
+                        : Icon(UniconsLine.thumbs_down,
+                            color: Theme.of(context).iconTheme.color)),
                 IconButton(
                     onPressed: () {
-                      print("kkk ${widget.likes}");
+                      if (widget.comments.length > 0) {
+                        
+                      }
                       GoRouter.of(context).pushNamed(
                           MyAppRouteConstants.commentRoutName,
                           pathParameters: {
@@ -127,9 +140,10 @@ class _PostWidgetState extends State<PostWidget> {
                             "imageUrl": widget.imageUrl,
                             "likes": widget.likes.join("`"),
                             "dislikes": widget.dislikes.join("`"),
-                            "comments": widget.comments.join("`"),
-                          }
-                          );
+                            // "comments": widget.comments
+                            //     .map((row) => row.join(','))
+                            //     .join('`'),
+                          });
                     },
                     icon: Icon(UniconsLine.comment_lines,
                         color: Theme.of(context).iconTheme.color)),
@@ -138,8 +152,10 @@ class _PostWidgetState extends State<PostWidget> {
                       postBloc
                           .add(PostDislikedEvent(widget.id, widget.username));
                     },
-                    icon: Icon(UniconsLine.thumbs_down,
-                        color: Theme.of(context).iconTheme.color))
+                    icon: widget.dislikes.contains(widget.username)
+                        ? const Icon(UniconsLine.thumbs_down)
+                        : Icon(UniconsLine.thumbs_up,
+                            color: Theme.of(context).iconTheme.color))
               ],
             ),
             IconButton(
