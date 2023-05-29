@@ -98,20 +98,19 @@ class PostDataProvider {
   }
 
   Future<List<Post>> fetchAll() async {
-  final response = await http.get(Uri.parse("$_baseUrl/getFeed"));
-  if (response.statusCode == 200) {
-    final posts = await json.decode(response.body) as List;
-    print('posts');
-    print(posts);
-    List<Post> post = [];
-    for (var i = 0; i < posts.length; i++) {
-      post.add(Post.fromJson(posts[i]));}
-    return post;
-  } else {
-    throw Exception("Could not fetch courses");
-  }
-}
+    final response = await http.get(Uri.parse("$_baseUrl/getFeed"));
+    if (response.statusCode == 200) {
+      final posts = await json.decode(response.body) as List;
 
+      List<Post> post = [];
+      for (var i = 0; i < posts.length; i++) {
+        post.add(Post.fromJson(posts[i]));
+      }
+      return post;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
 
   Future<void> delete(int id) async {
     final response = await http.delete(
@@ -127,6 +126,4 @@ class PostDataProvider {
       throw Exception("Field to delete the course");
     }
   }
-
-
 }

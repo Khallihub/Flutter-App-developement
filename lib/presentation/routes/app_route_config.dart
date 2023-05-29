@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:picstash/presentation/screens/login_page.dart';
+import 'package:picstash/presentation/screens/signup_page.dart';
 import '../screens/comment_screen.dart';
-import '../screens/home_screen.dart';
 import 'app_route_constants.dart';
 
-class NyAppRouter {
+class MyAppRouter {
   static GoRouter returnRouter(bool isAuth) {
     GoRouter router = GoRouter(
+      initialLocation: MyAppRouteConstants.loginRouteName,
       routes: [
         GoRoute(
-          name: MyAppRouteConstants.homeRouteName,
+          name: MyAppRouteConstants.loginRouteName,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: Home());
+            return const MaterialPage(child: LogIn());
           },
         ),
+        GoRoute(
+            name: MyAppRouteConstants.signupRouteName,
+            path: "/register",
+            pageBuilder: ((context, state) {
+              return const MaterialPage(child: MyRegister());
+            })),
         GoRoute(
           name: MyAppRouteConstants.commentRoutName,
           path:
@@ -25,20 +32,19 @@ class NyAppRouter {
             final dislikes = state.pathParameters['dislikes']!.split('`');
             final comments = state.pathParameters['comments']!.split('`');
             return MaterialPage(
-                    child: CommentScreen(
-                        id: state.pathParameters['id']!,
-                        title: state.pathParameters['title']!,
-                        username: state.pathParameters['username']!,
-                        name: state.pathParameters['name']!,
-                        description: state.pathParameters['description']!,
-                        avatarUrl: state.pathParameters['avatarUrl']!,
-                        date: state.pathParameters['date']!,
-                        imageUrl: state.pathParameters['imageUrl']!,
-                        likes: likes,
-                        dislikes: dislikes,
-                        comments: comments,
-                      )
-                    );
+                child: CommentScreen(
+              id: state.pathParameters['id']!,
+              title: state.pathParameters['title']!,
+              username: state.pathParameters['username']!,
+              name: state.pathParameters['name']!,
+              description: state.pathParameters['description']!,
+              avatarUrl: state.pathParameters['avatarUrl']!,
+              date: state.pathParameters['date']!,
+              imageUrl: state.pathParameters['imageUrl']!,
+              likes: likes,
+              dislikes: dislikes,
+              comments: comments,
+            ));
           },
         ),
         // GoRoute(

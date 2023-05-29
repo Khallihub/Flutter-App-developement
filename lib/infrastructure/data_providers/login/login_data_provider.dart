@@ -27,6 +27,7 @@ class LoginDataProvider {
     final AccessToken accessToken = AccessToken.create(
       decodedResponse['tokens']['token'],
       decodedResponse['tokens']['role'],
+      decodedResponse['tokens']['user'],
     );
 
     final String role = decodedResponse['role'];

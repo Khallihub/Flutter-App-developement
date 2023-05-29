@@ -77,7 +77,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   FutureOr<void> postLoadEvent(
       PostLoadEvent event, Emitter<PostState> emit) async {
     emit(PostLoadingState());
-    print('PostLoadEvent');
     try {
       final posts = await postRepository.fetchAll();
       emit(PostOperationSuccess(posts: posts));

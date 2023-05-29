@@ -16,8 +16,8 @@ class PostWidget extends StatefulWidget {
   final String avatarUrl;
   final String date;
   final String imageUrl;
-  final  likes;
-  final  dislikes;
+  final likes;
+  final dislikes;
   final comments;
 
   const PostWidget({
@@ -113,7 +113,6 @@ class _PostWidgetState extends State<PostWidget> {
                         color: Theme.of(context).iconTheme.color)),
                 IconButton(
                     onPressed: () {
-                      print("kkk ${widget.likes}");
                       GoRouter.of(context).pushNamed(
                           MyAppRouteConstants.commentRoutName,
                           pathParameters: {
@@ -128,8 +127,7 @@ class _PostWidgetState extends State<PostWidget> {
                             "likes": widget.likes.join("`"),
                             "dislikes": widget.dislikes.join("`"),
                             "comments": widget.comments.join("`"),
-                          }
-                          );
+                          });
                     },
                     icon: Icon(UniconsLine.comment_lines,
                         color: Theme.of(context).iconTheme.color)),

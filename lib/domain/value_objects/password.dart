@@ -8,13 +8,17 @@ class Password extends Equatable {
   const Password._(this.value);
 
   static Either<Failure, Password> create(String value) {
-    if (value.isEmpty || !_isValidPassword(value)) {
+    if (value.isEmpty || !isValidPassword(value)) {
       return Left(Failure("too short password"));
     }
     return Right(Password._(value));
   }
 
-  static bool _isValidPassword(String value) {
+  static Password crud(String value) {
+    return Password._(value);
+  }
+
+  static bool isValidPassword(String value) {
     return value.length >= 6;
   }
 
