@@ -84,7 +84,6 @@ class PostDataProvider {
     final response = await http.get(Uri.parse("$_baseUrl/getFeed"));
     if (response.statusCode == 200) {
       final posts = await json.decode(response.body) as List;
-      // print("fetchall $posts");
       List<Post> post = [];
       for (var i = 0; i < posts.length; i++) {
         post.add(Post.fromJson(posts[i]));
@@ -143,13 +142,73 @@ class PostDataProvider {
     );
     if (response.statusCode == 201) {
       final comments = await jsonDecode(response.body);
-      print(comments);
       // List<List> comment = [];
       // for (var i = 0; i < comments.length; i++) {
       //   comment.add([comments[i]["userName"], comments[i]["comment"]]);
       // }
-      // print(comment);
       return comments;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
+
+  fetchLikes(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getLikes"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final likes = await jsonDecode(response.body);
+      // List<List> comment = [];
+      // for (var i = 0; i < comments.length; i++) {
+      //   comment.add([comments[i]["userName"], comments[i]["comment"]]);
+      // }
+      return likes;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
+
+  fetchDisLikes(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getDislikes"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final comments = await jsonDecode(response.body);
+      // List<List> comment = [];
+      // for (var i = 0; i < comments.length; i++) {
+      //   comment.add([comments[i]["userName"], comments[i]["comment"]]);
+      // }
+      return comments;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
+
+  fetchSingle(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getSinglePost"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final post = await jsonDecode(response.body);
+      return [post];
     } else {
       throw Exception("Could not fetch courses");
     }

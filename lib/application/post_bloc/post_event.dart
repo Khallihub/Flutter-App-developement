@@ -12,6 +12,14 @@ class PostLoadEvent extends PostEvent {
   @override
   List<dynamic> get props => [];
 }
+class SinglePostLoadedEvent extends PostEvent {
+  final String id;
+  
+  const SinglePostLoadedEvent(this.id);
+
+  @override
+  List<dynamic> get props => [];
+}
 
 class PostCommentLoadedEvent extends PostEvent {
   final String id;
@@ -86,12 +94,35 @@ class PostLikedEvent extends PostEvent {
   @override
   String toString() => 'Post Liked {post Id: $userName}';
 }
+class PostCommentLikedEvent extends PostEvent {
+  final String id;
+  final String userName;
+  const PostCommentLikedEvent(this.id, this.userName);
+
+  @override
+  List<dynamic> get props => [id, userName];
+
+  @override
+  String toString() => 'Post Liked {post Id: $userName}';
+}
 
 class PostDislikedEvent extends PostEvent {
   final String id;
   final String userName;
 
   const PostDislikedEvent(this.id, this.userName);
+
+  @override
+  List<dynamic> get props => [id, userName];
+
+  @override
+  String toString() => 'Post Disliked {post Id: $userName}';
+}
+class PostCommentDislikedEvent extends PostEvent {
+  final String id;
+  final String userName;
+
+  const PostCommentDislikedEvent(this.id, this.userName);
 
   @override
   List<dynamic> get props => [id, userName];

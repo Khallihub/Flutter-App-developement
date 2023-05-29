@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:picstash/presentation/routes/test.dart';
 
 import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/repositories/post_repository.dart';
@@ -21,20 +22,34 @@ class NyAppRouter {
           },
         ),
         GoRoute(
+          name: MyAppRouteConstants.testRouteName,
+          path:
+              '/test/:id/:username/:name/:title/:description/:avatarUrl/:date/:imageUrl',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+                child: BlocProvider(
+              create: (context) =>
+                  PostBloc(postRepository: PostRepository(PostDataProvider())),
+              child: MyWidget(
+                id: state.pathParameters['id'] as String,
+                username: state.pathParameters['username'] as String,
+                name: state.pathParameters['name'] as String,
+                title: state.pathParameters['title'] as String,
+                description: state.pathParameters['description'] as String,
+                avatarUrl: state.pathParameters['avatarUrl'] as String,
+                date: state.pathParameters['date'] as String,
+                imageUrl: state.pathParameters['imageUrl'] as String,
+                // likes: state.pathParameters['likes'] as String,
+                // dislikes: state.pathParameters['dislikes'] as String,
+              ),
+            ));
+          },
+        ),
+        GoRoute(
           name: MyAppRouteConstants.commentRoutName,
           path:
-              '/comment/:id/:title/:username/:name/:description/:avatarUrl/:date/:imageUrl/:likes/:dislikes', //:comments',
+              '/comment/:id/:title/:username/:name/:description/:avatarUrl/:date/:imageUrl', //:comments',
           pageBuilder: (context, state) {
-            // print('kdddddddddddddddddddddddddddddddddddddddddddddddddddddddddd');
-            final likes = state.pathParameters['likes']!.split('`');
-            final dislikes = state.pathParameters['dislikes']!.split('`');
-            // String temp = state.pathParameters['comments']!;
-            // List<String> temp1 = temp.split("`");
-            // var comments = [];
-            // for (int i = 0; i < temp1.length; i += 1) {
-            //   comments.add([temp1[i]]);
-            // }
-
             return MaterialPage(
                 child: BlocProvider(
               create: (context) =>
@@ -48,9 +63,6 @@ class NyAppRouter {
                 avatarUrl: state.pathParameters['avatarUrl']!,
                 date: state.pathParameters['date']!,
                 imageUrl: state.pathParameters['imageUrl']!,
-                likes: likes,
-                dislikes: dislikes,
-                // comments: comments,
               ),
             ));
           },

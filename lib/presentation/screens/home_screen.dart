@@ -33,7 +33,6 @@ class _HomeState extends State<Home> {
         ));
       } else if (state is PostOperationSuccess) {
         final posts = state.posts as List;
-        // print("posts $posts");
         return Scaffold(
             body: ListView.builder(
           itemCount: posts.length,
@@ -56,28 +55,6 @@ class _HomeState extends State<Home> {
       } else {
         return const SizedBox();
       }
-      // print("posts $posts");
-      // return Scaffold(
-      //     body: ListView.builder(
-      //   itemCount: posts.length,
-      //   itemBuilder: (_, idx) => PostWidget(
-      //     id: posts[idx].id,
-      //     avatarUrl: posts[idx].authorAvatar,
-      //     username: posts[idx].author,
-      //     date: posts[idx].createdAt,
-      //     imageUrl: posts[idx].sourceURL,
-      //     likes: posts[idx].likes,
-      //     dislikes: posts[idx].dislikes,
-      //     comments: posts[idx].comments,
-      //     description: posts[idx].description,
-      //     name: posts[idx].authorName,
-      //     title: posts[idx].title,
-      //   ),
-      // ));
-      // case PostOperationFailure:
-      //   return const Scaffold(body: Center(child: Text('Error')));
-      // default:
-      //   return const SizedBox();
     });
   }
 }

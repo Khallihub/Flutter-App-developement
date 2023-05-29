@@ -5,8 +5,6 @@ import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:unicons/unicons.dart';
 
-import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
 
 class PostWidget extends StatefulWidget {
   final String id;
@@ -119,14 +117,11 @@ class _PostWidgetState extends State<PostWidget> {
                       postBloc.add(PostLikedEvent(widget.id, widget.username));
                     },
                     icon: widget.likes.contains(widget.username)
-                        ? const Icon(UniconsLine.thumbs_up)
-                        : Icon(UniconsLine.thumbs_down,
+                        ? const Icon(UniconsLine.thumbs_up, color: Colors.blue,)
+                        : Icon(UniconsLine.thumbs_up,
                             color: Theme.of(context).iconTheme.color)),
                 IconButton(
                     onPressed: () {
-                      if (widget.comments.length > 0) {
-                        
-                      }
                       GoRouter.of(context).pushNamed(
                           MyAppRouteConstants.commentRoutName,
                           pathParameters: {
@@ -138,12 +133,13 @@ class _PostWidgetState extends State<PostWidget> {
                             "avatarUrl": widget.avatarUrl,
                             "date": widget.date,
                             "imageUrl": widget.imageUrl,
-                            "likes": widget.likes.join("`"),
-                            "dislikes": widget.dislikes.join("`"),
-                            // "comments": widget.comments
-                            //     .map((row) => row.join(','))
-                            //     .join('`'),
-                          });
+                            // "likes": widget.likes.join("`"),
+                            // "dislikes": widget.dislikes.join("`"),
+                          //   // "comments": widget.comments
+                          //   //     .map((row) => row.join(','))
+                          //   //     .join('`'),
+                          }
+                          );
                     },
                     icon: Icon(UniconsLine.comment_lines,
                         color: Theme.of(context).iconTheme.color)),
@@ -153,9 +149,9 @@ class _PostWidgetState extends State<PostWidget> {
                           .add(PostDislikedEvent(widget.id, widget.username));
                     },
                     icon: widget.dislikes.contains(widget.username)
-                        ? const Icon(UniconsLine.thumbs_down)
-                        : Icon(UniconsLine.thumbs_up,
-                            color: Theme.of(context).iconTheme.color))
+                        ? const Icon(UniconsLine.thumbs_down, color: Colors.red,)
+                        : Icon(UniconsLine.thumbs_down,
+                          ))
               ],
             ),
             IconButton(
