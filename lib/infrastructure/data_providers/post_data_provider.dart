@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:picstash/domain/constants.dart';
 
 import '../factory models/post_factory.dart';
 
 class PostDataProvider {
-  static const String _baseUrl = "http://127.0.0.1:3000/post";
+  static const String _baseUrl = Constants.baseUrl;
 
   Future<Post> create(Post post) async {
     final http.Response response =

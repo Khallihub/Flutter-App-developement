@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:picstash/domain/constants.dart';
 import 'package:picstash/domain/entities/login/login_model.dart';
 import '../../../domain/entities/login/login_details.dart';
 import '../../../domain/value_objects/acess_token.dart';
 
 class LoginDataProvider {
-  final String _baseUrl = "http://localhost:3000";
+  const LoginDataProvider();
+  final String _baseUrl = Constants.baseUrl;
 
   Future<LoginDetailsModel> login(LoginModel loginModel) async {
     final http.Response response = await http.post(
@@ -24,14 +26,13 @@ class LoginDataProvider {
 
     final decodedResponse = jsonDecode(response.body);
 
-    final AccessToken accessToken = AccessToken.create(
-      decodedResponse['tokens']['token'],
-      decodedResponse['tokens']['role'],
-      decodedResponse['tokens']['user'],
+    final Token token = Token.create(
+      decodedResponse['access_token'],
+      decodedResponse['refresh_token'],
     );
-
+    final Object user = decodedResponse["user"];
     final String role = decodedResponse['role'];
 
-    return LoginDetailsModel.create(accessToken, role);
+    return LoginDetailsModel.create(token, role, user);
   }
 }

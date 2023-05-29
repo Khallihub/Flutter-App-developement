@@ -1,11 +1,10 @@
-class AccessToken {
-  final String token;
-  final String role;
-  final String user;
+class Token {
+  final String accessToken;
+  final String refreshToken;
 
-  AccessToken._({required this.token, required this.role, required this.user});
+  Token._({required this.accessToken, required this.refreshToken});
 
-  static AccessToken create(String accessToken, String role, String user) {
-    return AccessToken._(token: accessToken, role: role, user: user);
+  static Token create(String accessToken, String refreshToken) {
+    return Token._(accessToken: accessToken, refreshToken: refreshToken);
   }
 }

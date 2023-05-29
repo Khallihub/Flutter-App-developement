@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../application/post_bloc/blocs.dart';
 import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
+import '../../infrastructure/data_providers/post_data_provider.dart';
 import '../components/post.dart';
 
 class Home extends StatefulWidget {
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
                 date: posts[idx].createdAt,
                 imageUrl: posts[idx].sourceURL,
                 likes: posts[idx].likes,
-                dislikes: posts[idx].dislikes, 
+                dislikes: posts[idx].dislikes,
                 comments: posts[idx].comments,
                 description: posts[idx].description,
                 name: posts[idx].authorName,
@@ -74,4 +74,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-

@@ -1,26 +1,68 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:picstash/application/login_bloc/login_blocs.dart';
-import 'package:picstash/infrastructure/data_providers/login/login_data_provider.dart';
-import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
+import 'package:picstash/application/login_bloc/login_event.dart';
+import 'package:picstash/application/login_bloc/login_state.dart';
+import 'package:picstash/presentation/routes/app_route_constants.dart';
+import '../../domain/entities/login/login_model.dart';
 import '../../domain/value_objects/email_address.dart';
 import '../../domain/value_objects/password.dart';
 
 class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+  const LogIn({
+    super.key,
+  });
 
   @override
   State<LogIn> createState() => _LogInState();
 }
 
 class _LogInState extends State<LogIn> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (context, state) {
+        GoRouter.of(context).pushNamed(MyAppRouteConstants.homeRouteName);
+        if (state is LoginSuccess) {
+        } else if (state is LoginFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("incorrect email or password"),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        switch (state.runtimeType) {
+          case LoginLoading:
+            return const Scaffold(
+                body: Center(
+              child: CircularProgressIndicator(),
+            ));
+          case LoginInitial || LoginFailure:
+            return const LoginBody();
+          default:
+            return const Scaffold(
+              body: Center(child: Text("Something went wrong")),
+            );
+        }
+      },
+    );
+  }
+}
+
+class LoginBody extends StatefulWidget {
+  const LoginBody({super.key});
+
+  @override
+  State<LoginBody> createState() => _LoginBodyState();
+}
+
+class _LoginBodyState extends State<LoginBody> {
   final _formKey = GlobalKey<FormState>();
   late String _email;
   late String _password;
-  final LoginBloc loginBloc = LoginBloc(
-      loginRepository: LoginRepository(loginDataProvider: LoginDataProvider()));
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +145,13 @@ class _LogInState extends State<LogIn> {
                                         if (_formKey.currentState!.validate()) {
                                           _formKey.currentState!.save();
                                         }
-                                        stdout.write("email: $_email");
-                                        stdout.write("password: $_password");
+                                        LoginModel loginModel = LoginModel(
+                                            emailAddress:
+                                                EmailAddress.crud(_email),
+                                            password: Password.crud(_password));
+                                        BlocProvider.of<LoginBloc>(context).add(
+                                            LoginButtonPressed(
+                                                loginModel: loginModel));
                                       },
                                       icon: const Icon(Icons.arrow_forward),
                                     ),

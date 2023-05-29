@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:picstash/domain/value_objects/email_address.dart';
+import 'package:picstash/domain/entities/login/login_details.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState();
@@ -20,12 +20,11 @@ class LoginLoading extends LoginState {
 }
 
 class LoginSuccess extends LoginState {
-  final EmailAddress emailAddress;
-
-  const LoginSuccess({required this.emailAddress});
+  final LoginDetailsModel loginDetailsModel;
+  const LoginSuccess({required this.loginDetailsModel});
 
   @override
-  List<Object?> get props => [emailAddress];
+  List<Object?> get props => [loginDetailsModel];
 }
 
 class LoginFailure extends LoginState {

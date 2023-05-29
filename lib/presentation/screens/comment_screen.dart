@@ -3,7 +3,7 @@ import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:unicons/unicons.dart';
 
 import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
+import '../../infrastructure/data_providers/post_data_provider.dart';
 
 class CommentScreen extends StatefulWidget {
   final String id;
@@ -82,10 +82,13 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.comments[0],
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey)),
                     ],
                   ),
                 )
@@ -106,7 +109,8 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        postBloc.add(PostLikedEvent(widget.id, widget.username));
+                        postBloc
+                            .add(PostLikedEvent(widget.id, widget.username));
                       },
                       icon: Icon(UniconsLine.thumbs_up,
                           color: Theme.of(context).iconTheme.color)),
@@ -116,7 +120,8 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                           color: Theme.of(context).iconTheme.color)),
                   IconButton(
                       onPressed: () {
-                        postBloc.add(PostDislikedEvent(widget.id, widget.username));
+                        postBloc
+                            .add(PostDislikedEvent(widget.id, widget.username));
                       },
                       icon: Icon(UniconsLine.thumbs_down,
                           color: Theme.of(context).iconTheme.color))

@@ -5,7 +5,7 @@ import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:unicons/unicons.dart';
 
 import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
+import '../../infrastructure/data_providers/post_data_provider.dart';
 
 class PostWidget extends StatefulWidget {
   final String id;

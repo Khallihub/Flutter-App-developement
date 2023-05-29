@@ -1,4 +1,4 @@
-import 'package:picstash/domain/entities/login/login_details.dart';
+// import 'package:picstash/domain/entities/login/login_details.dart';
 import 'package:picstash/domain/entities/signup/sign_up_model.dart';
 import 'package:picstash/infrastructure/data_providers/signup/signup_data_provider.dart';
 
@@ -7,7 +7,7 @@ class SignUpRepository {
 
   const SignUpRepository({required this.signUpDataProvider});
 
-  Future<LoginDetailsModel> signup(SignUpModel signUpModel) {
+  Future<void> signup(SignUpModel signUpModel) {
     return signUpDataProvider.signup(signUpModel);
   }
 }

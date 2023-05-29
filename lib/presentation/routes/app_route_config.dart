@@ -14,6 +14,13 @@ class MyAppRouter {
           name: MyAppRouteConstants.loginRouteName,
           path: '/',
           pageBuilder: (context, state) {
+            return const MaterialPage(child: MyRegister());
+          },
+        ),
+        GoRoute(
+          path: "/login",
+          pageBuilder: (context, state) {
+            print('p' * 99);
             return const MaterialPage(child: LogIn());
           },
         ),
