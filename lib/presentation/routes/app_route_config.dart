@@ -6,6 +6,7 @@ import 'package:picstash/presentation/routes/test.dart';
 import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../../infrastructure/data_ providers/post_data_provider.dart';
+import '../screens/chat_screen.dart';
 import '../screens/comment_screen.dart';
 import '../screens/home_screen.dart';
 import 'app_route_constants.dart';
@@ -39,8 +40,6 @@ class NyAppRouter {
                 avatarUrl: state.pathParameters['avatarUrl'] as String,
                 date: state.pathParameters['date'] as String,
                 imageUrl: state.pathParameters['imageUrl'] as String,
-                // likes: state.pathParameters['likes'] as String,
-                // dislikes: state.pathParameters['dislikes'] as String,
               ),
             ));
           },
@@ -67,13 +66,17 @@ class NyAppRouter {
             ));
           },
         ),
-        // GoRoute(
-        //   name: MyAppRouteConstants.aboutRouteName,
-        //   path: '/about',
-        //   pageBuilder: (context, state) {
-        //     return MaterialPage(child: About());
-        //   },
-        // ),
+        GoRoute(
+          name: MyAppRouteConstants.chatRouteName,
+          path: '/chat/:user1/:user2',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              child: ChatScreen(
+                user1: state.pathParameters['user1']!,
+                user2: state.pathParameters['user2']!,
+              ));
+          },
+        ),
         // GoRoute(
         //   name: MyAppRouteConstants.contactUsRouteName,
         //   path: '/contact_us',

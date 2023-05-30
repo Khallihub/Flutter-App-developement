@@ -69,9 +69,6 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
         var likes = [];
         var dislikes = [];
         var comments = [];
-        print(state.props.length);
-        print(state.props.isEmpty);
-        print("jaldjfaldfjaldfjadlfjdfaldj ");
         for (var obj in state.props) {
           for (var i in obj[0]) {
             likes.add(i);
@@ -82,7 +79,6 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
           for (var i in obj[2]) {
             comments.add(i);
           }
-          print("asfjd;jdfaldjfaldfjkd ${[likes, dislikes, comments]}");
         }
           var res = commentBuilder(comments);
         return Scaffold(
@@ -164,7 +160,7 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                             },
                             icon: dislikes.contains(widget.username)
                                 ? const Icon(UniconsLine.thumbs_down, color: Colors.red,)
-                                : Icon(UniconsLine.thumbs_down,
+                                : const Icon(UniconsLine.thumbs_down,
                                     ))
                       ],
                     ),
@@ -176,8 +172,7 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                         ))
                   ],
                 ),
-                Container(
-                    child: Column(
+                Column(
                   children: res,
                   //   // widget.comments.length,
                   //   state.props.length,
@@ -202,7 +197,7 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                   //           //         )
                   //                   ),
                   // ),
-                )),
+                ),
                 const SizedBox(height: 10),
               ],
             ),

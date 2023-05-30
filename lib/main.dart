@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picstash/application/chat_bloc/chat_bloc.dart';
+import 'package:picstash/domain/repositories/chat_repository.dart';
+import 'package:picstash/infrastructure/data_%20providers/chat_data_provider.dart';
 
 import 'application/bloc_observer.dart';
 import 'application/post_bloc/post_bloc.dart';
@@ -10,6 +13,7 @@ import 'presentation/routes/app_route_config.dart';
 
 void main() {
   final PostRepository postRepository = PostRepository(PostDataProvider());
+  final ChatRepository chatRepository = ChatRepository(ChatDataProvider());
 
   BlocOverrides.runZoned(
     () => runApp(
@@ -17,9 +21,9 @@ void main() {
         BlocProvider<PostBloc>(
           create: (context) => PostBloc(postRepository: postRepository),
         ),
-        // BlocProvider<PostBloc>(
-        //   create: (context) => PostBloc(postRepository: postRepository),
-        // ),
+        BlocProvider<ChatBloc>(
+          create: (context) => ChatBloc(chatRepository: chatRepository),
+        ),
         // Add other bloc providers if needed
       ], child: MyApp(postRepository: postRepository)),
     ),

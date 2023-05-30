@@ -116,46 +116,44 @@ class _MyWidgetState extends State<MyWidget> {
               ...res,
             ]),
           ),
-          bottomNavigationBar: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage("widget.avatarUrl"),
-                  ),
+          bottomNavigationBar: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Expanded(
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage("widget.avatarUrl"),
                 ),
-                Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(
-                        hintText: 'Add a comment',
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey)),
-                  ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: _commentController,
+                  decoration: InputDecoration(
+                      hintText: 'Add a comment',
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey)),
                 ),
-                IconButton(
-                    onPressed: () {
-                      var comment = _commentController.text;
-                      if (comment != "") {
-                        postBloc.add(PostCommentedEvent(
-                            widget.id, "widget.username", comment));
-                        _commentController.text = "";
-                        postBloc.add(PostCommentLoadedEvent(widget.id));
-                      }
-                    },
-                    icon: Icon(
-                      UniconsLine.arrow_right,
-                      color: Theme.of(context).iconTheme.color,
-                    ))
-              ],
-            ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    var comment = _commentController.text;
+                    if (comment != "") {
+                      postBloc.add(PostCommentedEvent(
+                          widget.id, "widget.username", comment));
+                      _commentController.text = "";
+                      postBloc.add(PostCommentLoadedEvent(widget.id));
+                    }
+                  },
+                  icon: Icon(
+                    UniconsLine.arrow_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ))
+            ],
           ),
         );
       },

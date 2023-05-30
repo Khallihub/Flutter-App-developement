@@ -22,9 +22,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<SinglePostLoadedEvent>((event, emit) async {
       try {
         final post = await postRepository.fetchSingle({"id": event.id});
-        print("kkk" * 20);
-        print(post.runtimeType);
-        // print(post[0]);
         final likes = post[0]["likes"];
         final dislikes = post[0]["dislikes"];
         final comments = post[0]["comments"];

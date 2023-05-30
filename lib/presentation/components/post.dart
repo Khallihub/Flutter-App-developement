@@ -5,7 +5,6 @@ import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:unicons/unicons.dart';
 
-
 class PostWidget extends StatefulWidget {
   final String id;
   final String username;
@@ -48,8 +47,6 @@ class _PostWidgetState extends State<PostWidget> {
   }
 
   bool more = false;
-  // final PostBloc postBloc =
-  //     PostBloc(postRepository: PostRepository(PostDataProvider()));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -117,29 +114,27 @@ class _PostWidgetState extends State<PostWidget> {
                       postBloc.add(PostLikedEvent(widget.id, widget.username));
                     },
                     icon: widget.likes.contains(widget.username)
-                        ? const Icon(UniconsLine.thumbs_up, color: Colors.blue,)
+                        ? const Icon(
+                            UniconsLine.thumbs_up,
+                            color: Colors.blue,
+                          )
                         : Icon(UniconsLine.thumbs_up,
                             color: Theme.of(context).iconTheme.color)),
                 IconButton(
                     onPressed: () {
                       GoRouter.of(context).pushNamed(
-                          MyAppRouteConstants.commentRoutName,
-                          pathParameters: {
-                            "id": widget.id,
-                            "username": widget.username,
-                            "name": widget.name,
-                            "title": widget.title,
-                            "description": widget.description,
-                            "avatarUrl": widget.avatarUrl,
-                            "date": widget.date,
-                            "imageUrl": widget.imageUrl,
-                            // "likes": widget.likes.join("`"),
-                            // "dislikes": widget.dislikes.join("`"),
-                          //   // "comments": widget.comments
-                          //   //     .map((row) => row.join(','))
-                          //   //     .join('`'),
-                          }
-                          );
+                        MyAppRouteConstants.commentRoutName,
+                        pathParameters: {
+                          "id": widget.id,
+                          "username": widget.username,
+                          "name": widget.name,
+                          "title": widget.title,
+                          "description": widget.description,
+                          "avatarUrl": widget.avatarUrl,
+                          "date": widget.date,
+                          "imageUrl": widget.imageUrl,
+                        },
+                      );
                     },
                     icon: Icon(UniconsLine.comment_lines,
                         color: Theme.of(context).iconTheme.color)),
@@ -149,13 +144,25 @@ class _PostWidgetState extends State<PostWidget> {
                           .add(PostDislikedEvent(widget.id, widget.username));
                     },
                     icon: widget.dislikes.contains(widget.username)
-                        ? const Icon(UniconsLine.thumbs_down, color: Colors.red,)
-                        : Icon(UniconsLine.thumbs_down,
+                        ? const Icon(
+                            UniconsLine.thumbs_down,
+                            color: Colors.red,
+                          )
+                        : const Icon(
+                            UniconsLine.thumbs_down,
                           ))
               ],
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  GoRouter.of(context).pushNamed(
+                    MyAppRouteConstants.chatRouteName,
+                    pathParameters: {
+                      "user1": widget.username,
+                      "user2": widget.name
+                    },
+                  );
+                },
                 icon: Icon(
                   UniconsLine.share_alt,
                   color: Theme.of(context).iconTheme.color,
