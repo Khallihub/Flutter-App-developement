@@ -179,29 +179,7 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                 Container(
                     child: Column(
                   children: res,
-                  //   // widget.comments.length,
-                  //   state.props.length,
-                  //   (index) => CommentBox(
-                  //       username: state.props[index] ,//widget.comments[index]
-                  //           // .toString()
-                  //           // .split(",")[0]
-                  //           // .toString()
-                  //           // .substring(1),
-                  //       comment: state.props[index] as String, //widget.comments[index]
-                  //           // .toString()
-                  //           // .split(",")[1]
-                  //           // .toString()
-                  //           // .substring(
-                  //           //     0,
-                  //           //     state.props[index]//widget.comments[index]
-                  //           //             .toString()
-                  //           //             .split(",")[1]
-                  //           //             .toString()
-                  //           //             .length -
-                  //           //         1
-                  //           //         )
-                  //                   ),
-                  // ),
+                  
                 )),
                 const SizedBox(height: 10),
               ],

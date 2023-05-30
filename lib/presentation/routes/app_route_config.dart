@@ -7,6 +7,7 @@ import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../../infrastructure/data_ providers/post_data_provider.dart';
 import '../screens/comment_screen.dart';
+import '../screens/comment_screen2.dart';
 import '../screens/home_screen.dart';
 import 'app_route_constants.dart';
 
@@ -54,7 +55,7 @@ class NyAppRouter {
                 child: BlocProvider(
               create: (context) =>
                   PostBloc(postRepository: PostRepository(PostDataProvider())),
-              child: CommentScreen(
+              child: CommentScreen_2(
                 id: state.pathParameters['id']!,
                 title: state.pathParameters['title']!,
                 username: state.pathParameters['username']!,

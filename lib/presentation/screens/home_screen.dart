@@ -5,6 +5,8 @@ import '../../application/post_bloc/blocs.dart';
 // import '../../domain/repositories/post_repository.dart';
 // import '../../infrastructure/data_ providers/post_data_provider.dart';
 import '../components/post.dart';
+import '../components/post2.dart';
+import 'comment_screen2.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -36,7 +38,7 @@ class _HomeState extends State<Home> {
         return Scaffold(
             body: ListView.builder(
           itemCount: posts.length,
-          itemBuilder: (_, idx) => PostWidget(
+          itemBuilder: (_, idx) => PostWidget_2(
             id: posts[idx].id,
             avatarUrl: posts[idx].authorAvatar,
             username: posts[idx].author,
