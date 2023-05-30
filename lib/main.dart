@@ -10,6 +10,7 @@ import 'application/post_bloc/post_bloc.dart';
 import 'domain/repositories/post_repository.dart';
 import 'infrastructure/data_providers/post_data_provider.dart';
 import 'infrastructure/data_providers/login/login_data_provider.dart';
+import 'presentation/components/theme.dart';
 import 'presentation/routes/app_route_config.dart';
 
 void main() {
@@ -52,6 +53,8 @@ class MyApp extends StatelessWidget {
                   SignUpBloc(signUpRepository: signUpRepository)),
         ],
         child: MaterialApp.router(
+          theme: lightTheme(),
+          darkTheme: darkTheme(),
           debugShowCheckedModeBanner: false,
           routeInformationParser:
               MyAppRouter.returnRouter(false).routeInformationParser,
