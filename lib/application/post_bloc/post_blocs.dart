@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:picstash/application/post_bloc/post_event.dart';
+import 'package:picstash/application/post_bloc/post_state.dart';
 import '../../domain/repositories/post_repository.dart';
-import 'post_bloc.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository postRepository;

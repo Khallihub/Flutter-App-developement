@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/post_bloc/post_bloc.dart';
+import '../../domain/repositories/post_repository.dart';
+import '../../infrastructure/data_providers/post_data_provider.dart';
 import '../components/post2.dart';
 
 class Home extends StatefulWidget {
@@ -12,22 +14,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  // void initState() {
-  //   postBloc.add(const PostLoadEvent());
-  //   super.initState();
-  // }
+  void initState() {
+    postBloc.add(const PostLoadEvent());
+    super.initState();
+  }
 
-  // final PostBloc postBloc =
-  //     PostBloc(postRepository: PostRepository(PostDataProvider()));
+  final PostBloc postBloc =
+      PostBloc(postRepository: PostRepository(PostDataProvider()));
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PostBloc, PostState>(
         builder: (BuildContext context, state) {
       if (state is PostLoadingState) {
         return const Scaffold(
+            backgroundColor: Colors.white,
             body: Center(
-          child: CircularProgressIndicator(),
-        ));
+              child: CircularProgressIndicator(),
+            ));
       } else if (state is PostOperationSuccess) {
         final posts = state.posts as List;
         return Scaffold(

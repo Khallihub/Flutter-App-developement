@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:unicons/unicons.dart';
 
-import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
+import '../../application/post_bloc/post_blocs.dart';
+import '../../application/post_bloc/post_event.dart';
 
 class PostWidget_2 extends StatefulWidget {
   final String id;
@@ -74,7 +73,7 @@ class _PostWidgetState extends State<PostWidget_2> {
                   width: 35,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                           image: NetworkImage(
                               'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
                           fit: BoxFit.cover)),
@@ -125,7 +124,7 @@ class _PostWidgetState extends State<PostWidget_2> {
                 alignment: Alignment.topRight,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
+                    image: const DecorationImage(
                         image: NetworkImage(
                             'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
                         fit: BoxFit.cover)),
@@ -153,7 +152,7 @@ class _PostWidgetState extends State<PostWidget_2> {
                             color: Colors.grey.withOpacity(0.1),
                             spreadRadius: 1,
                             blurRadius: 3,
-                            offset: Offset(0, 2),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
