@@ -91,7 +91,6 @@ class PostDataProvider {
       }
       return post;
     } else {
-      print(response.body);
       throw Exception("Could not fetch courses");
     }
   }

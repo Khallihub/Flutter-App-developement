@@ -3,13 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picstash/application/login_bloc/login_blocs.dart';
 import 'package:picstash/application/signup_bloc/sign_up_block.dart';
 import 'package:picstash/bloc_observer.dart';
+import 'package:picstash/domain/entities/dummy_profile_data.dart';
 import 'package:picstash/infrastructure/data_providers/db/db.dart';
 import 'package:picstash/infrastructure/data_providers/signup/signup_data_provider.dart';
 import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
 import 'package:picstash/infrastructure/repository/signup_repository/sign_up_repository.dart';
 import 'package:picstash/presentation/components/theme.dart';
+import 'package:picstash/presentation/screens/user_profile_screen.dart';
 import 'application/post_bloc/post_blocs.dart';
+import 'application/user_profile_bloc/user_bloc.dart';
 import 'domain/repositories/post_repository.dart';
+import 'domain/repositories/user_profile_repository.dart';
+import 'infrastructure/data_providers/user_profile_data_provider.dart';
 import 'infrastructure/data_providers/post_data_provider.dart';
 import 'infrastructure/data_providers/login/login_data_provider.dart';
 import 'presentation/routes/app_route_config.dart';
@@ -49,6 +54,7 @@ class MyApp extends StatelessWidget {
     required this.isLoggedIn,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -62,6 +68,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SignUpBloc(signUpRepository: signUpRepository),
         ),
+        BlocProvider(
+        create: (context) => UserProfileBloc(
+            userProfileRepository:
+                UserProfileRepository(dataProvider: UserProfileDataProvider())),
+        child: UserProfileScreen(userProfile:  DummyProfile.getUserProfile() ,isOwner: false,),
+      ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

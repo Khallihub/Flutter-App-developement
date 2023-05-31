@@ -19,7 +19,7 @@ class _CommentBoxState extends State<CommentBox> {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        color: Color.fromARGB(255, 255, 250, 250),
+        color: const Color.fromARGB(255, 255, 250, 250),
         child: Column(
           children: [
             Row(
@@ -77,7 +77,7 @@ class _CommentBoxState extends State<CommentBox> {
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
-                      color: Color.fromARGB(255, 0, 0, 0),
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
               ),
             ),
