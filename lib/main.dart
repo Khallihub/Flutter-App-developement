@@ -54,7 +54,6 @@ class MyApp extends StatelessWidget {
     required this.isLoggedIn,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -69,16 +68,18 @@ class MyApp extends StatelessWidget {
           create: (context) => SignUpBloc(signUpRepository: signUpRepository),
         ),
         BlocProvider(
-        create: (context) => UserProfileBloc(
-            userProfileRepository:
-                UserProfileRepository(dataProvider: UserProfileDataProvider())),
-        child: UserProfileScreen(userProfile:  DummyProfile.getUserProfile() ,isOwner: false,),
-      ),
+          create: (context) => UserProfileBloc(
+              userProfileRepository: UserProfileRepository(
+                  dataProvider: UserProfileDataProvider())),
+          child: UserProfileScreen(
+            userProfile: DummyProfile.getUserProfile(),
+            isOwner: false,
+          ),
+        ),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        theme: lightTheme(),
-        darkTheme: darkTheme(),
+        theme: darkTheme(),
         routeInformationParser:
             MyAppRouter.returnRouter(isLoggedIn).routeInformationParser,
         routerDelegate: MyAppRouter.returnRouter(isLoggedIn).routerDelegate,

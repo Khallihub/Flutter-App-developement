@@ -1,9 +1,11 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../application/post_bloc/post_bloc.dart';
-import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_providers/post_data_provider.dart';
-import '../components/post2.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:picstash/domain/entities/dummy_profile_data.dart';
+import 'package:picstash/presentation/screens/post_screen.dart';
+import 'package:picstash/presentation/screens/user_profile_screen.dart';
+
+import '../../assets/constants/assets.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,48 +15,53 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  void initState() {
-    postBloc.add(const PostLoadEvent());
-    super.initState();
-  }
+  int selectedIndex = 0;
+  List<dynamic> pages = [
+    const PostScreen(),
+    Container(),
+    Container(),
+    Container(),
+    UserProfileScreen(
+      userProfile: DummyProfile.getUserProfile(),
+      isOwner: false,
+    ),
+  ];
 
-  final PostBloc postBloc =
-      PostBloc(postRepository: PostRepository(PostDataProvider()));
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostBloc, PostState>(
-        builder: (BuildContext context, state) {
-      if (state is PostLoadingState) {
-        return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: CircularProgressIndicator(),
-            ));
-      } else if (state is PostOperationSuccess) {
-        final posts = state.posts as List;
-        return Scaffold(
-            body: ListView.builder(
-          itemCount: posts.length,
-          itemBuilder: (_, idx) => PostWidget_2(
-            id: posts[idx].id,
-            avatarUrl: posts[idx].authorAvatar,
-            username: posts[idx].author,
-            date: posts[idx].createdAt,
-            imageUrl: posts[idx].sourceURL,
-            likes: posts[idx].likes,
-            dislikes: posts[idx].dislikes,
-            comments: posts[idx].comments,
-            description: posts[idx].description,
-            name: posts[idx].authorName,
-            title: posts[idx].title,
-          ),
-        ));
-      } else if (state is PostOperationFailure) {
-        return const Scaffold(body: Center(child: Text('Error')));
-      } else {
-        return const SizedBox();
-      }
-    });
+    return Scaffold(
+      body: pages[selectedIndex],
+      bottomNavigationBar: ConvexAppBar(
+        backgroundColor: Colors.grey[900],
+        activeColor: Colors.black,
+        initialActiveIndex: selectedIndex,
+        elevation: 0,
+        style: TabStyle.fixedCircle,
+        items: [
+          TabItem(
+              icon: SvgPicture.asset(CustomAssets.kHome),
+              title: '',
+              isIconBlend: true),
+          TabItem(
+              icon: SvgPicture.asset(CustomAssets.kSearch),
+              title: '',
+              isIconBlend: true),
+          const TabItem(icon: Icons.add, title: '', isIconBlend: true),
+          TabItem(
+              icon: SvgPicture.asset(CustomAssets.kChat),
+              title: '',
+              isIconBlend: true),
+          TabItem(
+              icon: SvgPicture.asset(CustomAssets.kUserIcon),
+              title: '',
+              isIconBlend: true),
+        ],
+        onTap: (int i) {
+          setState(() {
+            selectedIndex = i;
+          });
+        },
+      ),
+    );
   }
 }

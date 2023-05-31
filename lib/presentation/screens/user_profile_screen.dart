@@ -12,8 +12,7 @@ import './following.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final UserProfile userProfile;
-  final bool
-      isOwner; // New property to indicate if the current user is the owner
+  final bool isOwner;
 
   const UserProfileScreen({
     Key? key,
@@ -28,18 +27,16 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   List<dynamic> currentList = [];
 
-
   int buttonNumber = 1;
-
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       home: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.grey[800],
           appBar: AppBar(
             elevation: 0,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey[700],
             title: const Text("Profile",
                 style: TextStyle(fontSize: 18, color: Colors.black)),
             actions: [
@@ -164,8 +161,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      if (!widget.isOwner) 
-                                      const FollowChip(),
+                                      if (!widget.isOwner) const FollowChip(),
                                       if (!widget.isOwner)
                                         TextButton(
                                           onPressed: () {},

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:picstash/presentation/routes/test.dart';
+import 'package:picstash/presentation/screens/screens.dart';
 import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/entities/dummy_profile_data.dart';
 import '../../domain/repositories/post_repository.dart';
 import '../../infrastructure/data_providers/post_data_provider.dart';
 import '../screens/comment_screen2.dart';
-import '../screens/home_screen.dart';
 import '../screens/login_page.dart';
 import '../screens/signup_page.dart';
 import '../screens/user_profile_screen.dart';
@@ -16,8 +15,6 @@ import 'app_route_constants.dart';
 class MyAppRouter {
   static GoRouter returnRouter(bool isLoggedIn) {
     GoRouter router = GoRouter(
-      // initialLocation: isLoggedIn ? "/home" : "/login",
-      initialLocation: "/profile",
       routes: [
         GoRoute(
           path: '/',
@@ -42,18 +39,23 @@ class MyAppRouter {
         GoRoute(
             path: "/profile",
             pageBuilder: ((context, state) {
-              return  MaterialPage(child: UserProfileScreen(userProfile: DummyProfile.getUserProfile(), isOwner: false,),);
+              return MaterialPage(
+                child: UserProfileScreen(
+                  userProfile: DummyProfile.getUserProfile(),
+                  isOwner: false,
+                ),
+              );
             })),
         GoRoute(
-          name: MyAppRouteConstants.testRouteName,
+          name: MyAppRouteConstants.commentRoutName,
           path:
-              '/test/:id/:username/:name/:title/:description/:avatarUrl/:date/:imageUrl',
+              '/comment/:id/:username/:name/:title/:description/:avatarUrl/:date/:imageUrl',
           pageBuilder: (context, state) {
             return MaterialPage(
                 child: BlocProvider(
               create: (context) =>
                   PostBloc(postRepository: PostRepository(PostDataProvider())),
-              child: MyWidget(
+              child: CommentScreen_2(
                 id: state.pathParameters['id'] as String,
                 username: state.pathParameters['username'] as String,
                 name: state.pathParameters['name'] as String,
