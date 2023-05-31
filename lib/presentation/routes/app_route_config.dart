@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:picstash/presentation/routes/test.dart';
 import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
-import '../screens/chat_screen.dart';
-import '../screens/comment_screen.dart';
+import '../../infrastructure/data_providers/post_data_provider.dart';
 import '../screens/comment_screen2.dart';
 import '../screens/home_screen.dart';
+import '../screens/login_page.dart';
+import '../screens/signup_page.dart';
 import 'app_route_constants.dart';
 
 class MyAppRouter {

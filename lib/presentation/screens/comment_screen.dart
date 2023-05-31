@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:unicons/unicons.dart';
-
+import '../../application/post_bloc/post_bloc.dart';
 import '../components/comment_box.dart';
 
 class CommentScreen extends StatefulWidget {
@@ -181,8 +180,7 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                 ),
                 Column(
                   children: res,
-                  
-                )),
+                ),
                 const SizedBox(height: 10),
               ],
             ),

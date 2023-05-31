@@ -1,17 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-// import 'package:flutter_svg/svg.dart';
 import 'package:unicons/unicons.dart';
 
 import '../../application/post_bloc/post_bloc.dart';
-import '../../application/post_bloc/post_event.dart';
-import '../../application/post_bloc/post_state.dart';
-import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_ providers/post_data_provider.dart';
 import '../components/comment_box.dart';
-// import 'comment_box.dart';
 
 class CommentScreen_2 extends StatefulWidget {
   final String id;
@@ -78,8 +71,6 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
         var dislikes = [];
         var comments = [];
 
-        print("jaldjfaldfjaldfjadlfjdfaldj ");
-
         for (var obj in state.props) {
           for (var i in obj[0]) {
             likes.add(i);
@@ -90,7 +81,6 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
           for (var i in obj[2]) {
             comments.add(i);
           }
-          print("asfjd;jdfaldjfaldfjkd ${[likes, dislikes, comments]}");
         }
         var res = commentBuilder(comments);
 
@@ -119,7 +109,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                   alignment: Alignment.topLeft,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                           image: NetworkImage(
                               'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
                           fit: BoxFit.cover)),
@@ -166,7 +156,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                     width: 35,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        image: DecorationImage(
+                        image: const DecorationImage(
                             image: NetworkImage(
                                 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
                             fit: BoxFit.cover)),
@@ -220,7 +210,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                           color: Colors.grey.withOpacity(0.1),
                           spreadRadius: 1,
                           blurRadius: 3,
-                          offset: Offset(0, 2),
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
@@ -250,7 +240,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                               UniconsLine.thumbs_down,
                               color: Colors.red,
                             )
-                          : Icon(
+                          : const Icon(
                               UniconsLine.thumbs_down,
                             )),
                   Text('$no_dislikes'),
@@ -262,17 +252,14 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 10),
-              Container(
-                child: Column(
-                  children: res
-                      .map((comment) => Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical:
-                                    5), // Add 10 pixels of vertical padding
-                            child: comment,
-                          ))
-                      .toList(),
-                ),
+              Column(
+                children: res
+                    .map((comment) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5), // Add 10 pixels of vertical padding
+                          child: comment,
+                        ))
+                    .toList(),
               ),
 
               Expanded(

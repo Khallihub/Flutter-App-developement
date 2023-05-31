@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../application/post_bloc/blocs.dart';
-// import '../../domain/repositories/post_repository.dart';
-// import '../../infrastructure/data_ providers/post_data_provider.dart';
-import '../components/post.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../application/post_bloc/post_bloc.dart';
 import '../components/post2.dart';
-import 'comment_screen2.dart';
 
-class Home extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
