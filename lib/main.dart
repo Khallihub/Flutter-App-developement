@@ -7,7 +7,8 @@ import 'package:picstash/infrastructure/data_providers/db/db.dart';
 import 'package:picstash/infrastructure/data_providers/signup/signup_data_provider.dart';
 import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
 import 'package:picstash/infrastructure/repository/signup_repository/sign_up_repository.dart';
-import 'application/post_bloc/post_bloc.dart';
+import 'package:picstash/presentation/components/theme.dart';
+import 'application/post_bloc/post_blocs.dart';
 import 'domain/repositories/post_repository.dart';
 import 'infrastructure/data_providers/post_data_provider.dart';
 import 'infrastructure/data_providers/login/login_data_provider.dart';
@@ -64,6 +65,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
+        theme: lightTheme(),
+        darkTheme: darkTheme(),
         routeInformationParser:
             MyAppRouter.returnRouter(isLoggedIn).routeInformationParser,
         routerDelegate: MyAppRouter.returnRouter(isLoggedIn).routerDelegate,

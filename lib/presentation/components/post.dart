@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:picstash/application/post_bloc/blocs.dart';
+import 'package:picstash/application/post_bloc/post_bloc.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:unicons/unicons.dart';
 

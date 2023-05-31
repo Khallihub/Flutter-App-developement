@@ -6,7 +6,7 @@ import 'package:picstash/domain/constants.dart';
 import '../factory models/post_factory.dart';
 
 class PostDataProvider {
-  static const String _baseUrl = Constants.baseUrl;
+  static const String _baseUrl = "${Constants.baseUrl}/post";
 
   Future<Post> create(Post post) async {
     final http.Response response =
@@ -91,6 +91,7 @@ class PostDataProvider {
       }
       return post;
     } else {
+      print(response.body);
       throw Exception("Could not fetch courses");
     }
   }

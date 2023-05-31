@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picstash/domain/entities/login/login_details.dart';
+import 'package:picstash/infrastructure/data_providers/db/db.dart';
 import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
 
 import 'login_event.dart';
@@ -16,6 +17,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         LoginDetailsModel loginDetailsModel =
             await loginRepository.login(event.loginModel);
+        LoginCredentials loginCredentials = LoginCredentials();
+        loginCredentials.insertLoginCredentials(loginDetailsModel);
         emit(LoginSuccess(loginDetailsModel: loginDetailsModel));
       } catch (error) {
         emit(LoginFailure(error: error));

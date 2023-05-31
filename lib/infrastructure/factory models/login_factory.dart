@@ -7,9 +7,8 @@ class LoginFactory extends LoginModel {
       : super(emailAddress: emailAddress, password: password);
 
   factory LoginFactory.fromJson(Map<String, dynamic> json) {
-    EmailAddress emailAddress =
-        EmailAddress.create(json["email"]) as EmailAddress;
-    Password password = Password.create(json["password"]) as Password;
+    EmailAddress emailAddress = EmailAddress.crud(json["email"]);
+    Password password = Password.crud(json["password"]);
     return LoginFactory(emailAddress: emailAddress, password: password);
   }
 }

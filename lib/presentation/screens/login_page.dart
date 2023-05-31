@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:picstash/application/login_bloc/login_blocs.dart';
 import 'package:picstash/application/login_bloc/login_event.dart';
 import 'package:picstash/application/login_bloc/login_state.dart';
-import 'package:picstash/presentation/routes/app_route_constants.dart';
+import 'package:picstash/presentation/screens/home_screen.dart';
 import '../../domain/entities/login/login_model.dart';
 import '../../domain/value_objects/email_address.dart';
 import '../../domain/value_objects/password.dart';
@@ -23,8 +23,8 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        GoRouter.of(context).pushNamed(MyAppRouteConstants.homeRouteName);
         if (state is LoginSuccess) {
+          GoRouter.of(context).pushReplacement("/");
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -37,11 +37,15 @@ class _LogInState extends State<LogIn> {
         switch (state.runtimeType) {
           case LoginLoading:
             return const Scaffold(
-                body: Center(
-              child: CircularProgressIndicator(),
-            ));
-          case LoginInitial || LoginFailure:
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          case LoginInitial:
+          case LoginFailure:
             return const LoginBody();
+          case LoginSuccess:
+            return const Home();
           default:
             return const Scaffold(
               body: Center(child: Text("Something went wrong")),

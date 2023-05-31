@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:picstash/domain/constants.dart';
-// import 'package:picstash/domain/entities/login/login_details.dart';
 import 'package:picstash/domain/entities/signup/sign_up_model.dart';
-
-// import '../../../domain/value_objects/acess_token.dart';
 
 class SignUpDataProvider {
   final String _baseUrl = Constants.baseUrl;

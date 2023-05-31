@@ -7,6 +7,8 @@ import '../../domain/repositories/post_repository.dart';
 import '../../infrastructure/data_ providers/post_data_provider.dart';
 import '../screens/chat_screen.dart';
 import '../screens/comment_screen.dart';
+import '../screens/comment_screen2.dart';
+import '../screens/home_screen.dart';
 import 'app_route_constants.dart';
 
 class MyAppRouter {
@@ -61,9 +63,19 @@ class MyAppRouter {
           path: '/chat/:user1/:user2',
           pageBuilder: (context, state) {
             return MaterialPage(
-                child: ChatScreen(
-              user1: state.pathParameters['user1']!,
-              user2: state.pathParameters['user2']!,
+                child: BlocProvider(
+              create: (context) =>
+                  PostBloc(postRepository: PostRepository(PostDataProvider())),
+              child: CommentScreen_2(
+                id: state.pathParameters['id']!,
+                title: state.pathParameters['title']!,
+                username: state.pathParameters['username']!,
+                name: state.pathParameters['name']!,
+                description: state.pathParameters['description']!,
+                avatarUrl: state.pathParameters['avatarUrl']!,
+                date: state.pathParameters['date']!,
+                imageUrl: state.pathParameters['imageUrl']!,
+              ),
             ));
           },
         ),

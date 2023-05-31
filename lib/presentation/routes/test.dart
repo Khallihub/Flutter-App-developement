@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:unicons/unicons.dart';
 
-import '../../application/post_bloc/post_bloc.dart';
+import '../../application/post_bloc/post_blocs.dart';
 import '../../application/post_bloc/post_event.dart';
 import '../../application/post_bloc/post_state.dart';
 import '../components/comment_box.dart';

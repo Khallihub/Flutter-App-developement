@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:picstash/domain/constants.dart';
 import 'package:picstash/domain/entities/login/login_model.dart';
+import 'package:picstash/domain/entities/user_model.dart';
 import '../../../domain/entities/login/login_details.dart';
 import '../../../domain/value_objects/acess_token.dart';
 
@@ -20,8 +21,8 @@ class LoginDataProvider {
       }),
     );
 
-    if (response.statusCode == 403) {
-      throw Exception("invalid credentials");
+    if (response.statusCode != 201) {
+      throw Exception("invalid credentials or connection problem");
     }
 
     final decodedResponse = jsonDecode(response.body);
@@ -30,9 +31,10 @@ class LoginDataProvider {
       decodedResponse['access_token'],
       decodedResponse['refresh_token'],
     );
-    final Object user = decodedResponse["user"];
+    final Map<String, dynamic> user = decodedResponse["user"]["_doc"];
+    final User realUser = User.mapFromJson(user);
     final String role = decodedResponse['role'];
 
-    return LoginDetailsModel.create(token, role, user);
+    return LoginDetailsModel.create(token, role, realUser);
   }
 }

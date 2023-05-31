@@ -1,4 +1,4 @@
-import '../../infrastructure/data_ providers/chat_data_provider.dart';
+import '../../infrastructure/data_providers/chat_data_provider.dart';
 
 class ChatRepository {
   final ChatDataProvider dataProvider;
@@ -18,22 +18,18 @@ class ChatRepository {
 
   dynamic deleteChat(Map<String, String> data) {
     return dataProvider.deleteChat(data);
-
   }
 
   dynamic updateMessage(Map<String, String> data) {
     return dataProvider.updateMessage(data);
-
   }
 
   dynamic sendMessage(Map<String, String> data) {
     return dataProvider.sendMessage(data);
-
   }
 
   dynamic deleteMessage(Map<String, String> data) {
     return dataProvider.deleteMessage(data);
-
   }
 
   // Future<Post> create(Post post) async {
@@ -77,7 +73,7 @@ class ChatRepository {
   // dynamic fetchDisLikes(Map<String, String> id) async {
   //   var temp = await dataProvider.fetchDisLikes(id);
   //   return temp;
-    
+
   // }
 
   // dynamic fetchSingle(Map<String, String> id) async {
