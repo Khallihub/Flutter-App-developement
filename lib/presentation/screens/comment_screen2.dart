@@ -47,6 +47,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
   final TextEditingController _commentController = TextEditingController();
   @override
   void initState() {
+    print("baddiid ${widget.username}");
     postBloc = BlocProvider.of<PostBloc>(context);
     postBloc.add(SinglePostLoadedEvent(widget.id));
     super.initState();
@@ -166,7 +167,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.username,
+                        widget.name,
                         style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -215,41 +216,41 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                       ],
                     ),
                     child: IconButton(
-                        onPressed: () {
-                          postBloc.add(PostCommentLikedEvent(
-                              widget.id, widget.username));
-                          postBloc.add(SinglePostLoadedEvent(widget.id));
-                        },
-                        icon: likes.contains(widget.username)
-                            ? const Icon(
-                                UniconsLine.thumbs_up,
-                                color: Colors.blue,
-                              )
-                            : Icon(UniconsLine.thumbs_up,
-                                color: Theme.of(context).iconTheme.color)),
-                  ),
-                  Text('$no_likes'),
-                  IconButton(
                       onPressed: () {
-                        postBloc.add(PostCommentDislikedEvent(
-                            widget.id, widget.username));
+                        postBloc.add(
+                            PostCommentLikedEvent(widget.id, widget.username));
                         postBloc.add(SinglePostLoadedEvent(widget.id));
                       },
-                      icon: dislikes.contains(widget.username)
-                          ? const Icon(
-                              UniconsLine.thumbs_down,
-                              color: Colors.red,
-                            )
-                          : const Icon(
-                              UniconsLine.thumbs_down,
-                            )),
-                  Text('$no_dislikes'),
+                      icon: const Icon(UniconsLine.thumbs_up),
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    '$no_likes',
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      postBloc.add(
+                          PostCommentDislikedEvent(widget.id, widget.username));
+                      postBloc.add(SinglePostLoadedEvent(widget.id));
+                    },
+                    icon: const Icon(UniconsLine.thumbs_down),
+                    color: Colors.black,
+                  ),
+                  Text(
+                    '$no_dislikes',
+                    style: const TextStyle(color: Colors.black),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
               const Text(
                 "All Comments",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
               ),
               const SizedBox(height: 10),
               Column(
@@ -274,6 +275,9 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: TextField(
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
                             controller: _commentController,
                             maxLines:
                                 null, // Allow the TextField to expand vertically
@@ -296,6 +300,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                         onPressed: () {
                           var comment = _commentController.text;
                           if (comment != "") {
+                            print("this one ${widget.username}");
                             postBloc.add(PostCommentedEvent(
                                 widget.id, widget.username, comment));
                             _commentController.text = "";

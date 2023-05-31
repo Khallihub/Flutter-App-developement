@@ -60,6 +60,7 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         await postRepository
             .likeUnlike({"id": event.id, "userName": event.userName});
         final posts = await postRepository.fetchAll();
+        print("Allahu Akber");
         emit(PostOperationSuccess(posts: posts));
       } catch (error) {
         emit(PostOperationFailure(error));
