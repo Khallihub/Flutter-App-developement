@@ -2,17 +2,31 @@ import 'package:equatable/equatable.dart';
 
 import '../../infrastructure/factory models/post_factory.dart';
 
-
 abstract class PostEvent extends Equatable {
   const PostEvent();
 }
 
 class PostLoadEvent extends PostEvent {
-  const PostLoadEvent(
-  );
+  const PostLoadEvent();
 
   @override
-  List<Object> get props => [];
+  List<dynamic> get props => [];
+}
+class SinglePostLoadedEvent extends PostEvent {
+  final String id;
+  
+  const SinglePostLoadedEvent(this.id);
+
+  @override
+  List<dynamic> get props => [];
+}
+
+class PostCommentLoadedEvent extends PostEvent {
+  final String id;
+
+  const PostCommentLoadedEvent(this.id);
+  @override
+  List<List> get props => [[]];
 }
 
 class PostCreateEvent extends PostEvent {
@@ -21,7 +35,7 @@ class PostCreateEvent extends PostEvent {
   const PostCreateEvent(this.post);
 
   @override
-  List<Object> get props => [post];
+  List<dynamic> get props => [post];
 
   @override
   String toString() => 'Post Created {post Id: ${post.id}}';
@@ -34,7 +48,7 @@ class PostUpdateEvent extends PostEvent {
   const PostUpdateEvent(this.id, this.post);
 
   @override
-  List<Object> get props => [id, post];
+  List<dynamic> get props => [id, post];
 
   @override
   String toString() => 'Post Updated {post Id: ${post.id}}';
@@ -46,7 +60,7 @@ class PostDeleteEvent extends PostEvent {
   const PostDeleteEvent(this.id);
 
   @override
-  List<Object> get props => [id];
+  List<dynamic> get props => [id];
 
   @override
   toString() => 'Post Deleted {post Id: $id}';
@@ -55,17 +69,18 @@ class PostDeleteEvent extends PostEvent {
   bool? get stringify => true;
 }
 
-class PostCommentEvent extends PostEvent {
+class PostCommentedEvent extends PostEvent {
   final String id;
+  final String username;
   final String comment;
 
-  const PostCommentEvent(this.id, this.comment);
+  const PostCommentedEvent(this.id, this.username, this.comment);
 
   @override
-  List<Object> get props => [id, comment];
+  List<dynamic> get props => [id, username, comment];
 
   @override
-  String toString() => 'Post Comment {post Id: $comment}';
+  String toString() => 'Post Comment {post Id: $id}';
 }
 
 class PostLikedEvent extends PostEvent {
@@ -74,7 +89,18 @@ class PostLikedEvent extends PostEvent {
   const PostLikedEvent(this.id, this.userName);
 
   @override
-  List<Object> get props => [id, userName];
+  List<dynamic> get props => [id, userName];
+
+  @override
+  String toString() => 'Post Liked {post Id: $userName}';
+}
+class PostCommentLikedEvent extends PostEvent {
+  final String id;
+  final String userName;
+  const PostCommentLikedEvent(this.id, this.userName);
+
+  @override
+  List<dynamic> get props => [id, userName];
 
   @override
   String toString() => 'Post Liked {post Id: $userName}';
@@ -87,7 +113,19 @@ class PostDislikedEvent extends PostEvent {
   const PostDislikedEvent(this.id, this.userName);
 
   @override
-  List<Object> get props => [id, userName];
+  List<dynamic> get props => [id, userName];
+
+  @override
+  String toString() => 'Post Disliked {post Id: $userName}';
+}
+class PostCommentDislikedEvent extends PostEvent {
+  final String id;
+  final String userName;
+
+  const PostCommentDislikedEvent(this.id, this.userName);
+
+  @override
+  List<dynamic> get props => [id, userName];
 
   @override
   String toString() => 'Post Disliked {post Id: $userName}';

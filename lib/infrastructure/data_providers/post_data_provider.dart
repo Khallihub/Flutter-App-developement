@@ -48,23 +48,6 @@ class PostDataProvider {
     }
   }
 
-  Future<Post> comment(Map<String, String> data) async {
-    final http.Response response =
-        await http.post(Uri.parse("$_baseUrl/comment"),
-            headers: <String, String>{"Content-Type": "application/json"},
-            body: jsonEncode({
-              "id": data["id"],
-              "comment": data["comment"],
-            }));
-
-    if (response.statusCode == 201) {
-      return Post.fromJson(jsonDecode(response.body));
-    }
-    {
-      throw Exception("Failed to comment");
-    }
-  }
-
   Future<Post> likeUnlike(Map<String, String> data) async {
     final http.Response response = await http.post(Uri.parse("$_baseUrl/like"),
         headers: <String, String>{"Content-Type": "application/json"},
@@ -102,7 +85,6 @@ class PostDataProvider {
     final response = await http.get(Uri.parse("$_baseUrl/getFeed"));
     if (response.statusCode == 200) {
       final posts = await json.decode(response.body) as List;
-
       List<Post> post = [];
       for (var i = 0; i < posts.length; i++) {
         post.add(Post.fromJson(posts[i]));
@@ -125,6 +107,111 @@ class PostDataProvider {
     );
     if (response.statusCode != 204) {
       throw Exception("Field to delete the course");
+    }
+  }
+
+  Future<Post> comment(Map<String, String> data) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/comment"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": data["id"],
+          "userName": data["userName"],
+          "comment": data["comment"],
+        },
+      ),
+    );
+
+    if (response.statusCode == 201) {
+      return Post.fromJson(jsonDecode(response.body));
+    }
+    {
+      throw Exception("Failed to comment");
+    }
+  }
+
+  dynamic fetchComments(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getComments"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final comments = await jsonDecode(response.body);
+      // List<List> comment = [];
+      // for (var i = 0; i < comments.length; i++) {
+      //   comment.add([comments[i]["userName"], comments[i]["comment"]]);
+      // }
+      return comments;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
+
+  fetchLikes(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getLikes"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final likes = await jsonDecode(response.body);
+      // List<List> comment = [];
+      // for (var i = 0; i < comments.length; i++) {
+      //   comment.add([comments[i]["userName"], comments[i]["comment"]]);
+      // }
+      return likes;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
+
+  fetchDisLikes(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getDislikes"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final comments = await jsonDecode(response.body);
+      // List<List> comment = [];
+      // for (var i = 0; i < comments.length; i++) {
+      //   comment.add([comments[i]["userName"], comments[i]["comment"]]);
+      // }
+      return comments;
+    } else {
+      throw Exception("Could not fetch courses");
+    }
+  }
+
+  fetchSingle(Map<String, String> id) async {
+    final http.Response response = await http.post(
+      Uri.parse("$_baseUrl/getSinglePost"),
+      headers: <String, String>{"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
+          "id": id["id"],
+        },
+      ),
+    );
+    if (response.statusCode == 201) {
+      final post = await jsonDecode(response.body);
+      return [post];
+    } else {
+      throw Exception("Could not fetch courses");
     }
   }
 }

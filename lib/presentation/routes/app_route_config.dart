@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:picstash/presentation/screens/login_page.dart';
-import 'package:picstash/presentation/screens/signup_page.dart';
+import 'package:picstash/presentation/routes/test.dart';
+import '../../application/post_bloc/post_bloc.dart';
+import '../../domain/repositories/post_repository.dart';
+import '../../infrastructure/data_ providers/post_data_provider.dart';
+import '../screens/chat_screen.dart';
 import '../screens/comment_screen.dart';
 import 'app_route_constants.dart';
 
 class MyAppRouter {
-  static GoRouter returnRouter(bool isAuth) {
+  static GoRouter returnRouter(bool isLoggedIn) {
     GoRouter router = GoRouter(
-      initialLocation: MyAppRouteConstants.loginRouteName,
+      initialLocation: isLoggedIn ? "/home" : "/login",
       routes: [
         GoRoute(
-          name: MyAppRouteConstants.loginRouteName,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: MyRegister());
+            return MaterialPage(
+                child: isLoggedIn ? const Home() : const LogIn());
           },
         ),
         GoRoute(
+          name: MyAppRouteConstants.loginRouteName,
           path: "/login",
           pageBuilder: (context, state) {
-            print('p' * 99);
             return const MaterialPage(child: LogIn());
           },
         ),
@@ -31,36 +35,38 @@ class MyAppRouter {
               return const MaterialPage(child: MyRegister());
             })),
         GoRoute(
-          name: MyAppRouteConstants.commentRoutName,
+          name: MyAppRouteConstants.testRouteName,
           path:
-              '/comment/:id/:title/:username/:name/:description/:avatarUrl/:date/:imageUrl/:likes/:dislikes/:comments',
+              '/test/:id/:username/:name/:title/:description/:avatarUrl/:date/:imageUrl',
           pageBuilder: (context, state) {
-            final likes = state.pathParameters['likes']!.split('`');
-            final dislikes = state.pathParameters['dislikes']!.split('`');
-            final comments = state.pathParameters['comments']!.split('`');
             return MaterialPage(
-                child: CommentScreen(
-              id: state.pathParameters['id']!,
-              title: state.pathParameters['title']!,
-              username: state.pathParameters['username']!,
-              name: state.pathParameters['name']!,
-              description: state.pathParameters['description']!,
-              avatarUrl: state.pathParameters['avatarUrl']!,
-              date: state.pathParameters['date']!,
-              imageUrl: state.pathParameters['imageUrl']!,
-              likes: likes,
-              dislikes: dislikes,
-              comments: comments,
+                child: BlocProvider(
+              create: (context) =>
+                  PostBloc(postRepository: PostRepository(PostDataProvider())),
+              child: MyWidget(
+                id: state.pathParameters['id'] as String,
+                username: state.pathParameters['username'] as String,
+                name: state.pathParameters['name'] as String,
+                title: state.pathParameters['title'] as String,
+                description: state.pathParameters['description'] as String,
+                avatarUrl: state.pathParameters['avatarUrl'] as String,
+                date: state.pathParameters['date'] as String,
+                imageUrl: state.pathParameters['imageUrl'] as String,
+              ),
             ));
           },
         ),
-        // GoRoute(
-        //   name: MyAppRouteConstants.aboutRouteName,
-        //   path: '/about',
-        //   pageBuilder: (context, state) {
-        //     return MaterialPage(child: About());
-        //   },
-        // ),
+        GoRoute(
+          name: MyAppRouteConstants.chatRouteName,
+          path: '/chat/:user1/:user2',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+                child: ChatScreen(
+              user1: state.pathParameters['user1']!,
+              user2: state.pathParameters['user2']!,
+            ));
+          },
+        ),
         // GoRoute(
         //   name: MyAppRouteConstants.contactUsRouteName,
         //   path: '/contact_us',

@@ -45,7 +45,6 @@ class Post {
       shareCount: json['shareCount'],
       sourceURL: json['sourceURL'],
     );
-    print('after factory');
     return post;
   }
 }

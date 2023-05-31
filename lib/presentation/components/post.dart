@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:picstash/application/post_bloc/blocs.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:unicons/unicons.dart';
-
-import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_providers/post_data_provider.dart';
 
 class PostWidget extends StatefulWidget {
   final String id;
@@ -21,7 +19,7 @@ class PostWidget extends StatefulWidget {
   final comments;
 
   const PostWidget({
-    super.key,
+    Key? key,
     required this.id,
     required this.avatarUrl,
     required this.username,
@@ -33,16 +31,22 @@ class PostWidget extends StatefulWidget {
     required this.name,
     required this.title,
     required this.description,
-  });
+  }) : super(key: key);
 
   @override
   State<PostWidget> createState() => _PostWidgetState();
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  late PostBloc postBloc;
+
+  @override
+  void initState() {
+    postBloc = BlocProvider.of(context);
+    super.initState();
+  }
+
   bool more = false;
-  final PostBloc postBloc =
-      PostBloc(postRepository: PostRepository(PostDataProvider()));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -109,25 +113,28 @@ class _PostWidgetState extends State<PostWidget> {
                     onPressed: () {
                       postBloc.add(PostLikedEvent(widget.id, widget.username));
                     },
-                    icon: Icon(UniconsLine.thumbs_up,
-                        color: Theme.of(context).iconTheme.color)),
+                    icon: widget.likes.contains(widget.username)
+                        ? const Icon(
+                            UniconsLine.thumbs_up,
+                            color: Colors.blue,
+                          )
+                        : Icon(UniconsLine.thumbs_up,
+                            color: Theme.of(context).iconTheme.color)),
                 IconButton(
                     onPressed: () {
                       GoRouter.of(context).pushNamed(
-                          MyAppRouteConstants.commentRoutName,
-                          pathParameters: {
-                            "id": widget.id,
-                            "username": widget.username,
-                            "name": widget.name,
-                            "title": widget.title,
-                            "description": widget.description,
-                            "avatarUrl": widget.avatarUrl,
-                            "date": widget.date,
-                            "imageUrl": widget.imageUrl,
-                            "likes": widget.likes.join("`"),
-                            "dislikes": widget.dislikes.join("`"),
-                            "comments": widget.comments.join("`"),
-                          });
+                        MyAppRouteConstants.commentRoutName,
+                        pathParameters: {
+                          "id": widget.id,
+                          "username": widget.username,
+                          "name": widget.name,
+                          "title": widget.title,
+                          "description": widget.description,
+                          "avatarUrl": widget.avatarUrl,
+                          "date": widget.date,
+                          "imageUrl": widget.imageUrl,
+                        },
+                      );
                     },
                     icon: Icon(UniconsLine.comment_lines,
                         color: Theme.of(context).iconTheme.color)),
@@ -136,12 +143,26 @@ class _PostWidgetState extends State<PostWidget> {
                       postBloc
                           .add(PostDislikedEvent(widget.id, widget.username));
                     },
-                    icon: Icon(UniconsLine.thumbs_down,
-                        color: Theme.of(context).iconTheme.color))
+                    icon: widget.dislikes.contains(widget.username)
+                        ? const Icon(
+                            UniconsLine.thumbs_down,
+                            color: Colors.red,
+                          )
+                        : const Icon(
+                            UniconsLine.thumbs_down,
+                          ))
               ],
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  GoRouter.of(context).pushNamed(
+                    MyAppRouteConstants.chatRouteName,
+                    pathParameters: {
+                      "user1": widget.username,
+                      "user2": widget.name
+                    },
+                  );
+                },
                 icon: Icon(
                   UniconsLine.share_alt,
                   color: Theme.of(context).iconTheme.color,

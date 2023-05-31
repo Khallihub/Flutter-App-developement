@@ -32,4 +32,25 @@ class PostRepository {
   Future<void> delete(int id) async {
     dataProvider.delete(id);
   }
+
+  dynamic fetchComments(Map<String, String> id) async {
+    var temp = await dataProvider.fetchComments(id);
+    return temp; //dataProvider.fetchComments(id);
+  }
+
+  dynamic fetchLikes(Map<String, String> id) async {
+    var temp = await dataProvider.fetchLikes(id);
+    return temp;
+  }
+
+  dynamic fetchDisLikes(Map<String, String> id) async {
+    var temp = await dataProvider.fetchDisLikes(id);
+    return temp;
+    
+  }
+
+  dynamic fetchSingle(Map<String, String> id) async {
+    var temp = await dataProvider.fetchSingle(id);
+    return temp;
+  }
 }
