@@ -194,8 +194,6 @@ class _ProfileBodyState extends State<ProfileBody> {
       }
       switch (state.runtimeType) {
         case UserProfileLoadSuccess:
-          String followingLength = state.props[2].toString();
-          String followersLength = state.props[1].toString();
           LocalUserModel user = state.props[0] as LocalUserModel;
           return AnimationLimiter(
               child: ListView(
@@ -240,7 +238,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                                         },
                                         child: Center(
                                             child: Text(
-                                          "$followersLength Followers",
+                                          "${((state.props[1] as List).length).toString()} Followers",
                                           style: const TextStyle(
                                               color: Colors.blue, fontSize: 12),
                                         )),
@@ -254,7 +252,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                                         },
                                         child: Center(
                                             child: Text(
-                                          '$followingLength following',
+                                          '${((state.props[1] as List).length).toString()} Following',
                                           style: const TextStyle(
                                               color: Colors.blue, fontSize: 12),
                                         )),

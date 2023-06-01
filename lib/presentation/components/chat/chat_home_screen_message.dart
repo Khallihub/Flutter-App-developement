@@ -8,25 +8,31 @@ import '../../../application/chat_bloc/blocs.dart';
 import '../../../domain/entities/models/chat_model.dart';
 import 'custom_container.dart';
 
-class ChatMessages extends StatelessWidget {
-  ChatMessages({
+class ChatMessages extends StatefulWidget {
+  const ChatMessages({
     Key? key,
     required this.height,
     required this.chats,
   }) : super(key: key);
-  late ChatBloc chatBloc;
   final double height;
   final List<ChatModel> chats;
+
+  @override
+  State<ChatMessages> createState() => _ChatMessagesState();
+}
+
+class _ChatMessagesState extends State<ChatMessages> {
+  late ChatBloc chatBloc;
 
   @override
   Widget build(BuildContext context) {
     chatBloc = BlocProvider.of<ChatBloc>(context);
 
     return CustomContainer(
-      height: height * 0.7,
+      height: widget.height * 0.7,
       child: ListView.builder(
         padding: EdgeInsets.zero,
-        itemCount: chats.length,
+        itemCount: widget.chats.length,
         itemBuilder: (context, index) {
           // Message lastMessage = chats[index].messages!.first;
 
@@ -39,7 +45,7 @@ class ChatMessages extends StatelessWidget {
               ),
             ),
             child: Dismissible(
-              key: Key(chats[index].id),
+              key: Key(widget.chats[index].id),
               confirmDismiss: (DismissDirection direction) async {
                 if (direction == DismissDirection.endToStart) {
                   return await showDialog<bool>(
@@ -47,7 +53,8 @@ class ChatMessages extends StatelessWidget {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: const Text('Confirmation'),
-                        content: const Text('Are you sure you want to delete this chat?'),
+                        content: const Text(
+                            'Are you sure you want to delete this chat?'),
                         actions: [
                           TextButton(
                             child: const Text('Cancel'),
@@ -62,7 +69,9 @@ class ChatMessages extends StatelessWidget {
                               style: TextStyle(color: Colors.red),
                             ),
                             onPressed: () {
-                              chatBloc.add(ChatDeleteEvent(chats[index].users[0], chats[index].users[1]));
+                              chatBloc.add(ChatDeleteEvent(
+                                  widget.chats[index].users[0],
+                                  widget.chats[index].users[1]));
                               Navigator.of(context).pop(true);
                             },
                           ),
@@ -99,35 +108,36 @@ class ChatMessages extends StatelessWidget {
                   GoRouter.of(context).pushNamed(
                     MyAppRouteConstants.chatRouteName,
                     pathParameters: {
-                      "id": chats[index].id,
-                      "user1": chats[index].users[0] == chats[index].userName
-                          ? chats[index].users[1]
-                          : chats[index].users[0],
-                      "user2": chats[index].userName,
-                      "friendImage": chats[index].image,
-                      "friendName": chats[index].name,
+                      "id": widget.chats[index].id,
+                      "user1": widget.chats[index].users[0] ==
+                              widget.chats[index].userName
+                          ? widget.chats[index].users[1]
+                          : widget.chats[index].users[0],
+                      "user2": widget.chats[index].userName,
+                      "friendImage": widget.chats[index].image,
+                      "friendName": widget.chats[index].name,
                     },
                   );
                 },
                 contentPadding: EdgeInsets.zero,
                 leading: CircleAvatar(
                   radius: 30,
-                  backgroundImage: NetworkImage(chats[index].image),
+                  backgroundImage: NetworkImage(widget.chats[index].image),
                 ),
                 title: Text(
-                  chats[index].name,
+                  widget.chats[index].name,
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
-                  chats[index].lastMessage[2],
+                  widget.chats[index].lastMessage[2],
                   maxLines: 1,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 trailing: Text(DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(chats[index].lastMessage[0]))
+                            int.parse(widget.chats[index].lastMessage[0]))
                         .isAfter(
                   DateTime.now().add(
                     const Duration(days: 1),
@@ -135,11 +145,11 @@ class ChatMessages extends StatelessWidget {
                 )
                     ? DateFormat('MMM d').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(chats[index].lastMessage[0])),
+                            int.parse(widget.chats[index].lastMessage[0])),
                       )
                     : DateFormat('HH:mm').format(
                         DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(chats[index].lastMessage[0])),
+                            int.parse(widget.chats[index].lastMessage[0])),
                       )),
               ),
             ),

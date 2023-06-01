@@ -14,11 +14,11 @@ class UserProfileRepository {
     }
   }
 
-  updateUserProfile(
-      String email, String userName, String bio, String password) async {
+  updateUserProfile(String email, String userName, String bio, String password,
+      String avatarUrl) async {
     try {
       return await dataProvider.updateUserProfile(
-          email, userName, bio, password);
+          email, userName, bio, password, avatarUrl);
     } catch (error) {
       throw Exception('Failed to update user profile');
     }

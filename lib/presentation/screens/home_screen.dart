@@ -1,7 +1,8 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:picstash/domain/entities/local_user_model.dart';
+import 'package:picstash/domain/value_objects/email_address.dart';
 
 import '../../assets/constants/assets.dart';
 import '../../domain/entities/login/login_details.dart';
@@ -45,12 +46,20 @@ class _HomeState extends State<Home> {
       future: getProfile(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          LocalUserModel localUserModel = LocalUserModel(
+              id: snapshot.data!.id,
+              name: snapshot.data!.name,
+              email: EmailAddress.crud(snapshot.data!.email),
+              username: snapshot.data!.userName,
+              imageUrl: snapshot.data!.avatar,
+              bio: snapshot.data!.bio);
           List<dynamic> pages = [
             const PostScreen(),
             SearchScreen(localUser: snapshot.data!.userName),
-            const AddPostWidget(),
+            AddPostWidget(
+              localUserModel: localUserModel,
+            ),
             const ChatListScreen(),
-            const ErrorPage(),
             UserProfileScreen(
               userProfile: snapshot.data!,
               isOwner: true,
@@ -91,7 +100,7 @@ class _HomeState extends State<Home> {
             ),
           );
         }
-        return const Text("error");
+        return const ErrorPage();
       },
     );
   }

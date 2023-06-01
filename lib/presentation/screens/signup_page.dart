@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:picstash/application/signup_bloc/sign_up_event.dart';
@@ -8,6 +7,7 @@ import 'package:picstash/domain/entities/signup/sign_up_model.dart';
 import 'package:picstash/domain/value_objects/avatar.dart';
 import 'package:picstash/domain/value_objects/email_address.dart';
 import 'package:picstash/domain/value_objects/password.dart';
+import 'package:picstash/infrastructure/data_providers/upload_image.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import '../../application/signup_bloc/sign_up_block.dart';
 import '../../application/signup_bloc/sign_up_state.dart';
@@ -74,23 +74,23 @@ class _SignUpBodyState extends State<SignUpBody> {
   static String _bio = "";
   static String _username = "";
   File? _avatarImage;
-  // String? _avatarImageUrl;
+  String? _avatarImageUrl;
 
-  Future<void> _pickAvatarImage() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowMultiple: false,
-    );
+  // Future<void> _pickAvatarImage() async {
+  //   final result = await FilePicker.platform.pickFiles(
+  //     type: FileType.image,
+  //     allowMultiple: false,
+  //   );
 
-    if (result != null && result.files.isNotEmpty) {
-      final path = result.files.first.path;
-      if (path != null) {
-        setState(() {
-          _avatarImage = File(path);
-        });
-      }
-    }
-  }
+  //   if (result != null && result.files.isNotEmpty) {
+  //     final path = result.files.first.path;
+  //     if (path != null) {
+  //       setState(() {
+  //         _avatarImage = File(path);
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +198,9 @@ class _SignUpBodyState extends State<SignUpBody> {
                           ),
                     const SizedBox(height: 8.0),
                     TextButton(
-                      onPressed: _pickAvatarImage,
+                      onPressed: () async {
+                        _avatarImageUrl = await UploadImage.pickImage();
+                      },
                       child: const Text('Choose Avatar'),
                     ),
                     const SizedBox(height: 16.0),
@@ -245,8 +247,8 @@ class _SignUpBodyState extends State<SignUpBody> {
                               Password.crud(_password),
                               _username,
                               bio: _bio,
-                              avatar: AvatarModel.create(
-                                  "https://picsum.photos/400"));
+                              avatar:
+                                  AvatarModel.create(_avatarImageUrl ?? ""));
                           BlocProvider.of<SignUpBloc>(context).add(
                               SignUpButtonPressed(signUpModel: signUpModel));
                         }

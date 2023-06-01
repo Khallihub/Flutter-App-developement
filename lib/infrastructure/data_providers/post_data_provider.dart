@@ -8,19 +8,27 @@ import '../factory models/post_factory.dart';
 class PostDataProvider {
   static const String _baseUrl = "${Constants.baseUrl}/post";
 
-  Future<Post> create(Post post) async {
+  Future<Post> create(
+      {required title,
+      required description,
+      required sourceUrl,
+      required author,
+      required authorName,
+      required authorAvatar}) async {
     final http.Response response =
         await http.post(Uri.parse("$_baseUrl/createPost"),
             headers: <String, String>{"Content-Type": "application/json"},
             body: jsonEncode({
-              "title": post.title,
-              "description": post.description,
-              "author": post.author,
-              "createdAt": post.createdAt,
-              "categories": post.categories,
-              "sourceURL": post.sourceURL,
+              "title": title,
+              "description": description,
+              "author": author,
+              "authorName": authorName,
+              "createdAt": "",
+              "categories": [],
+              "sourceURL": sourceUrl,
+              "authorAvatar": authorAvatar,
             }));
-
+    print(response.body);
     if (response.statusCode == 201) {
       return Post.fromJson(jsonDecode(response.body));
     }

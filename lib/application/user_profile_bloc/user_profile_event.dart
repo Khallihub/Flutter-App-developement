@@ -21,12 +21,14 @@ class UserProfileUpdateEvent extends UserProfileEvent {
   final String userName;
   final String bio;
   final String password;
+  final String avatarUrl;
 
   const UserProfileUpdateEvent(
       {required this.email,
       required this.userName,
       required this.bio,
-      required this.password});
+      required this.password,
+      required this.avatarUrl});
 
   @override
   List<Object?> get props => [email, userName, bio, password];

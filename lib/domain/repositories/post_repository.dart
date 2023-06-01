@@ -5,8 +5,20 @@ class PostRepository {
   final PostDataProvider dataProvider;
   PostRepository(this.dataProvider);
 
-  Future<Post> create(Post post) async {
-    return dataProvider.create(post);
+  Future<Post> create(
+      {required title,
+      required description,
+      required sourceUrl,
+      required author,
+      required authorName,
+      required authorAvatar}) async {
+    return dataProvider.create(
+        title: title,
+        description: description,
+        sourceUrl: sourceUrl,
+        author: author,
+        authorName: authorName,
+        authorAvatar: authorAvatar);
   }
 
   Future<Post> update(int id, Post post) async {

@@ -22,18 +22,18 @@ class UserProfileDataProvider {
     }
   }
 
-  updateUserProfile(
-      String email, String userName, String bio, String password) async {
-
-    final http.Response response = await http.post(
-        Uri.parse("$_baseUrl/updateProfile"),
-        headers: <String, String>{"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": email,
-          "userName": userName,
-          "bio": bio,
-          "password": password
-        }));
+  updateUserProfile(String email, String userName, String bio, String password,
+      String avatarUrl) async {
+    final http.Response response =
+        await http.post(Uri.parse("$_baseUrl/updateProfile"),
+            headers: <String, String>{"Content-Type": "application/json"},
+            body: jsonEncode({
+              "email": email,
+              "userName": userName,
+              "bio": bio,
+              "password": password,
+              "avatarUrl": avatarUrl,
+            }));
 
     if (response.statusCode == 201) {
       final user = jsonDecode(response.body);

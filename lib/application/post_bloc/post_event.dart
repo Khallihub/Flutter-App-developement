@@ -31,15 +31,27 @@ class SinglePostLoadedEvent extends PostEvent {
 }
 
 class PostCreateEvent extends PostEvent {
-  final Post post;
+  final String title;
+  final String description;
+  final String sourceUrl;
+  final String author;
+  final String authorName;
+  final String authorAvatar;
 
-  const PostCreateEvent(this.post);
+  const PostCreateEvent(
+      {required this.title,
+      required this.description,
+      required this.sourceUrl,
+      required this.author,
+      required this.authorName,
+      required this.authorAvatar});
 
   @override
-  List<dynamic> get props => [post];
+  List<dynamic> get props =>
+      [title, description, sourceUrl, author, authorName, authorAvatar];
 
   @override
-  String toString() => 'Post Created {post Id: ${post.id}}';
+  String toString() => 'Post Created {post Id: $sourceUrl}';
 }
 
 class PostUpdateEvent extends PostEvent {

@@ -12,7 +12,13 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     on<PostLoadEvent>(postLoadEvent);
     on<PostCreateEvent>((event, emit) async {
       try {
-        await postRepository.create(event.post);
+        await postRepository.create(
+            title: event.title,
+            description: event.description,
+            sourceUrl: event.sourceUrl,
+            author: event.author,
+            authorName: event.authorName,
+            authorAvatar: event.authorAvatar);
         final posts = await postRepository.fetchAll();
         emit(PostOperationSuccess(posts: posts));
       } catch (error) {
