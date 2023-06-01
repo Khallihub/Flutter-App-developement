@@ -17,17 +17,10 @@ class UserProfileRepository {
   updateUserProfile(
       String email, String userName, String bio, String password) async {
     try {
-      return await dataProvider.updateUserProfile(email, userName,bio,password);
+      return await dataProvider.updateUserProfile(
+          email, userName, bio, password);
     } catch (error) {
       throw Exception('Failed to update user profile');
-    }
-  }
-
-  logout() async {
-    try {
-      await dataProvider.logout();
-    } catch (error) {
-      throw Exception('Failed to perform logout');
     }
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../routes/app_route_constants.dart';
+
 class ErrorPage extends StatefulWidget {
   const ErrorPage({super.key});
 
@@ -21,7 +23,8 @@ class _ErrorPageState extends State<ErrorPage> {
               textStyle: const TextStyle(color: Colors.black),
             ),
             onPressed: () {
-              GoRouter.of(context).pop();
+              // GoRouter.of(context).pop();
+              GoRouter.of(context).go(MyAppRouteConstants.homeRouteName);
             },
             child: const Text("go back"))
       ],

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../application/search_bloc/search_blocs.dart';
-import '../../../domain/entities/models/user_model.dart';
-import '../../routes/app_route_constants.dart';
+import '../../application/chat_bloc/blocs.dart';
+import '../../application/search_bloc/search_blocs.dart';
+import '../../domain/entities/models/user_model.dart';
+import '../routes/app_route_constants.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final localUser;
+  const SearchScreen({super.key, required this.localUser});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -16,6 +18,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   late SearchBloc _searchBloc;
+  late ChatBloc chatBloc;
 
   @override
   void initState() {
@@ -77,15 +80,22 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget buildSearchResults(List<User> results) {
+        chatBloc = BlocProvider.of<ChatBloc>(context);
+
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
         return ListTile(
           onTap: () {
+            chatBloc.add(ChatCreateEvent(widget.localUser, results[index].userName));
             GoRouter.of(context).pushNamed(
               MyAppRouteConstants.chatRouteName,
               pathParameters: {
-                // user: results[index].userName,
+                "id": results[index].id,
+                "user1": widget.localUser,
+                "user2": results[index].userName,
+                "friendName": results[index].name,
+                "friendImage": results[index].avatarUrl
               },
             );
           },

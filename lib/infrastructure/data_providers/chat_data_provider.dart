@@ -164,7 +164,8 @@ class ChatDataProvider {
               "user1": data["user1"],
               "user2": data["user2"],
             }));
-    if (response.statusCode == 201) {
+      print(response.statusCode);
+    if (response.statusCode == 200) {
       final chat = await json.decode(response.body);
       Chat decodedChat = Chat.fromJson(chat);
 
@@ -196,7 +197,7 @@ class ChatDataProvider {
 
   Future<Chat> sendMessage(Map<String, String> data) async {
     final response =
-        await http.post(Uri.parse("${Constants.chatBaseUrl}/sendMessage"),
+        await http.put(Uri.parse("${Constants.chatBaseUrl}/sendMessage"),
             headers: <String, String>{"Content-Type": "application/json"},
             body: jsonEncode({
               "user1": data["user1"],
@@ -204,10 +205,9 @@ class ChatDataProvider {
               "sender": data["sender"],
               "message": data["message"],
             }));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final chat = await json.decode(response.body);
       Chat decodedChat = Chat.fromJson(chat);
-
       return decodedChat;
     } else {
       throw Exception("Could not fetch chat");
@@ -216,17 +216,16 @@ class ChatDataProvider {
 
   Future<Chat> deleteMessage(Map<String, String> data) async {
     final response =
-        await http.delete(Uri.parse("${Constants.chatBaseUrl}/deleteMessage"),
+        await http.put(Uri.parse("${Constants.chatBaseUrl}/deleteMessage"),
             headers: <String, String>{"Content-Type": "application/json"},
             body: jsonEncode({
               "user1": data["user1"],
               "user2": data["user2"],
               "time": data["time"],
             }));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final chat = await json.decode(response.body);
       Chat decodedChat = Chat.fromJson(chat);
-
       return decodedChat;
     } else {
       throw Exception("Could not fetch chat");

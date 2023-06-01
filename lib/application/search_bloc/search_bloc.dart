@@ -9,6 +9,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final ChatRepository chatRepository;
   SearchBloc({required this.chatRepository}) : super(SearchInitial()) {
     on<SearchQueryChanged>((event, emit) async {
+      emit(SearchLoadingState());
       try {
         List<User> results = await chatRepository.search(event.query);
         emit(SearchResult(results));

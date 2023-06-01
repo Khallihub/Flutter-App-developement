@@ -24,10 +24,6 @@ class UserProfileDataProvider {
 
   updateUserProfile(
       String email, String userName, String bio, String password) async {
-    // Implement the logic to update the user profile in the data source
-    // Use the userProfile parameter to perform the update
-    // Make an HTTP PUT request or any other appropriate method for updating the profile
-    // Replace the following code with your actual implementation
 
     final http.Response response = await http.post(
         Uri.parse("$_baseUrl/updateProfile"),
@@ -44,22 +40,6 @@ class UserProfileDataProvider {
       return user;
     } else {
       throw Exception('Failed to update user profile');
-    }
-  }
-
-  logout() async {
-    // Implement the logic to perform logout actions
-    // Make an HTTP POST request or any other appropriate method for performing logout
-    // Replace the following code with your actual implementation
-
-    const logoutUrl = 'http://localhost:3000auth/logout';
-
-    final response = await http.post(Uri.parse(logoutUrl));
-
-    if (response.statusCode == 201) {
-      return response.statusCode;
-    } else {
-      throw Exception('Failed to perform logout');
     }
   }
 }

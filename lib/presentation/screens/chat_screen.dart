@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
-import '../components/chat/chat_message.dart';
+import '../components/chat/chat_screen_messages.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_container.dart';
 
@@ -30,165 +34,171 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController scrollController = ScrollController();
   TextEditingController textEditingController = TextEditingController();
 
+  late IO.Socket socket;
   late ChatBloc chatBloc;
-  // final User user = const User(id: "1", name: "khlaid", imageUrl: "imageUrl");
   late String text;
-  // late Chat chat = Chat();
+  String time = "";
+
   @override
   void initState() {
+    connect();
     chatBloc = BlocProvider.of<ChatBloc>(context);
     chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
+    // textEditingController.text = " ";
     super.initState();
   }
 
   @override
+  void dispose() {
+    disconnect();
+    // chatBloc.add(AllChatsLoadEvent(widget.user1));
+    super.dispose();
+  }
+
+  void connect() {
+    socket = IO.io("http://192.168.65.212:3000", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket.connect();
+    socket.emit("joined", {"sender": widget.user1, "receiver": widget.user2});
+    socket.onConnect((data) {
+      print(socket.connected);
+      print("connected");
+      socket.on("message", (data) {
+        
+        print("9"*99);
+        print(data);
+          chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
+      });
+    });
+  }
+
+  void disconnect() {
+    print("disconnected");
+    socket.emit("disconnect", widget.user1);
+    socket.disconnect();
+  }
+
+  void notifiy() {
+    socket.emit("message", {
+      "sender": widget.user1,
+      "receiver": widget.user2,
+      "status": "sent"
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("8" * 99);
     User friend = User(
         name: widget.friendName,
         avatarUrl: widget.friendImage,
         id: widget.id,
         userName: widget.user2);
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.topRight,
-          colors: [
-            Theme.of(context).colorScheme.secondary,
-            Theme.of(context).colorScheme.primary,
-          ],
-        ),
-      ),
-      child: Scaffold(
-        appBar: CustomAppBar(
-          user: friend,
-          text: widget.friendName,
-        ),
-        backgroundColor: Colors.transparent,
-        body: CustomContainer(
-          height: MediaQuery.of(context).size.height,
-          child: BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              if (state is ChatLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is ChatLoadOperationSuccess) {
-              } else if (state is ChatOperationFailure) {
-                return const Center(child: Text("error"));
-              } else {
-                return Container();
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const ChatMessages(
-                    height: 45,
-                    chats: [],
-                  ),
-                  TextFormField(
-                    controller: textEditingController,
-                    onChanged: (value) {
-                      setState(() {
-                        text = value;
-                      });
-                    },
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .colorScheme
-                          .secondary
-                          .withAlpha(150),
-                      hintText: 'Type here...',
-                      hintStyle: Theme.of(context).textTheme.bodyMedium,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.all(20.0),
-                      suffixIcon: _buildIconButton(context),
-                    ),
-                  ),
-                ],
-              );
-            },
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.topRight,
+            colors: [
+              Theme.of(context).colorScheme.secondary,
+              Theme.of(context).colorScheme.primary,
+            ],
           ),
         ),
-      ),
-    );
+        child: Scaffold(
+          appBar: CustomAppBar(
+            user: friend,
+            text: widget.friendName,
+          ),
+          backgroundColor: Colors.transparent,
+          body: CustomContainer(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    if (state is ChatLoadingState) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is ChatLoadOperationSuccess) {
+                      return ChatScreenMessages(
+                        chat: state.chats[0],
+                        scrollController: scrollController,
+                      );
+                    }  
+                    else if (state is ChatMessageDeletedState) {
+                      notifiy();
+                      return ChatScreenMessages(
+                        chat: state.chat,
+                        scrollController: scrollController,
+                      );
+                    } else if (state is ChatMessageUpdatedState) {
+                      return ChatScreenMessages(
+                        chat: state.chat,
+                        scrollController: scrollController,
+                      );
+                    } else if (state is SetParentTextFieldState) {
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (_) {
+                          setState(
+                            () {
+                              textEditingController.value =
+                                  TextEditingValue(text: state.text);
+                              time = state.time;
+                            },
+                          );
+                        },
+                      );
+
+                      return const SizedBox();
+                    } else if (state is ChatOperationFailure) {
+                      return const Center(child: Text("error"));
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+                TextFormField(
+                  controller: textEditingController,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor:
+                        Theme.of(context).colorScheme.secondary.withAlpha(150),
+                    hintText: 'Type here...',
+                    hintStyle: Theme.of(context).textTheme.bodyMedium,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.all(20.0),
+                    suffixIcon: _buildIconButton(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   IconButton _buildIconButton(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.send),
+      icon: Icon(time == "" ? Icons.send : Icons.save),
       color: Theme.of(context).iconTheme.color,
       onPressed: () {
-        // Message message = Message(
-        //   senderId: '1',
-        //   recipientId: '2',
-        //   text: text,
-        //   createdAt: DateTime.now(),
-        // );
-        // List<Message> messages = List.from(chat.messages!)..add(message);
-        // messages.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-        // setState(() {
-        //   chat = chat.copyWith(messages: messages);
-        // });
-        // scrollController.animateTo(
-        //   scrollController.position.minScrollExtent,
-        //   duration: const Duration(milliseconds: 300),
-        //   curve: Curves.easeIn,
-        // );
-        // textEditingController.clear();
+        if (textEditingController.text.trim().isNotEmpty) {
+          time == ""
+              ? chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
+                  widget.user1, textEditingController.text))
+              : chatBloc.add(ChatMessageUpdateEvent(widget.user1, widget.user2,
+                  widget.user1, textEditingController.text, time));
+          textEditingController.clear();
+          notifiy();
+        }
       },
     );
   }
 }
-
-// class _ChatMessages extends StatelessWidget {
-//   const _ChatMessages({
-//     Key? key,
-//     required this.scrollController,
-//     required this.chat,
-//   }) : super(key: key);
-
-//   final ScrollController scrollController;
-//   final Chat chat;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: ListView.builder(
-//         reverse: true,
-//         controller: scrollController,
-//         itemCount: chat.messages!.length,
-//         itemBuilder: (context, index) {
-//           Message message = chat.messages![index];
-//           return Align(
-//             alignment: (message.senderId == '1')
-//                 ? Alignment.centerLeft
-//                 : Alignment.centerRight,
-//             child: Container(
-//               constraints: BoxConstraints(
-//                 maxWidth: MediaQuery.of(context).size.width * 0.66,
-//               ),
-//               padding: const EdgeInsets.all(10.0),
-//               margin: const EdgeInsets.symmetric(vertical: 5.0),
-//               decoration: BoxDecoration(
-//                 color: (message.senderId == '1')
-//                     ? Theme.of(context).colorScheme.primary
-//                     : Theme.of(context).colorScheme.secondary,
-//                 borderRadius: const BorderRadius.all(Radius.circular(10)),
-//               ),
-//               child: Text(
-//                 message.text,
-//                 style: Theme.of(context).textTheme.bodyMedium,
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-

@@ -52,6 +52,8 @@ dependencies:
   flutter_popup_menu_button: ^0.0.1+5
   image_picker: ^0.8.7+5
   dio: ^5.1.2
+  intl: ^0.18.1
+  socket_io_client: ^2.0.2
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +65,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  mockito: ^5.4.1
+  mocktail: ^0.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

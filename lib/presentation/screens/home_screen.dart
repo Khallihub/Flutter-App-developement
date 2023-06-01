@@ -1,16 +1,18 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:picstash/presentation/screens/error_page.dart';
-import 'package:picstash/presentation/screens/post_adding.dart';
-import 'package:picstash/presentation/screens/post_screen.dart';
-import 'package:picstash/presentation/screens/temp.dart';
-import 'package:picstash/presentation/screens/user_profile_screen.dart';
+
 
 import '../../assets/constants/assets.dart';
 import '../../domain/entities/login/login_details.dart';
 import '../../domain/entities/user_profile/user_profile.dart';
 import '../../infrastructure/data_providers/db/db.dart';
+import 'search_screen.dart';
+import 'chat_list_screen.dart';
+import 'error_page.dart';
+import 'post_adding.dart';
+import 'post_screen.dart';
+import 'user_profile_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -45,9 +47,10 @@ class _HomeState extends State<Home> {
         if (snapshot.hasData) {
           List<dynamic> pages = [
             const PostScreen(),
-            const ErrorPage(),
+            SearchScreen(localUser: snapshot.data!.userName),
             const AddPostWidget(),
-            const ImageUploader(),
+            const ChatListScreen(),
+            const ErrorPage(),
             UserProfileScreen(
               userProfile: snapshot.data!,
               isOwner: true,

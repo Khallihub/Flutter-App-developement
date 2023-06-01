@@ -7,7 +7,7 @@ import '../../application/chat_bloc/chat_bloc.dart';
 import '../../domain/entities/dummy_profile_data.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../../infrastructure/data_providers/chat_data_provider.dart';
-import '../components/chat/search_screen.dart';
+import '../screens/search_screen.dart';
 import '../screens/chat_list_screen.dart';
 import '../screens/comment_screen2.dart';
 import '../screens/login_page.dart';
@@ -116,13 +116,13 @@ class MyAppRouter {
         ),
         GoRoute(
           name: MyAppRouteConstants.chatScreenSearch,
-          path: '/chatscreensearch',
+          path: '/chatscreensearch/:localUser',
           pageBuilder: (context, state) {
             return MaterialPage(
                 child: BlocProvider(
               create: (context) =>
                   ChatBloc(chatRepository: ChatRepository(ChatDataProvider())),
-              child: const SearchScreen(),
+              child: SearchScreen(localUser: state.pathParameters["localUser"]),
             ));
           },
         ),
