@@ -8,6 +8,7 @@ import '../../application/comment_bloc/comment_blocs.dart';
 import '../../application/comment_bloc/comment_event.dart';
 import '../../application/comment_bloc/comment_state.dart';
 import '../components/comment_box.dart';
+import '../routes/app_route_constants.dart';
 
 class CommentScreen_2 extends StatefulWidget {
   final String id;
@@ -56,10 +57,10 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
     return commentList;
   }
 
-  List<String> likes = [];
-  List<String> dislikes = [];
-  List<dynamic> comments = [];
-  var res;
+  List<dynamic> likes = [];
+  List<dynamic> dislikes = [];
+  List<dynamic> res = [];
+  List<Widget> commentWidget = [];
 
   @override
   Widget build(BuildContext context) {
@@ -77,48 +78,29 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
               ),
             );
           } else if (state is CommentLikedSuccess) {
-            likes = [];
-            for (var obj in state.props) {
-              for (var i in obj[0]) {
-                likes.add(i);
-              }
-            }
+            likes = state.props[0];
+            dislikes = state.props[1];
           } else if (state is CommentDisLikeSuccess) {
-            dislikes = [];
-            for (var obj in state.props) {
-              for (var i in obj[0]) {
-                dislikes.add(i);
-              }
-            }
+            likes = state.props[0];
+            dislikes = state.props[1];
           } else if (state is CommentedSuccess) {
-            comments = [];
-            for (var obj in state.props) {
-              for (var i in obj[0]) {
-                comments.add(i);
-              }
-            }
+            res = state.props[0];
           } else if (state is PostCommentLoaded) {
-            likes = [];
-            dislikes = [];
-            comments = [];
-            for (var obj in state.props) {
-              for (var i in obj[0]) {
-                likes.add(i);
-              }
-              for (var i in obj[1]) {
-                dislikes.add(i);
-              }
-              for (var i in obj[2]) {
-                comments.add(i);
-              }
-            }
-            res = commentBuilder(comments);
+            likes = state.props[0]["likes"];
+            dislikes = state.props[0]["dislikes"];
+            res = state.props[0]["comments"];
+            commentWidget = commentBuilder(res);
           }
         }),
         builder: (context, state) {
+          if (state is CommentInitialState) {
+            BlocProvider.of<CommentBloc>(context)
+                .add(LoadPostCommentEvent(id: widget.id));
+          }
+
           switch (state.runtimeType) {
-            case CommentInitialState:
             case CommentLoadingState:
+            case PostCommentLoading:
               return const Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
@@ -248,12 +230,12 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                     ),
                     const SizedBox(height: 10),
                     Column(
-                      children: res
-                          .map((comment) => Padding(
+                      children: commentWidget
+                          .map((eachWidget) => Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical:
                                         5), // Add 10 pixels of vertical padding
-                                child: comment,
+                                child: eachWidget,
                               ))
                           .toList(),
                     ),
@@ -324,7 +306,8 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                       Center(
                         child: ElevatedButton(
                             onPressed: () {
-                              GoRouter.of(context).pop();
+                              GoRouter.of(context).pushReplacementNamed(
+                                  MyAppRouteConstants.homeRouteName);
                             },
                             child: const Text("Go Back")),
                       )

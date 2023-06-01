@@ -29,7 +29,7 @@ class CommentRepository {
     return await commentDataProvider.fetchDisLikes(id);
   }
 
-  dynamic fetchSingle(Map<String, String> id) async {
+  dynamic fetchSingle(String id) async {
     return await commentDataProvider.fetchSingle(id);
   }
 }

@@ -15,15 +15,15 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         if (state is PostCommentLoading) return;
         emit(const PostCommentLoading());
         try {
-          final post = await commentRepository.fetchSingle({"id": event.id});
-          final likes = post[0]["likes"];
-          final dislikes = post[0]["dislikes"];
-          final comments = post[0]["comments"];
-          final modifiedpost = [
-            likes,
-            dislikes,
-            comments,
-          ];
+          final post = await commentRepository.fetchSingle(event.id);
+          final likes = post["likes"];
+          final dislikes = post["dislikes"];
+          final comments = post["comments"];
+          final modifiedpost = {
+            "likes": likes,
+            "dislikes": dislikes,
+            "comments": comments,
+          };
           emit(PostCommentLoaded(postDetails: modifiedpost));
         } catch (error) {
           emit(CommentFailure(error: error));
@@ -65,7 +65,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         try {
           Post post = await commentRepository
               .addLike({"id": event.id, "userName": event.userName});
-          emit(CommentLikedSuccess(likes: post.likes));
+          emit(CommentLikedSuccess(likes: post.likes, dislikes: post.dislikes));
         } catch (error) {
           emit(CommentFailure(error: error));
         }
@@ -77,7 +77,8 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         try {
           Post post = await commentRepository
               .addDisLike({"id": event.id, "userName": event.userName});
-          emit(CommentDisLikeSuccess(dislikes: post.dislikes));
+          emit(CommentDisLikeSuccess(
+              likes: post.likes, dislikes: post.dislikes));
         } catch (error) {
           emit(CommentFailure(error: error));
         }

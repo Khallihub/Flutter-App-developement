@@ -57,21 +57,17 @@ class _PostWidgetState extends State<PostWidget_2> {
     return await loginCredentials.getLoginCredentials();
   }
 
-  // final PostBloc postBloc =
-  //     PostBloc(postRepository: PostRepository(PostDataProvider()));
   @override
   Widget build(BuildContext context) {
-    int no_likes = widget.likes.length;
-    var no_dislikes = widget.dislikes.length;
-    var no_comments = widget.comments.length;
+    int noLikes = widget.likes.length;
+    int noDislikes = widget.dislikes.length;
+    int noComments = widget.comments.length;
 
     return FutureBuilder(
         future: fetchLocalUser(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data!.localUserModel.username);
             return InkWell(
-              //onTap: onTap,
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -111,18 +107,6 @@ class _PostWidgetState extends State<PostWidget_2> {
                           ],
                         ),
                         const Spacer(),
-                        // Container(
-                        //   height: 25,
-                        //   alignment: Alignment.center,
-                        //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                        //   decoration: BoxDecoration(
-                        //       borderRadius: BorderRadius.circular(25),
-                        //       color: Colors.grey.withOpacity(0.1)),
-                        //   child: Text(
-                        //     widget.title,
-                        //     style: const TextStyle(fontSize: 14, color: Colors.blue),
-                        //   ),
-                        // ),
                         const SizedBox(width: 5),
                         const Icon(Icons.more_vert)
                       ],
@@ -185,7 +169,7 @@ class _PostWidgetState extends State<PostWidget_2> {
                               ),
                             ),
                             Text(
-                              '$no_likes',
+                              '$noLikes',
                               style: const TextStyle(color: Colors.black),
                             ),
                             IconButton(
@@ -200,7 +184,7 @@ class _PostWidgetState extends State<PostWidget_2> {
                               },
                             ),
                             Text(
-                              '$no_dislikes',
+                              '$noDislikes',
                               style: const TextStyle(color: Colors.black),
                             ),
                           ],
@@ -221,18 +205,13 @@ class _PostWidgetState extends State<PostWidget_2> {
                                       "avatarUrl": widget.avatarUrl,
                                       "date": widget.date,
                                       "imageUrl": widget.imageUrl,
-                                      // "likes": no_likes,
-                                      // "dislikes": no_dislikes,
-                                      // "comments": widget.comments
-                                      //     .map((row) => row.join(','))
-                                      //     .join('`'),
                                     });
                               },
                               icon: const Icon(UniconsLine.comment_lines,
                                   color: Colors.black),
                             ),
                             Text(
-                              '$no_comments',
+                              '$noComments',
                               style: const TextStyle(color: Colors.black),
                             ),
                           ],

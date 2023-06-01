@@ -17,6 +17,7 @@ class MyAppRouter {
     GoRouter router = GoRouter(
       routes: [
         GoRoute(
+          name: MyAppRouteConstants.homeRouteName,
           path: '/',
           pageBuilder: (context, state) {
             return MaterialPage(
@@ -51,22 +52,16 @@ class MyAppRouter {
           path:
               '/comment/:id/:username/:name/:title/:description/:avatarUrl/:date/:imageUrl',
           pageBuilder: (context, state) {
-            String? name = state.pathParameters['username'];
-            print("daaa ${name}");
             return MaterialPage(
-                child: BlocProvider(
-              create: (context) =>
-                  PostBloc(postRepository: PostRepository(PostDataProvider())),
-              child: CommentScreen_2(
-                id: state.pathParameters['id'] as String,
-                avatarUrl: state.pathParameters['avatarUrl'] as String,
-                username: state.pathParameters['username'] as String,
-                name: state.pathParameters['name'] as String,
-                title: state.pathParameters['title'] as String,
-                description: state.pathParameters['description'] as String,
-                date: state.pathParameters['date'] as String,
-                imageUrl: state.pathParameters['imageUrl'] as String,
-              ),
+                child: CommentScreen_2(
+              id: state.pathParameters['id'] as String,
+              avatarUrl: state.pathParameters['avatarUrl'] as String,
+              username: state.pathParameters['username'] as String,
+              name: state.pathParameters['name'] as String,
+              title: state.pathParameters['title'] as String,
+              description: state.pathParameters['description'] as String,
+              date: state.pathParameters['date'] as String,
+              imageUrl: state.pathParameters['imageUrl'] as String,
             ));
           },
         ),

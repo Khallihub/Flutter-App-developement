@@ -45,7 +45,7 @@ class CommentDataProvider {
     }
   }
 
-    Future<Post> dislikeUndislike(Map<String, String> data) async {
+  Future<Post> dislikeUndislike(Map<String, String> data) async {
     final http.Response response =
         await http.post(Uri.parse("$_baseUrl/dislike"),
             headers: <String, String>{"Content-Type": "application/json"},
@@ -94,7 +94,7 @@ class CommentDataProvider {
       final likes = await jsonDecode(response.body);
       return likes;
     } else {
-      throw Exception("Could not fetch courses");
+      throw Exception("Could not fetch the required data");
     }
   }
 
@@ -112,17 +112,17 @@ class CommentDataProvider {
       final disLikes = await jsonDecode(response.body);
       return disLikes;
     } else {
-      throw Exception("Could not fetch courses");
+      throw Exception("Could not fetch data");
     }
   }
 
-  fetchSingle(Map<String, String> id) async {
+  fetchSingle(String id) async {
     final http.Response response = await http.post(
       Uri.parse("$_baseUrl/getSinglePost"),
       headers: <String, String>{"Content-Type": "application/json"},
       body: jsonEncode(
         {
-          "id": id["id"],
+          "id": id,
         },
       ),
     );
@@ -130,7 +130,7 @@ class CommentDataProvider {
       final post = await jsonDecode(response.body);
       return post;
     } else {
-      throw Exception("Could not fetch courses");
+      throw Exception("Could not fetch comments");
     }
   }
 }

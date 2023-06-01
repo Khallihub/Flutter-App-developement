@@ -22,7 +22,7 @@ class PostCommentLoading extends CommentState {
 }
 
 class PostCommentLoaded extends CommentState {
-  final List<dynamic> postDetails;
+  final Map<String, dynamic> postDetails;
   const PostCommentLoaded({required this.postDetails});
 
   @override
@@ -55,20 +55,22 @@ class LoadedPostComments extends CommentState {
 }
 
 class CommentLikedSuccess extends CommentState {
-  final List<String> likes;
+  final List<dynamic> likes;
+  final List<dynamic> dislikes;
 
-  const CommentLikedSuccess({required this.likes});
+  const CommentLikedSuccess({required this.likes, required this.dislikes});
   @override
-  List<dynamic> get props => [likes];
+  List<dynamic> get props => [likes, dislikes];
 }
 
 class CommentDisLikeSuccess extends CommentState {
-  final List<String> dislikes;
+  final List<dynamic> likes;
+  final List<dynamic> dislikes;
 
-  const CommentDisLikeSuccess({required this.dislikes});
+  const CommentDisLikeSuccess({required this.dislikes, required this.likes});
 
   @override
-  List<dynamic> get props => [dislikes];
+  List<dynamic> get props => [likes, dislikes];
 }
 
 class CommentedSuccess extends CommentState {
