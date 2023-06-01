@@ -14,6 +14,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (state is LoginLoading) return;
       emit(const LoginLoading());
       Future.delayed(const Duration(seconds: 5));
+
       try {
         LoginDetailsModel loginDetailsModel =
             await loginRepository.login(event.loginModel);

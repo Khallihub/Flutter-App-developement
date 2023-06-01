@@ -182,16 +182,16 @@ class _PostWidgetState extends State<PostWidget_2> {
                     IconButton(
                       onPressed: () {
                         GoRouter.of(context).pushNamed(
-                            MyAppRouteConstants.commentRoutName,
+                            MyAppRouteConstants.chatListRouteName,
                             pathParameters: {
-                              "id": widget.id,
-                              "username": widget.username,
-                              "name": widget.name,
-                              "title": widget.title,
-                              "description": widget.description,
-                              "avatarUrl": widget.avatarUrl,
-                              "date": widget.date,
-                              "imageUrl": widget.imageUrl,
+                              // "id": widget.id,
+                              // "username": widget.username,
+                              // "name": widget.name,
+                              // "title": widget.title,
+                              // "description": widget.description,
+                              // "avatarUrl": widget.avatarUrl,
+                              // "date": widget.date,
+                              // "imageUrl": widget.imageUrl,
                               // "likes": no_likes,
                               // "dislikes": no_dislikes,
                               // "comments": widget.comments
