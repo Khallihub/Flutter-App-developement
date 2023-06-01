@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:picstash/application/login_bloc/login_blocs.dart';
 import 'package:picstash/application/login_bloc/login_event.dart';
 import 'package:picstash/application/login_bloc/login_state.dart';
+import 'package:picstash/infrastructure/data_providers/login/login_data_provider.dart';
+import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
 import 'package:picstash/presentation/screens/home_screen.dart';
 import '../../domain/entities/login/login_model.dart';
 import '../../domain/value_objects/email_address.dart';
@@ -19,6 +21,16 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  LoginBloc loginBloc = LoginBloc(
+      loginRepository:
+          LoginRepository(loginDataProvider: const LoginDataProvider()));
+
+  @override
+  void initState() {
+    loginBloc.add(LoadLogin());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
@@ -28,7 +40,7 @@ class _LogInState extends State<LogIn> {
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("incorrect email or password"),
+              content: Text("invalid credentials or connection problem"),
             ),
           );
         }

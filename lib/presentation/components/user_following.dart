@@ -37,7 +37,7 @@ class _FollowingState extends State<Following> {
             ),
             const SizedBox(height: 2),
             Text(
-              widget.followers.location,
+              widget.followers.bio,
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             )
           ],
@@ -52,7 +52,6 @@ class _FollowingState extends State<Following> {
               icon: CustomIcons(src: CustomAssets.kChat),
               onPressed: () {},
             ),
-            
             IconButton(
               color: Colors.redAccent,
               icon: const Icon(Icons.remove_circle_outline_sharp, weight: 50),

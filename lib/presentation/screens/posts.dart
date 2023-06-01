@@ -23,10 +23,6 @@ class ShowPosts extends StatelessWidget {
             post: dummyPosts[index],
           );
         },
-        // Placeholder widget when list length exceeds available items
-        //  return Followers(
-        //     followers: userFollowers[index],
-        //   );
 
         separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemCount: dummyPosts.length);
