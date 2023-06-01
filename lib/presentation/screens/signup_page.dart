@@ -11,6 +11,7 @@ import 'package:picstash/domain/value_objects/password.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import '../../application/signup_bloc/sign_up_block.dart';
 import '../../application/signup_bloc/sign_up_state.dart';
+import 'error_page.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -52,11 +53,7 @@ class _MyRegisterState extends State<MyRegister> {
           ));
 
         default:
-          return const Scaffold(
-            body: Center(
-              child: Text("something went wrong"),
-            ),
-          );
+          return const ErrorPage();
       }
     });
   }
@@ -94,8 +91,6 @@ class _SignUpBodyState extends State<SignUpBody> {
       }
     }
   }
-
-  
 
   @override
   Widget build(BuildContext context) {

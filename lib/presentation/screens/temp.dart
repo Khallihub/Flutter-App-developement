@@ -79,14 +79,14 @@
 //   }
 // }
 
-import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
-const String clientId = 'YOUR_CLIENT_ID';
-const String apiUrl = 'https://api.imgur.com/3/image';
+import '../../domain/constants.dart';
 
 class ImageUploader extends StatefulWidget {
   const ImageUploader({super.key});
@@ -99,36 +99,46 @@ class _ImageUploaderState extends State<ImageUploader> {
   File? _imageFile;
 
   Future<void> _pickImage() async {
-    print("whate");
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-    print("fgf");
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
+
     if (result != null) {
-      setState(() {
-        _imageFile = File(result.files.single.path!);
-      });
+      Uint8List? uploadfile = result.files.single.bytes;
+      String filename = basename(result.files.single.name);
+      uploadImage(uploadfile, filename);
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_imageFile == null) {
-      return;
+  Future<String?> uploadImage(Uint8List? file, String filename) async {
+    if (file != null) {
+      Dio dio = Dio();
+
+      FormData formData = FormData.fromMap({
+        "key": Constants.apiKey,
+        "image": await MultipartFile.fromBytes(
+          file,
+          filename: filename,
+        ),
+        "name": filename,
+      });
+      var response = await dio.post(
+        "https://api.imgbb.com/1/upload",
+        data: formData,
+        onSendProgress: ((count, total) {
+          stdout.write("$count , $total");
+        }),
+      );
+      String avatarUrl = response.data["data"]["url"];
+      return avatarUrl;
+    } else {
+      return null;
     }
-    final bytes = await _imageFile!.readAsBytes();
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Authorization': 'Client-ID $clientId',
-      },
-      body: {
-        'image': base64Encode(bytes),
-      },
-    );
-    final responseData = jsonDecode(response.body);
-    final imageUrl = responseData['data']['link'];
-    // Handle the image URL here
-    print(imageUrl);
   }
 
   @override
@@ -147,12 +157,14 @@ class _ImageUploaderState extends State<ImageUploader> {
                   _imageFile!,
                   height: 300,
                 ),
+              // ElevatedButton(
+              //   onPressed: _pickImage,
+              //   child: const Text('Pick Image'),
+              // ),
               ElevatedButton(
-                onPressed: _pickImage,
-                child: const Text('Pick Image'),
-              ),
-              ElevatedButton(
-                onPressed: _uploadImage,
+                onPressed: () async {
+                  await _pickImage();
+                },
                 child: const Text('Upload Image'),
               ),
             ],

@@ -8,27 +8,28 @@ abstract class UserProfileEvent extends Equatable {
 }
 
 class UserProfileLoadEvent extends UserProfileEvent {
-  final String userId;
+  final String userEmail;
 
-  const UserProfileLoadEvent(this.userId);
+  const UserProfileLoadEvent({required this.userEmail});
 
   @override
-  List<Object?> get props => [userId];
+  List<Object?> get props => [userEmail];
 }
 
 class UserProfileUpdateEvent extends UserProfileEvent {
-  final String username;
+  final String email;
+  final String userName;
   final String bio;
-  final String profileImageUrl;
+  final String password;
 
-  const UserProfileUpdateEvent({
-    required this.username,
-    required this.bio,
-    required this.profileImageUrl,
-  });
+  const UserProfileUpdateEvent(
+      {required this.email,
+      required this.userName,
+      required this.bio,
+      required this.password});
 
   @override
-  List<Object?> get props => [username, bio, profileImageUrl];
+  List<Object?> get props => [email, userName, bio, password];
 }
 
 class UserProfileLogoutEvent extends UserProfileEvent {}

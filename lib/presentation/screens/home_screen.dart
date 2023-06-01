@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
             const PostScreen(),
             const ErrorPage(),
             const AddPostWidget(),
-            ImageUploader(),
+            const ImageUploader(),
             UserProfileScreen(
               userProfile: snapshot.data!,
               isOwner: true,
