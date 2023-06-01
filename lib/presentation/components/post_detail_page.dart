@@ -38,7 +38,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
         padding: const EdgeInsets.symmetric(horizontal: 14),
         children: [
           Hero(
-            tag: widget.post.id,
+            tag: widget.post.id!,
             child: Container(
               height: 400,
               alignment: Alignment.topLeft,

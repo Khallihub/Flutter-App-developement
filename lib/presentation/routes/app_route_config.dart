@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:picstash/presentation/screens/edit_profile_screen.dart';
 import 'package:picstash/presentation/screens/screens.dart';
 import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/entities/dummy_profile_data.dart';
@@ -8,6 +9,7 @@ import '../../domain/repositories/post_repository.dart';
 import '../../infrastructure/data_providers/post_data_provider.dart';
 import '../screens/comment_screen2.dart';
 import '../screens/login_page.dart';
+import '../screens/not_implemented_screen.dart';
 import '../screens/signup_page.dart';
 import '../screens/user_profile_screen.dart';
 import 'app_route_constants.dart';
@@ -19,8 +21,7 @@ class MyAppRouter {
         GoRoute(
           path: '/',
           pageBuilder: (context, state) {
-            return MaterialPage(
-                child: isLoggedIn ? const Home() : const LogIn());
+            return MaterialPage(child: isLoggedIn ? const Home() : const LogIn());
           },
         ),
         GoRoute(
@@ -91,6 +92,20 @@ class MyAppRouter {
             ));
           },
         ),
+
+        GoRoute(
+            name: MyAppRouteConstants.editProfileRouteName,
+            path: "/edit_profile",
+            pageBuilder: ((context, state) {
+              return const MaterialPage(child: EditProfileScreen());
+            })),
+        GoRoute(
+          name: MyAppRouteConstants.notImplemented,
+          path: "/not_implemented",
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: NotImplementedYet());
+          },
+        )
         // GoRoute(
         //   name: MyAppRouteConstants.contactUsRouteName,
         //   path: '/contact_us',

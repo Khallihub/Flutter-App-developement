@@ -64,10 +64,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(loginRepository: loginRepository),
         ),
-        BlocProvider(
+        BlocProvider<SignUpBloc>(
           create: (context) => SignUpBloc(signUpRepository: signUpRepository),
         ),
-        BlocProvider(
+        BlocProvider<UserProfileBloc>(
           create: (context) => UserProfileBloc(
               userProfileRepository: UserProfileRepository(
                   dataProvider: UserProfileDataProvider())),

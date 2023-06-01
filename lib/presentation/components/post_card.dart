@@ -32,7 +32,8 @@ class _PostCardState extends State<PostCard> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(
-                          image: AssetImage(widget.post.userImage), fit: BoxFit.cover)),
+                          image: AssetImage(widget.post.userImage),
+                          fit: BoxFit.cover)),
                 ),
                 const SizedBox(width: 10),
                 Column(
@@ -66,14 +67,13 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 const SizedBox(width: 5),
-                
               ],
             ),
             const SizedBox(height: 10),
             Text(widget.post.description),
             const SizedBox(height: 5),
             Hero(
-              tag: widget.post.id,
+              tag: widget.post.id!,
               child: Container(
                 height: 140,
                 width: double.maxFinite,
@@ -81,7 +81,8 @@ class _PostCardState extends State<PostCard> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                        image: AssetImage(widget.post.sourceURL), fit: BoxFit.cover)),
+                        image: AssetImage(widget.post.sourceURL),
+                        fit: BoxFit.cover)),
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   padding: const EdgeInsets.all(5),

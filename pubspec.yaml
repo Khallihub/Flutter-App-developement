@@ -48,7 +48,8 @@ dependencies:
   convex_bottom_bar: ^3.2.0
   flutter_svg: ^2.0.1
   flutter_staggered_animations: ^1.1.1
-
+  flutter_speed_dial: ^7.0.0
+  flutter_popup_menu_button: ^0.0.1+5
 
 dev_dependencies:
   flutter_test:
@@ -77,7 +78,6 @@ flutter:
     - lib/assets/icons/
     - lib/assets/images/
   #   - images/a_dot_ham.jpeg
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

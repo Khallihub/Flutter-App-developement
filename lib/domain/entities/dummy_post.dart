@@ -1,21 +1,22 @@
 import '../../assets/constants/assets.dart';
+
 class Post {
-  final id;
-  final title;
-  final userImage;
-  final description;
-  final author;
-  final createdAt;
-  final likes;
-  final comments;
-  final dislikes;
-  final categories;
-  final shareCount;
-  final sourceURL;
-  final location;
+  final String? id;
+  final String title;
+  final String userImage;
+  final String description;
+  final String author;
+  final String createdAt;
+  final double likes;
+  final double comments;
+  final double? dislikes;
+  final String? categories;
+  final String? shareCount;
+  final String sourceURL;
+  final String location;
 
   Post({
-    this.id, 
+    this.id,
     required this.location,
     required this.userImage,
     required this.title,
@@ -24,12 +25,13 @@ class Post {
     required this.createdAt,
     required this.likes,
     required this.comments,
-     this.dislikes,
-     this.categories,
+    this.dislikes,
+    this.categories,
     this.shareCount,
     required this.sourceURL,
   });
 }
+
 List<Post> dummyPosts = [
   Post(
       id: '1',
@@ -56,4 +58,3 @@ List<Post> dummyPosts = [
       likes: 5.3,
       comments: 10.4),
 ];
-

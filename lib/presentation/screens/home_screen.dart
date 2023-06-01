@@ -1,11 +1,13 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:picstash/domain/entities/dummy_profile_data.dart';
 import 'package:picstash/presentation/screens/post_screen.dart';
 import 'package:picstash/presentation/screens/user_profile_screen.dart';
 
 import '../../assets/constants/assets.dart';
+import '../../domain/entities/login/login_details.dart';
+import '../../domain/entities/user_profile/user_profile.dart';
+import '../../infrastructure/data_providers/db/db.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,52 +18,75 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int selectedIndex = 0;
-  List<dynamic> pages = [
-    const PostScreen(),
-    Container(),
-    Container(),
-    Container(),
-    UserProfileScreen(
-      userProfile: DummyProfile.getUserProfile(),
-      isOwner: false,
-    ),
-  ];
+
+  Future<UserProfile> getProfile() async {
+    LoginCredentials loginCredentials = LoginCredentials();
+    LoginDetailsModel? loginDetailsModel =
+        await loginCredentials.getLoginCredentials();
+    UserProfile userProfile = UserProfile(
+        id: loginDetailsModel!.localUserModel.id,
+        name: loginDetailsModel.localUserModel.name,
+        email: loginDetailsModel.localUserModel.email.toString(),
+        userName: loginDetailsModel.localUserModel.username,
+        avatar: loginDetailsModel.localUserModel.imageUrl,
+        bio: loginDetailsModel.localUserModel.bio,
+        role: loginDetailsModel.role);
+    return userProfile;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pages[selectedIndex],
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Colors.grey[900],
-        activeColor: Colors.black,
-        initialActiveIndex: selectedIndex,
-        elevation: 0,
-        style: TabStyle.fixedCircle,
-        items: [
-          TabItem(
-              icon: SvgPicture.asset(CustomAssets.kHome),
-              title: '',
-              isIconBlend: true),
-          TabItem(
-              icon: SvgPicture.asset(CustomAssets.kSearch),
-              title: '',
-              isIconBlend: true),
-          const TabItem(icon: Icons.add, title: '', isIconBlend: true),
-          TabItem(
-              icon: SvgPicture.asset(CustomAssets.kChat),
-              title: '',
-              isIconBlend: true),
-          TabItem(
-              icon: SvgPicture.asset(CustomAssets.kUserIcon),
-              title: '',
-              isIconBlend: true),
-        ],
-        onTap: (int i) {
-          setState(() {
-            selectedIndex = i;
-          });
-        },
-      ),
+    return FutureBuilder(
+      future: getProfile(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<dynamic> pages = [
+            const PostScreen(),
+            Container(),
+            Container(),
+            Container(),
+            UserProfileScreen(
+              userProfile: snapshot.data!,
+              isOwner: true,
+            ),
+          ];
+          return Scaffold(
+            body: pages[selectedIndex],
+            bottomNavigationBar: ConvexAppBar(
+              backgroundColor: Colors.grey[900],
+              activeColor: Colors.black,
+              initialActiveIndex: selectedIndex,
+              elevation: 0,
+              style: TabStyle.fixedCircle,
+              items: [
+                TabItem(
+                    icon: SvgPicture.asset(CustomAssets.kHome),
+                    title: '',
+                    isIconBlend: true),
+                TabItem(
+                    icon: SvgPicture.asset(CustomAssets.kSearch),
+                    title: '',
+                    isIconBlend: true),
+                const TabItem(icon: Icons.add, title: '', isIconBlend: true),
+                TabItem(
+                    icon: SvgPicture.asset(CustomAssets.kChat),
+                    title: '',
+                    isIconBlend: true),
+                TabItem(
+                    icon: SvgPicture.asset(CustomAssets.kUserIcon),
+                    title: '',
+                    isIconBlend: true),
+              ],
+              onTap: (int i) {
+                setState(() {
+                  selectedIndex = i;
+                });
+              },
+            ),
+          );
+        }
+        return const Text("error");
+      },
     );
   }
 }

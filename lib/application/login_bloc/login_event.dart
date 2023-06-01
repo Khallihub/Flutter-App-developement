@@ -18,3 +18,8 @@ class LoginButtonPressed extends LoginEvent {
   @override
   List<Object?> get props => [loginModel];
 }
+
+class LogOutButtonPressed extends LoginEvent {
+  @override
+  List<Object?> get props => [];
+}

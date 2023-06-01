@@ -37,7 +37,7 @@ class _FollowingState extends State<Following> {
             ),
             const SizedBox(height: 2),
             Text(
-              widget.followers.location,
+              widget.followers.bio,
               style: const TextStyle(fontSize: 12, color: Colors.grey),
             )
           ],
