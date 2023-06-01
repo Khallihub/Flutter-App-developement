@@ -25,9 +25,10 @@ class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PostBloc, PostState>(
-        bloc: postBloc,
+        bloc: BlocProvider.of<PostBloc>(context),
         builder: (BuildContext context, state) {
           if (state is PostLoadingState) {
+            BlocProvider.of<PostBloc>(context).add(const PostLoadEvent());
             return Center(
               child: CircularProgressIndicator(
                 color: Colors.blueGrey[50],
