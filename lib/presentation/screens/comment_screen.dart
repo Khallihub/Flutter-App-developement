@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:picstash/application/comment_bloc/comment_blocs.dart';
+import 'package:picstash/application/comment_bloc/comment_state.dart';
 import 'package:unicons/unicons.dart';
-import '../../application/post_bloc/post_bloc.dart';
+import '../../application/comment_bloc/comment_event.dart';
 import '../components/comment_box.dart';
 
 class CommentScreen extends StatefulWidget {
@@ -37,18 +40,8 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenWidgetState extends State<CommentScreen> {
-  late PostBloc postBloc;
-
   bool more = false;
-  // final PostBloc postBloc =
-  //     PostBloc(postRepository: PostRepository(PostDataProvider()));
   final TextEditingController _commentController = TextEditingController();
-  @override
-  void initState() {
-    postBloc = BlocProvider.of<PostBloc>(context);
-    postBloc.add(SinglePostLoadedEvent(widget.id));
-    super.initState();
-  }
 
   List<Widget> commentBuilder(List comments) {
     List<Widget> commentList = [];
@@ -61,62 +54,104 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
     return commentList;
   }
 
+  List<String> likes = [];
+  List<String> dislikes = [];
+  List<dynamic> comments = [];
+  var res;
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PostBloc, PostState>(
-      builder: (context, state) {
-        var likes = [];
-        var dislikes = [];
-        var comments = [];
-        for (var obj in state.props) {
-          for (var i in obj[0]) {
-            likes.add(i);
-          }
-          for (var i in obj[1]) {
-            dislikes.add(i);
-          }
-          for (var i in obj[2]) {
-            comments.add(i);
-          }
-        }
-        var res = commentBuilder(comments);
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Comments'),
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(UniconsLine.arrow_left),
+    return BlocConsumer<CommentBloc, CommentState>(
+      listener: ((context, state) {
+        if (state is CommentInitialState) {
+          BlocProvider.of<CommentBloc>(context)
+              .add(LoadPostCommentEvent(id: widget.id));
+        } else if (state is CommentFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  "something went wrong, unable to perform the selected operation"),
             ),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  contentPadding: const EdgeInsets.all(0),
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(widget.avatarUrl),
-                  ),
-                  title: Text(widget.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontSize: 15, fontWeight: FontWeight.w600)),
-                  subtitle: Text(widget.username,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey)),
+          );
+        } else if (state is CommentLikedSuccess) {
+          likes = [];
+          for (var obj in state.props) {
+            for (var i in obj[0]) {
+              likes.add(i);
+            }
+          }
+        } else if (state is CommentDisLikeSuccess) {
+          dislikes = [];
+          for (var obj in state.props) {
+            for (var i in obj[0]) {
+              dislikes.add(i);
+            }
+          }
+        } else if (state is CommentedSuccess) {
+          comments = [];
+          for (var obj in state.props) {
+            for (var i in obj[0]) {
+              comments.add(i);
+            }
+          }
+        } else if (state is PostCommentLoaded) {
+          likes = [];
+          dislikes = [];
+          comments = [];
+          for (var obj in state.props) {
+            for (var i in obj[0]) {
+              likes.add(i);
+            }
+            for (var i in obj[1]) {
+              dislikes.add(i);
+            }
+            for (var i in obj[2]) {
+              comments.add(i);
+            }
+          }
+          res = commentBuilder(comments);
+        }
+      }),
+      builder: (context, state) {
+        switch (state.runtimeType) {
+          case CommentLoadingState:
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          case PostCommentLoaded:
+          case LoadedPostComments:
+          case CommentedSuccess:
+          case CommentLikedSuccess:
+          case CommentDisLikeSuccess:
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Comments'),
+                leading: IconButton(
+                  onPressed: () {
+                    GoRouter.of(context).pop(context);
+                  },
+                  icon: const Icon(UniconsLine.arrow_left),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("test", //widget.comments[0][0],
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.all(0),
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(widget.avatarUrl),
+                      ),
+                      title: Text(widget.name,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                  fontSize: 15, fontWeight: FontWeight.w600)),
+                      subtitle: Text(widget.username,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium!
@@ -124,110 +159,143 @@ class _CommentScreenWidgetState extends State<CommentScreen> {
                                   fontSize: 16,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.grey)),
-                    ],
-                  ),
-                ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    widget.imageUrl,
-                    height: 200,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("test", //widget.comments[0][0],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey)),
+                        ],
+                      ),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                        widget.imageUrl,
+                        height: 200,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  BlocProvider.of<CommentBloc>(context).add(
+                                      AddLike(
+                                          id: widget.id,
+                                          userName: widget.username));
+                                },
+                                icon: likes.contains(widget.username)
+                                    ? const Icon(
+                                        UniconsLine.thumbs_up,
+                                        color: Colors.blue,
+                                      )
+                                    : Icon(UniconsLine.thumbs_up,
+                                        color:
+                                            Theme.of(context).iconTheme.color)),
+                            IconButton(
+                                onPressed: () {
+                                  BlocProvider.of<CommentBloc>(context).add(
+                                      AddDisLike(widget.id, widget.username));
+                                },
+                                icon: dislikes.contains(widget.username)
+                                    ? const Icon(
+                                        UniconsLine.thumbs_down,
+                                        color: Colors.red,
+                                      )
+                                    : const Icon(
+                                        UniconsLine.thumbs_down,
+                                      ))
+                          ],
+                        ),
                         IconButton(
-                            onPressed: () {
-                              postBloc.add(PostCommentLikedEvent(
-                                  widget.id, widget.username));
-                              postBloc.add(SinglePostLoadedEvent(widget.id));
-                            },
-                            icon: likes.contains(widget.username)
-                                ? const Icon(
-                                    UniconsLine.thumbs_up,
-                                    color: Colors.blue,
-                                  )
-                                : Icon(UniconsLine.thumbs_up,
-                                    color: Theme.of(context).iconTheme.color)),
-                        IconButton(
-                            onPressed: () {
-                              postBloc.add(PostCommentDislikedEvent(
-                                  widget.id, widget.username));
-                              postBloc.add(SinglePostLoadedEvent(widget.id));
-                            },
-                            icon: dislikes.contains(widget.username)
-                                ? const Icon(
-                                    UniconsLine.thumbs_down,
-                                    color: Colors.red,
-                                  )
-                                : const Icon(
-                                    UniconsLine.thumbs_down,
-                                  ))
+                            onPressed: () {},
+                            icon: Icon(
+                              UniconsLine.share_alt,
+                              color: Theme.of(context).iconTheme.color,
+                            ))
                       ],
                     ),
+                    Column(
+                      children: res,
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              bottomNavigationBar: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(widget.avatarUrl),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _commentController,
+                        decoration: InputDecoration(
+                            hintText: 'Add a comment',
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey)),
+                      ),
+                    ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          var comment = _commentController.text;
+                          if (comment != "") {
+                            BlocProvider.of<CommentBloc>(context).add(
+                                AddCommentEvent(
+                                    id: widget.id,
+                                    username: widget.username,
+                                    comment: comment));
+                            _commentController.text = "";
+                          }
+                        },
                         icon: Icon(
-                          UniconsLine.share_alt,
+                          UniconsLine.arrow_right,
                           color: Theme.of(context).iconTheme.color,
                         ))
                   ],
                 ),
-                Column(
-                  children: res,
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(widget.avatarUrl),
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(
-                        hintText: 'Add a comment',
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.grey)),
-                  ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      var comment = _commentController.text;
-                      if (comment != "") {
-                        postBloc.add(PostCommentedEvent(
-                            widget.id, widget.username, comment));
-                        _commentController.text = "";
-                        postBloc.add(SinglePostLoadedEvent(widget.id));
-                      }
-                    },
-                    icon: Icon(
-                      UniconsLine.arrow_right,
-                      color: Theme.of(context).iconTheme.color,
-                    ))
-              ],
-            ),
-          ),
-        );
+              ),
+            );
+          default:
+            return Scaffold(
+              body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Center(child: Text("something wrong happend")),
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            GoRouter.of(context).pop();
+                          },
+                          child: const Text("Go Back")),
+                    )
+                  ]),
+            );
+        }
       },
     );
   }

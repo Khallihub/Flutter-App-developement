@@ -52,7 +52,6 @@ class _FollowingState extends State<Following> {
               icon: CustomIcons(src: CustomAssets.kChat),
               onPressed: () {},
             ),
-            
             IconButton(
               color: Colors.redAccent,
               icon: const Icon(Icons.remove_circle_outline_sharp, weight: 50),
