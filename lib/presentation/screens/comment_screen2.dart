@@ -85,6 +85,7 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
             dislikes = state.props[1];
           } else if (state is CommentedSuccess) {
             res = state.props[0];
+            commentWidget = commentBuilder(res);
           } else if (state is PostCommentLoaded) {
             likes = state.props[0]["likes"];
             dislikes = state.props[0]["dislikes"];
