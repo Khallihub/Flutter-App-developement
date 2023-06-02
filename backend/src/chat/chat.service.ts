@@ -47,13 +47,7 @@ export class ChatService {
     return chat;
   }
 
-  async updateMessage(data: {
-    user1: string;
-    user2: string;
-    sender: string;
-    time: string;
-    message: string;
-  }) {
+  async updateMessage(data) {
     const users = [data.user1, data.user2].sort();
     const chat = await this.chatModel.findOne({ usersName: users });
     const messages = chat.messages;
@@ -65,13 +59,15 @@ export class ChatService {
     )[0];
     const newMessage = [oldMessage[0], data.sender, data.message];
     unchangedMessages.push(newMessage);
+    const sortedMessages = unchangedMessages.sort((a, b) => a[0].localeCompare(b[0]));
     const updatedChat = await this.chatModel.findOneAndUpdate(
       { usersName: users },
-      { messages: unchangedMessages },
+      { messages: sortedMessages },
       { new: true },
     );
     return updatedChat;
   }
+  
 
   async Message(data: {
     user1: string;
