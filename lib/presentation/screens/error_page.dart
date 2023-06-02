@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class NotImplementedYet extends StatefulWidget {
-  const NotImplementedYet({super.key});
+class ErrorPage extends StatefulWidget {
+  const ErrorPage({super.key});
 
   @override
-  State<NotImplementedYet> createState() => _NotImplementedYetState();
+  State<ErrorPage> createState() => _ErrorPageState();
 }
 
-class _NotImplementedYetState extends State<NotImplementedYet> {
+class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +16,11 @@ class _NotImplementedYetState extends State<NotImplementedYet> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text("not implemented yet!"),
+          const Text("something went wrong"),
           TextButton(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.blue,
-                textStyle: const TextStyle(),
+                foregroundColor: Colors.green[200],
+                textStyle: const TextStyle(color: Colors.black),
               ),
               onPressed: () {
                 GoRouter.of(context).pop();

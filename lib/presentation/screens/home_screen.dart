@@ -1,6 +1,8 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:picstash/presentation/screens/error_page.dart';
+import 'package:picstash/presentation/screens/post_adding.dart';
 import 'package:picstash/presentation/screens/post_screen.dart';
 import 'package:picstash/presentation/screens/user_profile_screen.dart';
 
@@ -42,9 +44,9 @@ class _HomeState extends State<Home> {
         if (snapshot.hasData) {
           List<dynamic> pages = [
             const PostScreen(),
-            Container(),
-            Container(),
-            Container(),
+            const ErrorPage(),
+            const AddPostWidget(),
+            const ErrorPage(),
             UserProfileScreen(
               userProfile: snapshot.data!,
               isOwner: true,

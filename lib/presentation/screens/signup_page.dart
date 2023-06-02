@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -96,26 +97,28 @@ class _SignUpBodyState extends State<SignUpBody> {
     }
   }
 
-  // Future<void> _uploadAvatarImage() async {
-  //   // Perform the upload logic here, such as sending the photo to a server
-  //   // and getting back the URL or identifier for accessing the photo later
-  //   // Replace this code with your actual implementation
+  Future<String> uploadImage(File imageFile, String apiKey) async {
+    const url = 'https://freeimage.host/api/1/upload';
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+    request.fields['key'] = apiKey;
+    request.fields['format'] = 'json';
+    request.fields['action'] = 'upload';
+    request.files
+        .add(await http.MultipartFile.fromPath('source', imageFile.path));
 
-  //   // Simulating the upload process with a delay
-  //   await Future.delayed(const Duration(seconds: 2));
+    final response = await request.send();
+    final responseJson = json.decode(await response.stream.bytesToString());
 
-  //   // Example response from the server
-  //   const uploadedImageUrl = 'https://example.com/uploads/avatar123.jpg';
-
-  //   setState(() {
-  //     _avatarImageUrl = uploadedImageUrl;
-  //   });
-  // }
+    if (response.statusCode == 200 && responseJson['status'] == 'success') {
+      return responseJson['image']['url'];
+    } else {
+      throw Exception('Failed to upload image');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Center(
             child: Padding(

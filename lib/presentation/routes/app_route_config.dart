@@ -11,7 +11,7 @@ import '../components/chat/search_screen.dart';
 import '../screens/chat_list_screen.dart';
 import '../screens/comment_screen2.dart';
 import '../screens/login_page.dart';
-import '../screens/not_implemented_screen.dart';
+import '../screens/error_page.dart';
 import '../screens/signup_page.dart';
 import '../screens/user_profile_screen.dart';
 import 'app_route_constants.dart';
@@ -59,7 +59,7 @@ class MyAppRouter {
               '/comment/:id/:username/:name/:title/:description/:avatarUrl/:date/:imageUrl',
           pageBuilder: (context, state) {
             return MaterialPage(
-                child: CommentScreen_2(
+                child: CommentScreen2(
               id: state.pathParameters['id'] as String,
               avatarUrl: state.pathParameters['avatarUrl'] as String,
               username: state.pathParameters['username'] as String,
@@ -99,7 +99,7 @@ class MyAppRouter {
           name: MyAppRouteConstants.notImplemented,
           path: "/not_implemented",
           pageBuilder: (context, state) {
-            return const MaterialPage(child: NotImplementedYet());
+            return const MaterialPage(child: ErrorPage());
           },
         ),
         GoRoute(

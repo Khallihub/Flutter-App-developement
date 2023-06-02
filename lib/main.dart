@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picstash/application/login_bloc/login_blocs.dart';
 import 'package:picstash/application/signup_bloc/sign_up_block.dart';
-import 'package:picstash/domain/entities/dummy_profile_data.dart';
 import 'package:picstash/infrastructure/data_providers/db/db.dart';
 import 'package:picstash/infrastructure/data_providers/signup/signup_data_provider.dart';
 import 'package:picstash/infrastructure/repository/comment/comment_repository.dart';
 import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
 import 'package:picstash/infrastructure/repository/signup_repository/sign_up_repository.dart';
 import 'package:picstash/presentation/components/theme.dart';
-import 'package:picstash/presentation/screens/user_profile_screen.dart';
 import 'application/comment_bloc/comment_blocs.dart';
 import 'application/bloc_observer.dart';
 import 'application/chat_bloc/chat_bloc.dart';
@@ -95,10 +93,6 @@ class MyApp extends StatelessWidget {
           create: (context) => UserProfileBloc(
               userProfileRepository: UserProfileRepository(
                   dataProvider: UserProfileDataProvider())),
-          child: UserProfileScreen(
-            userProfile: DummyProfile.getUserProfile(),
-            isOwner: false,
-          ),
         ),
       ],
       child: MaterialApp.router(

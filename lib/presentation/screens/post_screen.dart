@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picstash/infrastructure/data_providers/db/db.dart';
+import 'package:picstash/presentation/screens/error_page.dart';
 
 import '../../application/post_bloc/post_bloc.dart';
 import '../../domain/entities/login/login_details.dart';
@@ -36,7 +37,7 @@ class _PostScreenState extends State<PostScreen> {
             return Scaffold(
                 body: ListView.builder(
               itemCount: posts.length,
-              itemBuilder: (_, idx) => PostWidget_2(
+              itemBuilder: (_, idx) => PostWidget2(
                 id: posts[idx].id,
                 avatarUrl: posts[idx].authorAvatar,
                 username: posts[idx].author,
@@ -50,10 +51,8 @@ class _PostScreenState extends State<PostScreen> {
                 title: posts[idx].title,
               ),
             ));
-          } else if (state is PostOperationFailure) {
-            return const Scaffold(body: Center(child: Text('Error')));
           } else {
-            return const SizedBox();
+            return const ErrorPage();
           }
           //
         });

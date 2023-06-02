@@ -13,15 +13,18 @@ class CommentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        color: const Color.fromARGB(255, 255, 250, 250),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10)),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  height: 35,
-                  width: 35,
+                  height: 30,
+                  width: 30,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: const DecorationImage(

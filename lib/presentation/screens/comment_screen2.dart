@@ -10,7 +10,7 @@ import '../../application/comment_bloc/comment_state.dart';
 import '../components/comment_box.dart';
 import '../routes/app_route_constants.dart';
 
-class CommentScreen_2 extends StatefulWidget {
+class CommentScreen2 extends StatefulWidget {
   final String id;
   final String username;
   final String name;
@@ -23,7 +23,7 @@ class CommentScreen_2 extends StatefulWidget {
   // final int dislikes;
   // final comments;
 
-  const CommentScreen_2({
+  const CommentScreen2({
     Key? key,
     required this.id,
     required this.avatarUrl,
@@ -39,10 +39,10 @@ class CommentScreen_2 extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CommentScreen_2> createState() => _CommentScreenWidgetState();
+  State<CommentScreen2> createState() => _CommentScreenWidgetState();
 }
 
-class _CommentScreenWidgetState extends State<CommentScreen_2> {
+class _CommentScreenWidgetState extends State<CommentScreen2> {
   bool more = false;
   final TextEditingController _commentController = TextEditingController();
 
@@ -112,13 +112,14 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
             case CommentedSuccess:
             case CommentLikedSuccess:
             case CommentDisLikeSuccess:
+              DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+                  int.parse(widget.date) * 1000);
               return Scaffold(
-                backgroundColor: Colors.white,
                 appBar: AppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.grey[900],
                   elevation: 0,
                   leading: IconButton(
-                      color: Colors.black,
+                      color: Colors.grey[200],
                       onPressed: () {
                         GoRouter.of(context).pop(context);
                       },
@@ -133,14 +134,12 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                         height: 400,
                         alignment: Alignment.topLeft,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            image: const DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                                image: NetworkImage(widget.imageUrl),
                                 fit: BoxFit.cover)),
                       ),
                     ),
-                    const SizedBox(height: 10),
                     const SizedBox(height: 30),
                     Row(
                       children: [
@@ -149,9 +148,8 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                           width: 35,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              image: const DecorationImage(
-                                  image: NetworkImage(
-                                      'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
+                              image: DecorationImage(
+                                  image: NetworkImage(widget.avatarUrl),
                                   fit: BoxFit.cover)),
                         ),
                         const SizedBox(width: 10),
@@ -167,10 +165,10 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              '${widget.description} • thus ',
+                              '${widget.username} •  ${postDate.year} - ${postDate.month} - ${postDate.day}',
                               style: const TextStyle(
                                   fontSize: 12, color: Colors.grey),
-                            )
+                            ),
                           ],
                         ),
                         const Spacer(),
@@ -179,7 +177,9 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Text(widget.description),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(widget.description)),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -200,12 +200,12 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                                   id: widget.id, userName: widget.username));
                             },
                             icon: const Icon(UniconsLine.thumbs_up),
-                            color: Colors.black,
+                            color: Colors.white,
                           ),
                         ),
                         Text(
                           "${likes.length}",
-                          style: const TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.white),
                         ),
                         IconButton(
                           onPressed: () {
@@ -213,11 +213,11 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                                 .add(AddDisLike(widget.id, widget.username));
                           },
                           icon: const Icon(UniconsLine.thumbs_down),
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         Text(
                           '${dislikes.length}',
-                          style: const TextStyle(color: Colors.black),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
@@ -225,20 +225,61 @@ class _CommentScreenWidgetState extends State<CommentScreen_2> {
                     const Text(
                       "All Comments",
                       style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    Column(
-                      children: commentWidget
-                          .map((eachWidget) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical:
-                                        5), // Add 10 pixels of vertical padding
-                                child: eachWidget,
-                              ))
-                          .toList(),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: ((context, index) {
+                        return Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[700],
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(children: [
+                                    Container(
+                                      height: 30,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  widget.avatarUrl),
+                                              fit: BoxFit.cover)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          widget.name,
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          '${widget.username} • ${postDate.year} - ${postDate.month} - ${postDate.day} ',
+                                          style: const TextStyle(
+                                              fontSize: 12, color: Colors.grey),
+                                        )
+                                      ],
+                                    ),
+                                  ])
+                                ]));
+                      }),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 10),
+                      itemCount: 2,
                     ),
                     Expanded(
                       child: Container(

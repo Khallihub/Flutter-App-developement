@@ -54,18 +54,6 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
                 const Spacer(),
-                Container(
-                  height: 25,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.grey.withOpacity(0.1)),
-                  child: Text(
-                    widget.post.title,
-                    style: const TextStyle(fontSize: 14, color: Colors.blue),
-                  ),
-                ),
                 const SizedBox(width: 5),
               ],
             ),
