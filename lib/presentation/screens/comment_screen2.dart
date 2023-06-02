@@ -1,14 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:picstash/presentation/screens/error_page.dart';
 import 'package:unicons/unicons.dart';
-
 import '../../application/comment_bloc/comment_blocs.dart';
 import '../../application/comment_bloc/comment_event.dart';
 import '../../application/comment_bloc/comment_state.dart';
-import '../components/comment_box.dart';
-import '../routes/app_route_constants.dart';
 
 class CommentScreen2 extends StatefulWidget {
   final String id;
@@ -19,9 +16,6 @@ class CommentScreen2 extends StatefulWidget {
   final String avatarUrl;
   final String date;
   final String imageUrl;
-  // final int likes;
-  // final int dislikes;
-  // final comments;
 
   const CommentScreen2({
     Key? key,
@@ -30,9 +24,6 @@ class CommentScreen2 extends StatefulWidget {
     required this.username,
     required this.date,
     required this.imageUrl,
-    // required this.likes,
-    // required this.dislikes,
-    // required this.comments,
     required this.name,
     required this.title,
     required this.description,
@@ -46,21 +37,9 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
   bool more = false;
   final TextEditingController _commentController = TextEditingController();
 
-  List<Widget> commentBuilder(List comments) {
-    List<Widget> commentList = [];
-    for (int i = 0; i < comments.length; i += 1) {
-      commentList.add(CommentBox(
-        username: comments[i][0],
-        comment: comments[i][1],
-      ));
-    }
-    return commentList;
-  }
-
   List<dynamic> likes = [];
   List<dynamic> dislikes = [];
   List<dynamic> res = [];
-  List<Widget> commentWidget = [];
 
   @override
   Widget build(BuildContext context) {
@@ -85,12 +64,10 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
             dislikes = state.props[1];
           } else if (state is CommentedSuccess) {
             res = state.props[0];
-            commentWidget = commentBuilder(res);
           } else if (state is PostCommentLoaded) {
             likes = state.props[0]["likes"];
             dislikes = state.props[0]["dislikes"];
             res = state.props[0]["comments"];
-            commentWidget = commentBuilder(res);
           }
         }),
         builder: (context, state) {
@@ -121,7 +98,7 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
                   leading: IconButton(
                       color: Colors.grey[200],
                       onPressed: () {
-                        GoRouter.of(context).pop(context);
+                        GoRouter.of(context).pop();
                       },
                       icon: const Icon(UniconsLine.arrow_left)),
                 ),
@@ -230,65 +207,74 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: ((context, index) {
-                        return Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.grey[700],
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(children: [
-                                    Container(
-                                      height: 30,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  widget.avatarUrl),
-                                              fit: BoxFit.cover)),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          widget.name,
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          '${widget.username} • ${postDate.year} - ${postDate.month} - ${postDate.day} ',
-                                          style: const TextStyle(
-                                              fontSize: 12, color: Colors.grey),
-                                        ),
-                                        Text(
-                                          res[index],
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white),
-                                        )
-                                      ],
-                                    ),
-                                  ])
-                                ]));
-                      }),
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 10),
-                      itemCount: 2,
+                    SizedBox(
+                      height: 200,
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: ((context, index) {
+                          return Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[700],
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [
+                                      Container(
+                                        height: 30,
+                                        width: 30,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            image: DecorationImage(
+                                                image: NetworkImage((res[index]
+                                                    [0][0])["avatar"]),
+                                                fit: BoxFit.cover)),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            res[index][0][0]["Name"],
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 3),
+                                            child: Text(
+                                              '${res[index][0][0]["userName"]}',
+                                              style: const TextStyle(
+                                                  fontSize: 8,
+                                                  color: Colors.grey),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            res[index][1],
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.white),
+                                          )
+                                        ],
+                                      ),
+                                    ])
+                                  ]));
+                        }),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10),
+                        itemCount: res.length,
+                      ),
                     ),
-                    Expanded(
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.bottomCenter,
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -305,8 +291,7 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
                                     color: Colors.black,
                                   ),
                                   controller: _commentController,
-                                  maxLines:
-                                      null, // Allow the TextField to expand vertically
+                                  maxLines: null,
                                   decoration: InputDecoration(
                                     hintText: 'Add a comment',
                                     hintStyle: Theme.of(context)
@@ -327,10 +312,12 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
                                 var comment = _commentController.text;
                                 if (comment != "") {
                                   BlocProvider.of<CommentBloc>(context).add(
-                                      AddCommentEvent(
-                                          id: widget.id,
-                                          username: widget.username,
-                                          comment: comment));
+                                    AddCommentEvent(
+                                      id: widget.id,
+                                      username: widget.username,
+                                      comment: comment,
+                                    ),
+                                  );
                                   _commentController.text = "";
                                 }
                               },
@@ -343,25 +330,12 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 10)
                   ],
                 ),
               );
             default:
-              return Scaffold(
-                body: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Center(child: Text("something wrong happend")),
-                      Center(
-                        child: ElevatedButton(
-                            onPressed: () {
-                              GoRouter.of(context).pushReplacementNamed(
-                                  MyAppRouteConstants.homeRouteName);
-                            },
-                            child: const Text("Go Back")),
-                      )
-                    ]),
-              );
+              return const ErrorPage();
           }
         });
   }

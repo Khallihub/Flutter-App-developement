@@ -11,23 +11,20 @@ class ErrorPage extends StatefulWidget {
 class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text("something went wrong"),
-          TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.green[200],
-                textStyle: const TextStyle(color: Colors.black),
-              ),
-              onPressed: () {
-                GoRouter.of(context).pop();
-              },
-              child: const Text("go back"))
-        ],
-      )),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text("something went wrong"),
+        TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.green[200],
+              textStyle: const TextStyle(color: Colors.black),
+            ),
+            onPressed: () {
+              GoRouter.of(context).pop();
+            },
+            child: const Text("go back"))
+      ],
     );
   }
 }

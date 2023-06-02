@@ -74,14 +74,13 @@ class _PostWidgetState extends State<PostWidget2> {
 
   @override
   Widget build(BuildContext context) {
-    int noLikes = widget.likes.length;
-    int noDislikes = widget.dislikes.length;
-    int noComments = widget.comments.length;
-
     return FutureBuilder(
         future: fetchLocalUser(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            int noLikes = widget.likes.length;
+            int noDislikes = widget.dislikes.length;
+            int noComments = widget.comments.length;
             DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
                 int.parse(widget.date) * 1000);
             return InkWell(
@@ -210,144 +209,7 @@ class _PostWidgetState extends State<PostWidget2> {
                         style: const TextStyle(color: Colors.black),
                       ),
                     ])
-                  ])
-
-                  // child: Column(
-                  //   children: [
-                  //     Row(
-                  //       children: [
-                  //         Container(
-                  //           height: 35,
-                  //           width: 35,
-                  //           decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(5),
-                  //               image: DecorationImage(
-                  //                   image: NetworkImage(widget.avatarUrl),
-                  //                   fit: BoxFit.cover)),
-                  //         ),
-                  //         const SizedBox(width: 10),
-                  //         Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Text(
-                  //               widget.name,
-                  //               style: const TextStyle(
-                  //                   fontSize: 14,
-                  //                   fontWeight: FontWeight.w600,
-                  //                   color: Colors.black),
-                  //             ),
-                  //             const SizedBox(height: 2),
-                  //             Text(
-                  //               '${widget.username} • ${(postDate).year}-${postDate.month}-${postDate.day}',
-                  //               style: const TextStyle(
-                  //                   fontSize: 12, color: Colors.grey),
-                  //             )
-                  //           ],
-                  //         ),
-                  //         const Spacer(),
-                  //         const SizedBox(width: 5),
-                  //         const Icon(Icons.more_vert)
-                  //       ],
-                  //     ),
-                  //     const SizedBox(height: 10),
-                  //     Align(
-                  //         alignment: Alignment.topLeft,
-                  //         child: Text(widget.description)),
-                  //     const SizedBox(height: 5),
-                  //     Hero(
-                  //       tag: widget.id,
-                  //       child: Container(
-                  //         height: MediaQuery.of(context).size.width * 0.65,
-                  //         width: double.maxFinite,
-                  //         alignment: Alignment.topRight,
-                  //         decoration: BoxDecoration(
-                  //             borderRadius: BorderRadius.circular(10),
-                  //             image: const DecorationImage(
-                  //                 image: NetworkImage(
-                  //                     'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2F0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60'),
-                  //                 fit: BoxFit.cover)),
-                  //         child: Container(
-                  //           margin: const EdgeInsets.all(5),
-                  //           padding: const EdgeInsets.all(5),
-                  //           decoration: BoxDecoration(
-                  //             shape: BoxShape.circle,
-                  //             color: Colors.black.withOpacity(0.05),
-                  //           ),
-                  //           child:
-                  //               const Icon(Icons.attachment, color: Colors.white),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     const SizedBox(height: 10),
-                  //     Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Row(
-                  //           children: [
-                  //             Container(
-                  //               decoration: BoxDecoration(
-                  //                 boxShadow: [
-                  //                   BoxShadow(
-                  //                     color: Colors.grey.withOpacity(0.1),
-                  //                     spreadRadius: 1,
-                  //                     blurRadius: 3,
-                  //                     offset: const Offset(0, 2),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //               child: IconButton(
-                  //                 icon: const Icon(UniconsLine.thumbs_up),
-                  //                 color: Colors.white,
-                  //                 onPressed: () {
-                  //                   BlocProvider.of<PostBloc>(context).add(
-                  //                       PostLikedEvent(
-                  //                           widget.id,
-                  //                           snapshot
-                  //                               .data!.localUserModel.username));
-                  //                 },
-                  //               ),
-                  //             ),
-                  //             Text(
-                  //               '$noLikes',
-                  //               style: const TextStyle(color: Colors.black),
-                  //             ),
-                  //             IconButton(
-                  //               icon: const Icon(UniconsLine.thumbs_down),
-                  //               color: Colors.white,
-                  //               onPressed: () {
-                  //                 BlocProvider.of<PostBloc>(context).add(
-                  //                     PostDislikedEvent(
-                  //                         widget.id,
-                  //                         snapshot
-                  //                             .data!.localUserModel.username));
-                  //               },
-                  //             ),
-                  //             Text(
-                  //               '$noDislikes',
-                  //               style: const TextStyle(color: Colors.white),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         Row(
-                  //           children: [
-                  //             IconButton(
-                  //               onPressed: () {
-                  //                 goComments(snapshot, context);
-                  //               },
-                  //               icon: const Icon(UniconsLine.comment_lines,
-                  //                   color: Colors.white),
-                  //             ),
-                  //             Text(
-                  //               '$noComments',
-                  //               style: const TextStyle(color: Colors.black),
-                  //             ),
-                  //           ],
-                  //         )
-                  //       ],
-                  //     )
-                  //   ],
-                  // ),
-                  ),
+                  ])),
             );
           }
           return const ErrorPage();

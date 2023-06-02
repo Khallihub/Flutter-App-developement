@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:picstash/presentation/screens/error_page.dart';
 import 'package:picstash/presentation/screens/post_adding.dart';
 import 'package:picstash/presentation/screens/post_screen.dart';
+import 'package:picstash/presentation/screens/temp.dart';
 import 'package:picstash/presentation/screens/user_profile_screen.dart';
 
 import '../../assets/constants/assets.dart';
@@ -46,7 +47,7 @@ class _HomeState extends State<Home> {
             const PostScreen(),
             const ErrorPage(),
             const AddPostWidget(),
-            const ErrorPage(),
+            ImageUploader(),
             UserProfileScreen(
               userProfile: snapshot.data!,
               isOwner: true,
