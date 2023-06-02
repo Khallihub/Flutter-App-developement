@@ -6,22 +6,29 @@ abstract class PostEvent extends Equatable {
   const PostEvent();
 }
 
+class UserPostLoadEvent extends PostEvent {
+  final String email;
+
+  const UserPostLoadEvent({required this.email});
+  @override
+  List<dynamic> get props => [];
+}
+
 class PostLoadEvent extends PostEvent {
   const PostLoadEvent();
 
   @override
   List<dynamic> get props => [];
 }
+
 class SinglePostLoadedEvent extends PostEvent {
   final String id;
-  
+
   const SinglePostLoadedEvent(this.id);
 
   @override
   List<dynamic> get props => [];
 }
-
-
 
 class PostCreateEvent extends PostEvent {
   final Post post;
@@ -62,7 +69,6 @@ class PostDeleteEvent extends PostEvent {
   @override
   bool? get stringify => true;
 }
-
 
 class PostLikedEvent extends PostEvent {
   final String id;

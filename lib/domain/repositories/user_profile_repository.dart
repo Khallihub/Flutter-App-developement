@@ -1,5 +1,3 @@
-import 'package:picstash/domain/entities/local_user_model.dart';
-
 import '../../infrastructure/data_providers/user_profile_data_provider.dart';
 
 class UserProfileRepository {
@@ -16,19 +14,13 @@ class UserProfileRepository {
     }
   }
 
-  updateUserProfile(LocalUserModel userModel) async {
+  updateUserProfile(
+      String email, String userName, String bio, String password) async {
     try {
-      await dataProvider.updateUserProfile(userModel);
+      return await dataProvider.updateUserProfile(
+          email, userName, bio, password);
     } catch (error) {
       throw Exception('Failed to update user profile');
-    }
-  }
-
-  logout() async {
-    try {
-      await dataProvider.logout();
-    } catch (error) {
-      throw Exception('Failed to perform logout');
     }
   }
 }
