@@ -2,7 +2,6 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-
 import '../../assets/constants/assets.dart';
 import '../../domain/entities/login/login_details.dart';
 import '../../domain/entities/user_profile/user_profile.dart';

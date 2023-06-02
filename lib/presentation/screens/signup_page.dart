@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,24 +95,7 @@ class _SignUpBodyState extends State<SignUpBody> {
     }
   }
 
-  Future<String> uploadImage(File imageFile, String apiKey) async {
-    const url = 'https://freeimage.host/api/1/upload';
-    final request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['key'] = apiKey;
-    request.fields['format'] = 'json';
-    request.fields['action'] = 'upload';
-    request.files
-        .add(await http.MultipartFile.fromPath('source', imageFile.path));
-
-    final response = await request.send();
-    final responseJson = json.decode(await response.stream.bytesToString());
-
-    if (response.statusCode == 200 && responseJson['status'] == 'success') {
-      return responseJson['image']['url'];
-    } else {
-      throw Exception('Failed to upload image');
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {

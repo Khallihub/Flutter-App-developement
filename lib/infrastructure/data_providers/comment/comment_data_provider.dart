@@ -126,9 +126,15 @@ class CommentDataProvider {
         },
       ),
     );
+
     if (response.statusCode == 201) {
+      final comments = await fetchComments({"id": id});
       final post = await jsonDecode(response.body);
-      return post;
+      return {
+        "likes": post["likes"],
+        "dislikes": post["dislikes"],
+        "comments": comments
+      };
     } else {
       throw Exception("Could not fetch comments");
     }
