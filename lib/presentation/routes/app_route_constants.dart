@@ -6,4 +6,6 @@ class MyAppRouteConstants {
   static const String chatRouteName = "chat";
   static const String editProfileRouteName = "edit_profile";
   static const String notImplemented = "not_implemented";
+  static const String chatListRouteName = "chatlist";
+  static const String chatScreenSearch = "chatscreensearch";
 }

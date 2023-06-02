@@ -1,9 +1,11 @@
-
 import 'package:equatable/equatable.dart';
+
+import '../../domain/entities/models/chat_model.dart';
+import '../../infrastructure/factory models/chat_factory.dart';
 
 abstract class ChatState extends Equatable {
   const ChatState();
-  
+
   @override
   List<dynamic> get props => [];
 }
@@ -13,7 +15,7 @@ class ChatInitial extends ChatState {}
 class ChatLoadingState extends ChatState {}
 
 class ChatLoadOperationSuccess extends ChatState {
-  final Iterable<dynamic> chats;
+  final List<Chat> chats;
 
   const ChatLoadOperationSuccess({required this.chats});
 
@@ -29,10 +31,22 @@ class ChatOperationFailure extends ChatState {
   List<dynamic> get props => [error];
 }
 
-class ChatCreatedState extends ChatState {
+class AllChatsLoadOperationInProgress extends ChatState {}
 
+class AllChatsLoadOperationSuccess extends ChatState {
+  final List<ChatModel> chats;
+
+  const AllChatsLoadOperationSuccess({
+    required this.chats,
+  });
+
+  @override
+  List<dynamic> get props => [chats];
+}
+
+class ChatCreatedState extends ChatState {
   final dynamic chat;
-  
+
   const ChatCreatedState(this.chat);
 
   @override
@@ -40,7 +54,6 @@ class ChatCreatedState extends ChatState {
 }
 
 class ChatRenamedState extends ChatState {
-
   final dynamic chat;
 
   const ChatRenamedState(this.chat);
@@ -50,7 +63,6 @@ class ChatRenamedState extends ChatState {
 }
 
 class ChatDeletedState extends ChatState {
-
   final dynamic chat;
 
   const ChatDeletedState(this.chat);
@@ -60,7 +72,6 @@ class ChatDeletedState extends ChatState {
 }
 
 class ChatMessageUpdatedState extends ChatState {
-
   final dynamic chat;
 
   const ChatMessageUpdatedState(this.chat);
@@ -70,7 +81,6 @@ class ChatMessageUpdatedState extends ChatState {
 }
 
 class ChatMessageSentState extends ChatState {
-
   final dynamic chat;
 
   const ChatMessageSentState(this.chat);
@@ -80,7 +90,6 @@ class ChatMessageSentState extends ChatState {
 }
 
 class ChatMessageDeletedState extends ChatState {
-
   final dynamic chat;
 
   const ChatMessageDeletedState(this.chat);
@@ -88,4 +97,3 @@ class ChatMessageDeletedState extends ChatState {
   @override
   List<dynamic> get props => [chat];
 }
-

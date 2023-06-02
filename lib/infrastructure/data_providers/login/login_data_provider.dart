@@ -21,11 +21,12 @@ class LoginDataProvider {
       }),
     );
 
+
     if (response.statusCode != 201) {
       throw Exception("invalid credentials or connection problem");
     }
-
     final decodedResponse = jsonDecode(response.body);
+
 
     final Token token = Token.create(
       decodedResponse['access_token'],
@@ -34,7 +35,6 @@ class LoginDataProvider {
     final Map<String, dynamic> user = decodedResponse["user"]["_doc"];
     final LocalUserModel realUser = LocalUserModel.mapFromJson(user);
     final String role = decodedResponse['role'];
-
     return LoginDetailsModel.create(token, role, realUser);
   }
 

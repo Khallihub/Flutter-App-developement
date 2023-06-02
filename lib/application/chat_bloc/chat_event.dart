@@ -16,6 +16,13 @@ class ChatLoadEvent extends ChatEvent {
   @override
   List<dynamic> get props => [user1, user2];
 }
+class AllChatsLoadEvent extends ChatEvent {
+  final user;
+   const AllChatsLoadEvent(this.user);
+
+  @override
+  List<dynamic> get props => [user];
+}
 
 class ChatCreateEvent extends ChatEvent {
   final String user1;

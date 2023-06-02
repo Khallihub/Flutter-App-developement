@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:picstash/presentation/screens/edit_profile_screen.dart';
 import 'package:picstash/presentation/screens/screens.dart';
-import '../../application/post_bloc/post_bloc.dart';
+import '../../application/chat_bloc/chat_bloc.dart';
 import '../../domain/entities/dummy_profile_data.dart';
-import '../../domain/repositories/post_repository.dart';
-import '../../infrastructure/data_providers/post_data_provider.dart';
+import '../../domain/repositories/chat_repository.dart';
+import '../../infrastructure/data_providers/chat_data_provider.dart';
+import '../components/chat/search_screen.dart';
+import '../screens/chat_list_screen.dart';
 import '../screens/comment_screen2.dart';
 import '../screens/login_page.dart';
 import '../screens/not_implemented_screen.dart';
@@ -17,6 +19,8 @@ import 'app_route_constants.dart';
 class MyAppRouter {
   static GoRouter returnRouter(bool isLoggedIn) {
     GoRouter router = GoRouter(
+      // initialLocation: isLoggedIn ? "/home" : "/login",
+      // initialLocation: "/profile",
       routes: [
         GoRoute(
           name: MyAppRouteConstants.homeRouteName,
@@ -69,21 +73,18 @@ class MyAppRouter {
         ),
         GoRoute(
           name: MyAppRouteConstants.chatRouteName,
-          path: '/chat/:user1/:user2',
+          path: '/chat/:id/:user1/:user2/:friendImage/:friendName',
           pageBuilder: (context, state) {
             return MaterialPage(
                 child: BlocProvider(
               create: (context) =>
-                  PostBloc(postRepository: PostRepository(PostDataProvider())),
-              child: CommentScreen_2(
-                id: state.pathParameters['id']!,
-                title: state.pathParameters['title']!,
-                username: state.pathParameters['username']!,
-                name: state.pathParameters['name']!,
-                description: state.pathParameters['description']!,
-                avatarUrl: state.pathParameters['avatarUrl']!,
-                date: state.pathParameters['date']!,
-                imageUrl: state.pathParameters['imageUrl']!,
+                  ChatBloc(chatRepository: ChatRepository(ChatDataProvider())),
+              child: ChatScreen(
+                id: state.pathParameters['id'] as String,
+                user1: state.pathParameters['user1'] as String,
+                user2: state.pathParameters['user2'] as String,
+                friendImage: state.pathParameters['friendImage'] as String,
+                friendName: state.pathParameters['friendName'] as String,
               ),
             ));
           },
@@ -100,27 +101,32 @@ class MyAppRouter {
           pageBuilder: (context, state) {
             return const MaterialPage(child: NotImplementedYet());
           },
-        )
-        // GoRoute(
-        //   name: MyAppRouteConstants.contactUsRouteName,
-        //   path: '/contact_us',
-        //   pageBuilder: (context, state) {
-        //     return MaterialPage(child: ContactUS());
-        //   },
-        // )
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.chatListRouteName,
+          path: '/chatlist',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+                child: BlocProvider(
+              create: (context) =>
+                  ChatBloc(chatRepository: ChatRepository(ChatDataProvider())),
+              child: const ChatListScreen(),
+            ));
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.chatScreenSearch,
+          path: '/chatscreensearch',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+                child: BlocProvider(
+              create: (context) =>
+                  ChatBloc(chatRepository: ChatRepository(ChatDataProvider())),
+              child: const SearchScreen(),
+            ));
+          },
+        ),
       ],
-      // errorPageBuilder: (context, state) {
-      //   return MaterialPage(child: ErrorPage());
-
-      // redirect: (context, state) {
-      //   if (!isAuth &&
-      //       state.location
-      //           .startsWith('/${MyAppRouteConstants.profileRouteName}')) {
-      //     return context.namedLocation(MyAppRouteConstants.contactUsRouteName);
-      //   } else {
-      //     return null;
-      //   }
-      // },
     );
     return router;
   }

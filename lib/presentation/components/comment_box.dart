@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CommentBox extends StatefulWidget {
+class CommentBox extends StatelessWidget {
   final String username;
   final String comment;
 
@@ -10,11 +10,6 @@ class CommentBox extends StatefulWidget {
     required this.comment,
   });
 
-  @override
-  State<CommentBox> createState() => _CommentBoxState();
-}
-
-class _CommentBoxState extends State<CommentBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,7 +33,7 @@ class _CommentBoxState extends State<CommentBox> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.username,
+                      username,
                       style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -46,7 +41,7 @@ class _CommentBoxState extends State<CommentBox> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${widget.username} • thus ',
+                      '$username • thus ',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     )
                   ],
@@ -73,7 +68,7 @@ class _CommentBoxState extends State<CommentBox> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                widget.comment,
+                comment,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
