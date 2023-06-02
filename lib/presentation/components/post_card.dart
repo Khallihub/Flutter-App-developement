@@ -32,7 +32,8 @@ class _PostCardState extends State<PostCard> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(
-                          image: AssetImage(widget.post.userImage), fit: BoxFit.cover)),
+                          image: AssetImage(widget.post.userImage),
+                          fit: BoxFit.cover)),
                 ),
                 const SizedBox(width: 10),
                 Column(
@@ -53,20 +54,19 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
                 const Spacer(),
-                Container(
-                  height: 25,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Colors.grey.withOpacity(0.1)),
-                  child: Text(
-                    widget.post.title,
-                    style: const TextStyle(fontSize: 14, color: Colors.blue),
-                  ),
-                ),
+                // Container(
+                //   height: 25,
+                //   alignment: Alignment.center,
+                //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(25),
+                //       color: Colors.grey.withOpacity(0.1)),
+                //   child: Text(
+                //     widget.post.title,
+                //     style: const TextStyle(fontSize: 14, color: Colors.blue),
+                //   ),
+                // ),
                 const SizedBox(width: 5),
-                
               ],
             ),
             const SizedBox(height: 10),
@@ -81,7 +81,8 @@ class _PostCardState extends State<PostCard> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                        image: AssetImage(widget.post.sourceURL), fit: BoxFit.cover)),
+                        image: AssetImage(widget.post.sourceURL),
+                        fit: BoxFit.cover)),
                 child: Container(
                   margin: const EdgeInsets.all(5),
                   padding: const EdgeInsets.all(5),

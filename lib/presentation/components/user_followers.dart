@@ -36,9 +36,9 @@ class _FollowersState extends State<Followers> {
                   color: Colors.black),
             ),
             const SizedBox(height: 2),
-            Text(
-              widget.followers.location,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            const Text(
+             " widget.followers.location,",
+              style: TextStyle(fontSize: 12, color: Colors.grey),
             )
           ],
         ),

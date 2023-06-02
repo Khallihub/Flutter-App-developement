@@ -187,7 +187,6 @@ class _CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Get.changeThemeMode(
               Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
             );
-            print(IconTheme.of(context).color);
           },
         )
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picstash/domain/entities/local_user_model.dart';
 import '../../domain/repositories/user_profile_repository.dart';
 import './blocs.dart';
 
@@ -10,25 +11,37 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     on<UserProfileLoadEvent>((event, emit) async {
       emit(UserProfileLoading());
       try {
-        final userProfile = await userProfileRepository.fetchUserProfile(event.userId);
-        emit(UserProfileLoadSuccess(userProfile));
+        final userProfile =
+            await userProfileRepository.fetchUserProfile(event.userEmail);
+
+        LocalUserModel user = LocalUserModel(
+            id: userProfile["_id"],
+            name: userProfile["Name"],
+            email: userProfile["email"],
+            username: userProfile["userName"],
+            imageUrl: userProfile["avatar"],
+            bio: userProfile["bio"]);
+
+        var followersInfo = userProfile["followers"].length;
+        var followingInfo = userProfile["following"].length;
+
+        emit(UserProfileLoadSuccess(
+            userProfile: user,
+            followers: followersInfo,
+            following: followingInfo));
       } catch (error) {
         emit(UserProfileError('Failed to load user profile: $error'));
       }
     });
 
     on<UserProfileUpdateEvent>((event, emit) async {
-      if (state is UserProfileLoadSuccess) {
-        try {
-          final updatedProfile = (state as UserProfileLoadSuccess).userProfile.copyWith(
-            userName: event.username,
-            bio: event.bio,
-            avatar: event.profileImageUrl,
-          );
-          emit(UserProfileLoadSuccess(updatedProfile));
-        } catch (error) {
-          emit(UserProfileError('Failed to update user profile: $error'));
-        }
+      try {
+        await userProfileRepository.updateUserProfile(event.usermodel);
+        final user =
+            await userProfileRepository.fetchUserProfile(event.usermodel.email.toString());
+        emit(UserProfileUpdateSuccess(userProfile: user));
+      } catch (error) {
+        emit(UserProfileError('Failed to load user profile: $error'));
       }
     });
 
@@ -39,4 +52,3 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     });
   }
 }
-

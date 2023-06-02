@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:picstash/domain/entities/local_user_model.dart';
 
 abstract class UserProfileEvent extends Equatable {
   const UserProfileEvent();
@@ -8,27 +9,23 @@ abstract class UserProfileEvent extends Equatable {
 }
 
 class UserProfileLoadEvent extends UserProfileEvent {
-  final String userId;
+  final String userEmail;
 
-  const UserProfileLoadEvent(this.userId);
+  const UserProfileLoadEvent({required this.userEmail});
 
   @override
-  List<Object?> get props => [userId];
+  List<Object?> get props => [userEmail];
 }
 
 class UserProfileUpdateEvent extends UserProfileEvent {
-  final String username;
-  final String bio;
-  final String profileImageUrl;
+  final LocalUserModel usermodel;
 
   const UserProfileUpdateEvent({
-    required this.username,
-    required this.bio,
-    required this.profileImageUrl,
+    required this.usermodel
   });
 
   @override
-  List<Object?> get props => [username, bio, profileImageUrl];
+  List<Object?> get props => [usermodel];
 }
 
 class UserProfileLogoutEvent extends UserProfileEvent {}
