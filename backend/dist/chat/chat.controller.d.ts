@@ -39,6 +39,11 @@ export declare class ChatController {
     }): Promise<import("mongoose").Document<unknown, {}, import("./chat.model").Chat> & Omit<import("./chat.model").Chat & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
+    getChats(data: {
+        user: string;
+    }): Promise<(import("mongoose").Document<unknown, {}, import("./chat.model").Chat> & Omit<import("./chat.model").Chat & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
     renameChat(data: {
         user1: string;
         user2: string;
@@ -68,7 +73,9 @@ export declare class ChatController {
         user1: string;
         user2: string;
         time: string;
-    }): Promise<void>;
+    }): Promise<import("mongoose").Document<unknown, {}, import("./chat.model").Chat> & Omit<import("./chat.model").Chat & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
     deleteChat(data: {
         user1: string;
         user2: string;

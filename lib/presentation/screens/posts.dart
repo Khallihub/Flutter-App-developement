@@ -34,7 +34,7 @@ class ShowPosts extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, idx) {
-                      return PostWidget2(
+                      return PstWidget(
                         id: userPosts[idx].id,
                         avatarUrl: userPosts[idx].authorAvatar,
                         username: userPosts[idx].author,

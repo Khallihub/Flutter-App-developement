@@ -24,9 +24,9 @@ let ChatService = class ChatService {
         console.log(data);
         const users = [data.user1, data.user2].sort();
         const chat = await this.chatModel.findOne({ usersName: users });
-        console.log(chat);
         const unchangedMessages = chat.messages.filter((message) => message[0] !== data.time);
         const updatedChat = await this.chatModel.findOneAndUpdate({ usersName: users }, { messages: unchangedMessages }, { new: true });
+        return updatedChat;
     }
     async renameChat(data) {
         const users = [data.user1, data.user2].sort();
@@ -51,13 +51,14 @@ let ChatService = class ChatService {
         const oldMessage = messages.filter((message) => message[0] === data.time)[0];
         const newMessage = [oldMessage[0], data.sender, data.message];
         unchangedMessages.push(newMessage);
-        const updatedChat = await this.chatModel.findOneAndUpdate({ usersName: users }, { messages: unchangedMessages }, { new: true });
+        const sortedMessages = unchangedMessages.sort((a, b) => a[0].localeCompare(b[0]));
+        const updatedChat = await this.chatModel.findOneAndUpdate({ usersName: users }, { messages: sortedMessages }, { new: true });
         return updatedChat;
     }
     async Message(data) {
         const users = [data.user1, data.user2].sort();
         const message = [Date.now(), data.sender, data.message];
-        const chat = await this.chatModel.findOneAndUpdate({ usersName: users }, { $push: { messages: message } }, { new: true });
+        const chat = await this.chatModel.findOneAndUpdate({ usersName: users }, { $push: { messages: message }, lastMessage: message }, { new: true });
         return chat;
     }
     async deleteChat(data) {
@@ -72,6 +73,12 @@ let ChatService = class ChatService {
             return chat;
         }
     }
+    async getChats(data) {
+        const chats1 = await this.chatModel.find({ user1: data.user });
+        const chats2 = await this.chatModel.find({ user2: data.user });
+        const chats = [...chats1, ...chats2];
+        return chats;
+    }
     async createChat(data) {
         const users = [data.user1, data.user2].sort();
         const chat = await this.chatModel.findOne({ usersName: users });
@@ -79,6 +86,9 @@ let ChatService = class ChatService {
             return chat;
         }
         const newChat = new this.chatModel({
+            user1: users[0],
+            user2: users[1],
+            lastMessage: [Date.now(), '', '',],
             usersName: users,
             messages: [],
         });

@@ -55,8 +55,7 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
                 value: 'edit',
                 child: Text("Edit"),
               )
-            : 
-            const PopupMenuItem(
+            : const PopupMenuItem(
                 value: 'n',
                 child: Text("Edit"),
               ),
@@ -68,8 +67,8 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
     );
     switch (result) {
       case "edit":
-        chatBloc.add(
-            SetParentTextField(text: message.text, time: message.createdAt, chat: widget.chat));
+        chatBloc.add(SetParentTextField(
+            text: message.text, time: message.createdAt, chat: widget.chat));
       case "delete":
         chatBloc.add(ChatMessageDeleteEvent(
             widget.chat.user1, widget.chat.user2, message.createdAt));
@@ -100,16 +99,24 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
             text: widget.chat.messages[widget.chat.messages.length - index - 1]
                 [2],
           );
+          TextPainter textPainter = TextPainter(
+            text: TextSpan(text: message.text, style: Theme.of(context).textTheme.bodyMedium,),
+            textDirection: TextDirection.ltr,
+          );
+          textPainter.layout();
 
+          double textWidth = textPainter.width;
           return Align(
             alignment: (message.sender == widget.chat.user1)
                 ? Alignment.centerRight
                 : Alignment.centerLeft,
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.66,
+                maxWidth: MediaQuery.of(context).size.width * 0.66 > textWidth
+                    ? textWidth + 35 > MediaQuery.of(context).size.width * 0.66 ? MediaQuery.of(context).size.width * 0.66 : textWidth + 35
+                    : MediaQuery.of(context).size.width * 0.66,
               ),
-              padding: const EdgeInsets.all(10.0),
+              // padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.symmetric(vertical: 5.0),
               decoration: BoxDecoration(
                 color: (message.sender == widget.chat.user2)

@@ -8,7 +8,7 @@ import '../../../application/chat_bloc/blocs.dart';
 import '../../../domain/entities/models/chat_model.dart';
 import 'custom_container.dart';
 
-class ChatMessages extends StatefulWidget {
+class ChatMessages extends StatelessWidget {
   const ChatMessages({
     Key? key,
     required this.height,
@@ -18,21 +18,14 @@ class ChatMessages extends StatefulWidget {
   final List<ChatModel> chats;
 
   @override
-  State<ChatMessages> createState() => _ChatMessagesState();
-}
-
-class _ChatMessagesState extends State<ChatMessages> {
-  late ChatBloc chatBloc;
-
-  @override
   Widget build(BuildContext context) {
-    chatBloc = BlocProvider.of<ChatBloc>(context);
+    ChatBloc chatBloc = BlocProvider.of<ChatBloc>(context);
 
     return CustomContainer(
-      height: widget.height * 0.7,
+      height: height * 0.7,
       child: ListView.builder(
         padding: EdgeInsets.zero,
-        itemCount: widget.chats.length,
+        itemCount: chats.length,
         itemBuilder: (context, index) {
           // Message lastMessage = chats[index].messages!.first;
 
@@ -45,7 +38,7 @@ class _ChatMessagesState extends State<ChatMessages> {
               ),
             ),
             child: Dismissible(
-              key: Key(widget.chats[index].id),
+              key: Key(chats[index].id),
               confirmDismiss: (DismissDirection direction) async {
                 if (direction == DismissDirection.endToStart) {
                   return await showDialog<bool>(
@@ -70,8 +63,8 @@ class _ChatMessagesState extends State<ChatMessages> {
                             ),
                             onPressed: () {
                               chatBloc.add(ChatDeleteEvent(
-                                  widget.chats[index].users[0],
-                                  widget.chats[index].users[1]));
+                                  chats[index].users[0],
+                                  chats[index].users[1]));
                               Navigator.of(context).pop(true);
                             },
                           ),
@@ -103,54 +96,57 @@ class _ChatMessagesState extends State<ChatMessages> {
               //     color: Colors.white,
               //   ),
               // ),
-              child: ListTile(
-                onTap: () {
-                  GoRouter.of(context).pushNamed(
-                    MyAppRouteConstants.chatRouteName,
-                    pathParameters: {
-                      "id": widget.chats[index].id,
-                      "user1": widget.chats[index].users[0] ==
-                              widget.chats[index].userName
-                          ? widget.chats[index].users[1]
-                          : widget.chats[index].users[0],
-                      "user2": widget.chats[index].userName,
-                      "friendImage": widget.chats[index].image,
-                      "friendName": widget.chats[index].name,
-                    },
-                  );
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(widget.chats[index].image),
-                ),
-                title: Text(
-                  widget.chats[index].name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  widget.chats[index].lastMessage[2],
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                trailing: Text(DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(widget.chats[index].lastMessage[0]))
-                        .isAfter(
-                  DateTime.now().add(
-                    const Duration(days: 1),
+              child: InkWell(
+                splashColor: Colors.grey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(30),
+                child: ListTile(
+                  onTap: () {
+                    GoRouter.of(context).pushNamed(
+                      MyAppRouteConstants.chatRouteName,
+                      pathParameters: {
+                        "id": chats[index].id,
+                        "user1": chats[index].users[0] == chats[index].userName
+                            ? chats[index].users[1]
+                            : chats[index].users[0],
+                        "user2": chats[index].userName,
+                        "friendImage": chats[index].image,
+                        "friendName": chats[index].name,
+                      },
+                    );
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(chats[index].image),
                   ),
-                )
-                    ? DateFormat('MMM d').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(widget.chats[index].lastMessage[0])),
-                      )
-                    : DateFormat('HH:mm').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(widget.chats[index].lastMessage[0])),
-                      )),
+                  title: Text(
+                    chats[index].name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    chats[index].lastMessage[2],
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  trailing: Text(DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(chats[index].lastMessage[0]))
+                          .isAfter(
+                    DateTime.now().add(
+                      const Duration(days: 1),
+                    ),
+                  )
+                      ? DateFormat('MMM d').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(chats[index].lastMessage[0])),
+                        )
+                      : DateFormat('HH:mm').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(chats[index].lastMessage[0])),
+                        )),
+                ),
               ),
             ),
           );

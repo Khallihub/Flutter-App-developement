@@ -75,6 +75,11 @@ class _SignUpBodyState extends State<SignUpBody> {
   PickedImage? pickedImage;
   String? _avatarUrl;
 
+  void signUp(SignUpModel signUpModel) {
+    BlocProvider.of<SignUpBloc>(context)
+        .add(SignUpButtonPressed(signUpModel: signUpModel));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -236,8 +241,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                               bio: _bio,
                               avatar: AvatarModel.create(
                                   _avatarUrl ?? "https://picsum.photos/200"));
-                          BlocProvider.of<SignUpBloc>(context).add(
-                              SignUpButtonPressed(signUpModel: signUpModel));
+                          signUp(signUpModel);
                         }
                       },
                       child: const Padding(

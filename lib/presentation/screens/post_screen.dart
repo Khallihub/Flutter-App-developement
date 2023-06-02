@@ -37,20 +37,28 @@ class _PostScreenState extends State<PostScreen> {
             return Scaffold(
                 body: ListView.builder(
               itemCount: posts.length,
-              itemBuilder: (_, idx) => PostWidget2(
-                id: posts[idx].id,
-                avatarUrl: posts[idx].authorAvatar,
-                username: posts[idx].author,
-                date: posts[idx].createdAt,
-                imageUrl: posts[idx].sourceURL,
-                likes: posts[idx].likes,
-                dislikes: posts[idx].dislikes,
-                comments: posts[idx].comments,
-                description: posts[idx].description,
-                name: posts[idx].authorName,
-                title: posts[idx].title,
-              ),
+              itemBuilder: (_, idx) {
+                return PstWidget(
+                  id: posts[idx].id,
+                  avatarUrl: posts[idx].authorAvatar,
+                  username: posts[idx].author,
+                  date: posts[idx].createdAt,
+                  imageUrl: posts[idx].sourceURL,
+                  likes: posts[idx].likes,
+                  dislikes: posts[idx].dislikes,
+                  comments: posts[idx].comments,
+                  description: posts[idx].description,
+                  name: posts[idx].authorName,
+                  title: posts[idx].title,
+                );
+              },
             ));
+          } else if (state is! PostOperationFailure) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.blueGrey[50],
+              ),
+            );
           } else {
             return const ErrorPage();
           }

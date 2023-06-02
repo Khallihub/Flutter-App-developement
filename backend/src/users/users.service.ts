@@ -9,6 +9,14 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(@InjectModel('user') private user: Model<USER>) {}
 
+  async findByName(query: { text: string }) {
+    if (query.text.trim() === '') {
+      return [];
+    }
+    const regex = new RegExp(query.text, 'i'); // Create a case-insensitive regex pattern
+    const users = await this.user.find({ Name: { $regex: regex } });
+    return users;
+  }
   async addUser(dto: userDto) {
     const user = new this.user({
       Name: dto.Name,
@@ -29,43 +37,40 @@ export class UsersService {
   async findByUsername(info: { userName: string }): Promise<USER | undefined> {
     return await this.user.findOne({ userName: info.userName.toLowerCase() });
   }
-
-  async findByemail(info: { email: string }): Promise<USER | undefined> {
-    return await this.user.findOne({ email: info.email.toLowerCase() });
+  async findByUsernames(userNames: string[]) {
+    let users = [];
+    for (const userName of userNames) {
+      let temp = await this.user.findOne({ userName: userName });
+      if (temp) {
+        users.push(temp);
+      }
+    }
+    return users;
   }
 
-  async updateProfile(data: {
-    email: string;
-    userName: string;
-    bio: string;
-    password: string;
-  }) {
-    if ((data.password = '')) {
-      const updatedProfile = await this.user.findOneAndUpdate(
-        { email: data.email },
-        {
-          userName: data.userName,
-          //avatar: dto.avatar,
-          bio: data.bio,
-        },
-        { new: true },
-      );
-      return updatedProfile;
-    }
-    const hashed = await this.hashData(data.password);
-    data.password = hashed;
+  async findByemail(info: { email: string }): Promise<USER | undefined> {
+    const regex = new RegExp(info.email, 'i');
+    const users = await this.user.find({ email: { $regex: regex } });
+    return users[0];
+  }
 
+  async updateProfile(
+    email: string,
+    userName: string,
+    bio: string,
+    password: string,
+    avatarUrl: string,
+  ) {
     const updatedProfile = await this.user.findOneAndUpdate(
-      { email: data.email },
+      { email: email },
       {
-        userName: data.userName,
-        //avatar: dto.avatar,
-        bio: data.bio,
-        hash: data.password,
+        username: userName,
+        avatar: avatarUrl,
+        bio: bio,
+        password: bcrypt.hash(password, 10),
       },
       { new: true },
     );
-    console.log(updatedProfile);
     return updatedProfile;
   }
 
@@ -80,22 +85,18 @@ export class UsersService {
       userName: data.followedUsername,
     });
     let temp2;
-    if (followed.followers.includes(data.followerUsername)) {
-      temp2 = followed.followers.filter(
-        (item) => item !== data.followerUsername,
-      );
+    if (followed.followers.includes(follower.email)) {
+      temp2 = followed.followers.filter((item) => item !== follower.email);
     } else {
-      followed.followers.push(data.followerUsername);
+      followed.followers.push(follower.email);
       temp2 = followed.followers;
     }
 
     let temp1;
-    if (follower.following.includes(data.followedUsername)) {
-      temp1 = follower.following.filter(
-        (item) => item !== data.followedUsername,
-      );
+    if (follower.following.includes(followed.email)) {
+      temp1 = follower.following.filter((item) => item !== followed.email);
     } else {
-      follower.following.push(data.followedUsername);
+      follower.following.push(followed.email);
       temp1 = follower.following;
     }
     const newProfile1 = await this.user.findOneAndUpdate(
@@ -112,6 +113,7 @@ export class UsersService {
     if (!(newProfile1 && newProfile2)) {
       return 'failed';
     }
+    console.log(newProfile2.following);
   }
   async deleteProfile(data: { userName: string; password: string }) {
     const user = await this.findByUsername({ userName: data.userName });

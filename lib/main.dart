@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        // theme: darkTheme(),
+        theme: ThemeData(primarySwatch: Colors.indigo),
         routeInformationParser:
             MyAppRouter.returnRouter(isLoggedIn).routeInformationParser,
         routerDelegate: MyAppRouter.returnRouter(isLoggedIn).routerDelegate,

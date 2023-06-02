@@ -10,7 +10,7 @@ class UserProfileRepository {
       final userProfile = await dataProvider.fetchUserProfile(userEmail);
       return userProfile;
     } catch (error) {
-      throw Exception('Failed to fetch user profile');
+      throw Exception(error);
     }
   }
 
@@ -20,7 +20,11 @@ class UserProfileRepository {
       return await dataProvider.updateUserProfile(
           email, userName, bio, password, avatarUrl);
     } catch (error) {
-      throw Exception('Failed to update user profile');
+      throw Exception(error);
     }
+  }
+
+  followUser(String followerUsername, String followedUsername) async {
+    return await dataProvider.followUser(followerUsername, followedUsername);
   }
 }

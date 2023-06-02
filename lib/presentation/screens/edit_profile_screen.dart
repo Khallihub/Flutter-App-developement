@@ -35,6 +35,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return await loginCredentials.getLoginCredentials();
   }
 
+  void go(snapshot, String username, String bio, String password) {
+    BlocProvider.of<UserProfileBloc>(context).add(
+      UserProfileUpdateEvent(
+          email: snapshot.data!.localUserModel.email.toString(),
+          userName: username.isEmpty
+              ? snapshot.data!.localUserModel.username
+              : username,
+          bio: bio.isEmpty ? snapshot.data!.localUserModel.bio : bio,
+          password: password,
+          avatarUrl: avatarUrl == ""
+              ? snapshot.data!.localUserModel.imageUrl
+              : avatarUrl),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -156,6 +171,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                   const SizedBox(height: 16.0),
                                   TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "you should enter the old or new password";
+                                      }
+                                      return null;
+                                    },
                                     controller: _passwordController,
                                     obscureText: true,
                                     decoration: InputDecoration(
@@ -230,29 +251,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         var bio = _bioController.text;
                                         var password =
                                             _passwordController.toString();
-                                        avatarUrl =
-                                            await UploadImage.uploadImage(
-                                                _avatarImage!);
-                                        BlocProvider.of<UserProfileBloc>(
-                                                context)
-                                            .add(
-                                          UserProfileUpdateEvent(
-                                              email: snapshot
-                                                  .data!.localUserModel.email
-                                                  .toString(),
-                                              userName: username.isEmpty
-                                                  ? snapshot.data!
-                                                      .localUserModel.username
-                                                  : username,
-                                              bio: bio.isEmpty
-                                                  ? snapshot
-                                                      .data!.localUserModel.bio
-                                                  : bio,
-                                              password: password,
-                                              avatarUrl: avatarUrl ??
-                                                  snapshot.data!.localUserModel
-                                                      .imageUrl),
-                                        );
+                                        try {
+                                          avatarUrl =
+                                              await UploadImage.uploadImage(
+                                                  _avatarImage!);
+                                        } catch (e) {
+                                          avatarUrl = "";
+                                        }
+                                        go(snapshot, username, bio, password);
                                         _usernameController.text = "";
                                         _bioController.text = "";
                                         _passwordController.text = "";

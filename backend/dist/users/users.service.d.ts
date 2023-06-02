@@ -28,21 +28,22 @@ import { USER } from './users.model';
 export declare class UsersService {
     private user;
     constructor(user: Model<USER>);
+    findByName(query: {
+        text: string;
+    }): Promise<(import("mongoose").Document<unknown, {}, USER> & Omit<USER & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
     addUser(dto: userDto): Promise<import("mongoose").Document<unknown, {}, USER> & Omit<USER & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
     findByUsername(info: {
         userName: string;
     }): Promise<USER | undefined>;
+    findByUsernames(userNames: string[]): Promise<any[]>;
     findByemail(info: {
         email: string;
     }): Promise<USER | undefined>;
-    updateProfile(data: {
-        email: string;
-        userName: string;
-        bio: string;
-        password: string;
-    }): Promise<import("mongoose").Document<unknown, {}, USER> & Omit<USER & {
+    updateProfile(email: string, userName: string, bio: string, password: string, avatarUrl: string): Promise<import("mongoose").Document<unknown, {}, USER> & Omit<USER & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
     updateFollowers(data: {

@@ -15,6 +15,8 @@ class ChatScreen extends StatefulWidget {
   final String id;
   final String friendName;
   final String friendImage;
+  final String bio = "";
+  final String email = "";
   const ChatScreen({
     Key? key,
     required this.user1,
@@ -54,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void connect() {
-    socket = IO.io("http://192.168.65.212:3000", <String, dynamic>{
+    socket = IO.io("http://192.168.57.158:3000", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });
@@ -83,7 +85,9 @@ class _ChatScreenState extends State<ChatScreen> {
         name: widget.friendName,
         avatarUrl: widget.friendImage,
         id: widget.id,
-        userName: widget.user2);
+        userName: widget.user2,
+        bio: widget.bio,
+        email: widget.email);
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -123,25 +127,21 @@ class _ChatScreenState extends State<ChatScreen> {
                         scrollController: scrollController,
                       );
                     } else if (state is ChatMessageUpdatedState) {
+                      notifiy();
                       return ChatScreenMessages(
                         chat: state.chat,
                         scrollController: scrollController,
                       );
                     } else if (state is SetParentTextFieldState) {
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        textEditingController.text = state.text;
-                        time = state.time;
-                        textEditingController.selection =
-                            TextSelection.fromPosition(
-                          TextPosition(
-                              offset: textEditingController.text.length),
-                        );
-                      });
-
-                      return ChatScreenMessages(
-                        chat: state.chat,
-                        scrollController: scrollController,
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (_) {
+                          textEditingController.value =
+                              TextEditingValue(text: state.text);
+                          time = state.time;
+                        },
                       );
+                      return ChatScreenMessages(
+                          scrollController: scrollController, chat: state.chat);
                     } else if (state is ChatOperationFailure) {
                       return const Center(child: Text("error"));
                     } else {
@@ -184,6 +184,7 @@ class _ChatScreenState extends State<ChatScreen> {
               : chatBloc.add(ChatMessageUpdateEvent(widget.user1, widget.user2,
                   widget.user1, textEditingController.text, time));
           textEditingController.clear();
+          time = "";
           notifiy();
         }
       },

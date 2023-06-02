@@ -6,10 +6,10 @@ import 'package:unicons/unicons.dart';
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
 import '../../infrastructure/data_providers/db/db.dart';
-// import '../components/chat/chat_contacts.dart';
 import '../components/chat/chat_home_screen_message.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_chat_nav_bar.dart';
+import 'error_page.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({Key? key}) : super(key: key);
@@ -26,11 +26,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
     final login = await loginCredentials.getLoginCredentials();
     final userDetail = login!.localUserModel;
     User user = User(
-      id: userDetail.id,
-      avatarUrl: userDetail.imageUrl,
-      userName: userDetail.username,
-      name: userDetail.username,
-    );
+        id: userDetail.id,
+        avatarUrl: userDetail.imageUrl,
+        userName: userDetail.username,
+        name: userDetail.username,
+        bio: userDetail.bio,
+        email: userDetail.bio);
     return user;
   }
 
@@ -55,9 +56,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
               body: const CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Scaffold(
-            body: Center(child: Text("error")),
-          );
+          return const ErrorPage();
         }
         User? user = snapshot.data;
         chatBloc = BlocProvider.of<ChatBloc>(context);
@@ -111,9 +110,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   ),
                 );
               } else {
-                return const Center(
-                  child: Text("Error"),
-                );
+                return const ErrorPage();
               }
             },
           ),

@@ -158,7 +158,6 @@ export class PostService {
       authorAvatar: dto.authorAvatar,
     });
     const result = await post.save();
-    console.log(`post: ${result}`);
     return result;
   }
 

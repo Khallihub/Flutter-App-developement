@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:picstash/domain/entities/user_profile/user_profile.dart';
 import 'package:picstash/presentation/screens/edit_profile_screen.dart';
 import 'package:picstash/presentation/screens/screens.dart';
 import '../../application/chat_bloc/chat_bloc.dart';
-import '../../domain/entities/dummy_profile_data.dart';
 import '../../domain/repositories/chat_repository.dart';
 import '../../infrastructure/data_providers/chat_data_provider.dart';
+import '../screens/chat_search.dart';
 import '../screens/search_screen.dart';
 import '../screens/chat_list_screen.dart';
 import '../screens/comment_screen2.dart';
@@ -44,11 +45,20 @@ class MyAppRouter {
               return const MaterialPage(child: MyRegister());
             })),
         GoRoute(
-            path: "/profile",
+            name: MyAppRouteConstants.userProfile,
+            path: "/profile/:username/:bio/:avatar/:id/:name/:email/:role",
             pageBuilder: ((context, state) {
+              UserProfile userProfile = UserProfile(
+                  id: state.pathParameters["id"] as String,
+                  name: state.pathParameters["name"] as String,
+                  email: state.pathParameters["email"] as String,
+                  userName: state.pathParameters["username"] as String,
+                  avatar: state.pathParameters["avatar"] as String,
+                  bio: state.pathParameters["bio"] as String,
+                  role: "user");
               return MaterialPage(
                 child: UserProfileScreen(
-                  userProfile: DummyProfile.getUserProfile(),
+                  userProfile: userProfile,
                   isOwner: false,
                 ),
               );
@@ -116,6 +126,19 @@ class MyAppRouter {
         ),
         GoRoute(
           name: MyAppRouteConstants.chatScreenSearch,
+          path: '/chatscreensearch/:localUser',
+          pageBuilder: (context, state) {
+            return MaterialPage(
+                child: BlocProvider(
+              create: (context) =>
+                  ChatBloc(chatRepository: ChatRepository(ChatDataProvider())),
+              child: ChatSearchScreen(
+                  localUser: state.pathParameters["localUser"]),
+            ));
+          },
+        ),
+        GoRoute(
+          name: MyAppRouteConstants.searchScreen,
           path: '/chatscreensearch/:localUser',
           pageBuilder: (context, state) {
             return MaterialPage(

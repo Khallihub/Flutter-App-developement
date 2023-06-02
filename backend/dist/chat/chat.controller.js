@@ -25,6 +25,9 @@ let ChatController = class ChatController {
     async getChat(data) {
         return await this.chatService.getChat(data);
     }
+    async getChats(data) {
+        return await this.chatService.getChats(data);
+    }
     async renameChat(data) {
         return await this.chatService.renameChat(data);
     }
@@ -55,6 +58,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ChatController.prototype, "getChat", null);
+__decorate([
+    (0, common_1.Post)('getChats'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ChatController.prototype, "getChats", null);
 __decorate([
     (0, common_1.Put)('renameChat'),
     __param(0, (0, common_1.Body)()),

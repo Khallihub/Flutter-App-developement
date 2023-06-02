@@ -11,6 +11,9 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   UserProfileBloc({required this.userProfileRepository})
       : super(UserProfileLoading()) {
+    on<UserProfileInitEvent>(
+      (event, emit) => emit(UserProfileLoading()),
+    );
     on<UserProfileLoadEvent>((event, emit) async {
       emit(UserProfileLoading());
       try {
@@ -74,5 +77,15 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         emit(UserProfileError('Failed to load user profile: $error'));
       }
     });
+    on<UserProfileFollowEvent>(
+      (event, emit) async {
+        try {
+          await userProfileRepository.followUser(
+              event.followerUsername, event.followedUsername);
+        } catch (error) {
+          emit(const UserProfileError("couldn't follow"));
+        }
+      },
+    );
   }
 }

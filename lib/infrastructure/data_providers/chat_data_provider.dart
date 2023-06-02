@@ -7,8 +7,6 @@ import '../../domain/entities/models/user_model.dart';
 import '../factory models/chat_factory.dart';
 
 class ChatDataProvider {
-
-
   Future<Chat> fetchChat(Map<String, String> data) async {
     final response =
         await http.post(Uri.parse("${Constants.chatBaseUrl}/getChat"),
@@ -113,7 +111,6 @@ class ChatDataProvider {
               "sender": data["sender"],
               "time": data["time"],
               "message": data["newMessage"],
-
             }));
     if (response.statusCode == 200) {
       final chat = await json.decode(response.body);
@@ -183,6 +180,7 @@ class ChatDataProvider {
       throw Exception("Could not fetch users");
     }
   }
+
   fetchSearchResults(String query) async {
     final response = await http.post(
       Uri.parse("${Constants.usersBaseUrl}/searchUsers"),

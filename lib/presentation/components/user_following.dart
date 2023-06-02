@@ -1,11 +1,17 @@
-import 'package:picstash/domain/entities/user_profile/models.dart';
-import 'package:picstash/presentation/components/custom_icons.dart';
-import '../../assets/constants/assets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../application/user_profile_bloc/user_bloc.dart';
+import '../../application/user_profile_bloc/user_profile_event.dart';
+import '../../application/user_profile_bloc/user_profile_state.dart';
 import 'package:flutter/material.dart';
 
+import '../../domain/entities/local_user_model.dart';
+import '../routes/app_route_constants.dart';
+import '../screens/error_page.dart';
+
 class Following extends StatefulWidget {
-  final UserProfile followers;
-  const Following({super.key, required this.followers});
+  final String following;
+  const Following({super.key, required this.following});
 
   @override
   State<Following> createState() => _FollowingState();
@@ -13,53 +19,89 @@ class Following extends StatefulWidget {
 
 class _FollowingState extends State<Following> {
   @override
+  void initState() {
+    BlocProvider.of<UserProfileBloc>(context).add(UserProfileInitEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-            height: 35,
-            width: 35,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                image: DecorationImage(
-                    image: AssetImage(widget.followers.avatar),
-                    fit: BoxFit.cover))),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.followers.userName,
-              style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              widget.followers.bio,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            )
-          ],
-        ),
-        const Spacer(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              color: Colors.deepPurpleAccent,
-              iconSize: 40,
-              icon: CustomIcons(src: CustomAssets.kChat),
-              onPressed: () {},
-            ),
-            IconButton(
-              color: Colors.redAccent,
-              icon: const Icon(Icons.remove_circle_outline_sharp, weight: 50),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ],
+    return BlocBuilder<UserProfileBloc, UserProfileState>(
+      builder: (context, state) {
+        if (state is UserProfileLoading) {
+          BlocProvider.of<UserProfileBloc>(context)
+              .add(UserProfileLoadEvent(userEmail: widget.following));
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        switch (state.runtimeType) {
+          case UserProfileLoadSuccess:
+            LocalUserModel followingProfile = state.props[0] as LocalUserModel;
+            return InkWell(
+              onTap: (() => GoRouter.of(context).pushReplacementNamed(
+                    MyAppRouteConstants.userProfile,
+                    pathParameters: {
+                      "username": followingProfile.username,
+                      "bio": followingProfile.bio,
+                      "avatar": followingProfile.imageUrl,
+                      "id": followingProfile.id,
+                      "name": followingProfile.name,
+                      "email": followingProfile.email.toString(),
+                      "role": "user"
+                    },
+                  )),
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, right: 15),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          followingProfile.imageUrl,
+                        ),
+                        radius: 35,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            followingProfile.name,
+                            style: const TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.w700),
+                          ),
+                          const Divider(
+                            height: 5,
+                          ),
+                          Text(
+                            "@${followingProfile.username}",
+                            style: const TextStyle(
+                                color: Colors.blue, fontSize: 12),
+                          )
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "@${followingProfile.username}",
+                          style: const TextStyle(fontSize: 12),
+                        )),
+                  ],
+                ),
+              ),
+            );
+          default:
+            return const ErrorPage();
+        }
+      },
     );
   }
 }

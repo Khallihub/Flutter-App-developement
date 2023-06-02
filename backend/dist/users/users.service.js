@@ -21,6 +21,14 @@ let UsersService = class UsersService {
     constructor(user) {
         this.user = user;
     }
+    async findByName(query) {
+        if (query.text.trim() === '') {
+            return [];
+        }
+        const regex = new RegExp(query.text, 'i');
+        const users = await this.user.find({ Name: { $regex: regex } });
+        return users;
+    }
     async addUser(dto) {
         const user = new this.user({
             Name: dto.Name,
@@ -40,25 +48,28 @@ let UsersService = class UsersService {
     async findByUsername(info) {
         return await this.user.findOne({ userName: info.userName.toLowerCase() });
     }
-    async findByemail(info) {
-        return await this.user.findOne({ email: info.email.toLowerCase() });
-    }
-    async updateProfile(data) {
-        if ((data.password = '')) {
-            const updatedProfile = await this.user.findOneAndUpdate({ email: data.email }, {
-                userName: data.userName,
-                bio: data.bio,
-            }, { new: true });
-            return updatedProfile;
+    async findByUsernames(userNames) {
+        let users = [];
+        for (const userName of userNames) {
+            let temp = await this.user.findOne({ userName: userName });
+            if (temp) {
+                users.push(temp);
+            }
         }
-        const hashed = await this.hashData(data.password);
-        data.password = hashed;
-        const updatedProfile = await this.user.findOneAndUpdate({ email: data.email }, {
-            userName: data.userName,
-            bio: data.bio,
-            hash: data.password,
+        return users;
+    }
+    async findByemail(info) {
+        const regex = new RegExp(info.email, 'i');
+        const users = await this.user.find({ email: { $regex: regex } });
+        return users[0];
+    }
+    async updateProfile(email, userName, bio, password, avatarUrl) {
+        const updatedProfile = await this.user.findOneAndUpdate({ email: email }, {
+            username: userName,
+            avatar: avatarUrl,
+            bio: bio,
+            password: bcrypt.hash(password, 10),
         }, { new: true });
-        console.log(updatedProfile);
         return updatedProfile;
     }
     async updateFollowers(data) {
@@ -69,19 +80,19 @@ let UsersService = class UsersService {
             userName: data.followedUsername,
         });
         let temp2;
-        if (followed.followers.includes(data.followerUsername)) {
-            temp2 = followed.followers.filter((item) => item !== data.followerUsername);
+        if (followed.followers.includes(follower.email)) {
+            temp2 = followed.followers.filter((item) => item !== follower.email);
         }
         else {
-            followed.followers.push(data.followerUsername);
+            followed.followers.push(follower.email);
             temp2 = followed.followers;
         }
         let temp1;
-        if (follower.following.includes(data.followedUsername)) {
-            temp1 = follower.following.filter((item) => item !== data.followedUsername);
+        if (follower.following.includes(followed.email)) {
+            temp1 = follower.following.filter((item) => item !== followed.email);
         }
         else {
-            follower.following.push(data.followedUsername);
+            follower.following.push(followed.email);
             temp1 = follower.following;
         }
         const newProfile1 = await this.user.findOneAndUpdate({ userName: data.followedUsername }, { followers: temp2 }, { new: true });
@@ -89,6 +100,7 @@ let UsersService = class UsersService {
         if (!(newProfile1 && newProfile2)) {
             return 'failed';
         }
+        console.log(newProfile2.following);
     }
     async deleteProfile(data) {
         const user = await this.findByUsername({ userName: data.userName });

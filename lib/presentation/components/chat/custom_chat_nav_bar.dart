@@ -20,17 +20,16 @@ class CustomBottomNavBar extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Container(
         height: 65,
-        width: width * 0.50,
+        width: width * 0.33,
         margin: const EdgeInsets.only(bottom: 30.0),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withAlpha(150),
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(width: 20),
             Material(
               color: Colors.transparent,
               child: IconButton(

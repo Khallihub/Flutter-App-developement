@@ -7,6 +7,8 @@ abstract class UserProfileEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class UserProfileInitEvent extends UserProfileEvent {}
+
 class UserProfileLoadEvent extends UserProfileEvent {
   final String userEmail;
 
@@ -35,3 +37,11 @@ class UserProfileUpdateEvent extends UserProfileEvent {
 }
 
 class UserProfileLogoutEvent extends UserProfileEvent {}
+
+class UserProfileFollowEvent extends UserProfileEvent {
+  final String followerUsername;
+  final String followedUsername;
+
+  const UserProfileFollowEvent(
+      {required this.followerUsername, required this.followedUsername});
+}

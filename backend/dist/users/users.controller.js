@@ -20,16 +20,22 @@ let UsersController = class UsersController {
         this.usersService = usersService;
     }
     async getUser(email) {
-        return this.usersService.findByemail(email);
+        return this.usersService.findByemail({ email: email.email });
+    }
+    async getUsers(usersNames) {
+        const users = usersNames['users'];
+        return this.usersService.findByUsernames(users);
     }
     async search(userName) {
         return this.usersService.findByUsername(userName);
     }
-    async updateProfile(data) {
-        return this.usersService.updateProfile(data);
+    async finadByName(query) {
+        return this.usersService.findByName(query);
+    }
+    async updateProfile(email, userName, bio, password, avatarUrl) {
+        return this.usersService.updateProfile(email, userName, bio, password, avatarUrl);
     }
     async updateFollowers(data) {
-        console.log(data);
         return this.usersService.updateFollowers(data);
     }
     async deleteProfile(data) {
@@ -44,6 +50,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUser", null);
 __decorate([
+    (0, common_1.Post)('getUsers'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUsers", null);
+__decorate([
     (0, common_1.Post)('search'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -51,10 +64,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "search", null);
 __decorate([
-    (0, common_1.Post)('updateProfile'),
+    (0, common_1.Post)('searchUsers'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "finadByName", null);
+__decorate([
+    (0, common_1.Post)('updateProfile'),
+    __param(0, (0, common_1.Body)('email')),
+    __param(1, (0, common_1.Body)('userName')),
+    __param(2, (0, common_1.Body)('bio')),
+    __param(3, (0, common_1.Body)('password')),
+    __param(4, (0, common_1.Body)('avatarUrl')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateProfile", null);
 __decorate([

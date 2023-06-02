@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:picstash/domain/entities/local_user_model.dart';
+import 'package:picstash/domain/entities/login/login_details.dart';
+import 'package:picstash/infrastructure/data_providers/db/db.dart';
+import '../../application/chat_bloc/chat_bloc.dart';
+import '../../application/chat_bloc/chat_event.dart';
 import '../../application/login_bloc/login_blocs.dart';
 import '../../application/login_bloc/login_event.dart';
 import '../../application/login_bloc/login_state.dart';
@@ -9,10 +12,7 @@ import '../../application/user_profile_bloc/user_bloc.dart';
 import '../../application/user_profile_bloc/user_profile_event.dart';
 import '../../application/user_profile_bloc/user_profile_state.dart';
 import '../../domain/entities/user_profile/user_profile.dart';
-import '../../presentation/components/custom_icons.dart';
-import '../../assets/constants/assets.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import '../components/follow_chip.dart';
 import '../routes/app_route_constants.dart';
 import './posts.dart';
 import './followers.dart';
@@ -46,7 +46,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           } else if (state is LogOutFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text("invalid credentials or connection problem"),
+                content: Text("something went wrong, please try again!"),
               ),
             );
           }
@@ -102,12 +102,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
       title: const Text("Profile",
           style: TextStyle(fontSize: 18, color: Colors.white)),
       actions: [
-        if (!widget.isOwner)
-          IconButton(
-            iconSize: 60,
-            icon: CustomIcons(src: CustomAssets.kChat),
-            onPressed: () {},
-          ),
         if (widget.isOwner)
           PopupMenuButton<String>(
             elevation: 3,
@@ -165,10 +159,20 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  int buttonNumber = 1;
+  @override
+  void initState() {
+    BlocProvider.of<UserProfileBloc>(context)
+        .add(UserProfileLoadEvent(userEmail: widget.userProfile.email));
+    super.initState();
+  }
 
+  int buttonNumber = 1;
   @override
   Widget build(BuildContext context) {
+    Future<LoginDetailsModel?> fetchLocalUser() async {
+      return await LoginCredentials().getLoginCredentials();
+    }
+
     return BlocConsumer<UserProfileBloc, UserProfileState>(
         listener: (context, state) {
       if (state is UserProfileLoading) {
@@ -193,129 +197,242 @@ class _ProfileBodyState extends State<ProfileBody> {
         );
       }
       switch (state.runtimeType) {
+        case UserProfileLoading:
+          BlocProvider.of<UserProfileBloc>(context).add(UserProfileLoadEvent(
+              userEmail: widget.userProfile.email.toString()));
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         case UserProfileLoadSuccess:
-          LocalUserModel user = state.props[0] as LocalUserModel;
-          return AnimationLimiter(
-              child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  children: AnimationConfiguration.toStaggeredList(
-                      duration: const Duration(milliseconds: 375),
-                      childAnimationBuilder: (widget) => SlideAnimation(
-                            horizontalOffset:
-                                MediaQuery.of(context).size.width / 2,
-                            child: FadeInAnimation(child: widget),
-                          ),
-                      children: [
+          return FutureBuilder(
+              future: fetchLocalUser(),
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  return AnimationLimiter(
+                      child: ListView(
+                          children: AnimationConfiguration.toStaggeredList(
+                              duration: const Duration(milliseconds: 375),
+                              childAnimationBuilder: (widget) => SlideAnimation(
+                                    horizontalOffset:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: FadeInAnimation(child: widget),
+                                  ),
+                              children: [
                         const SizedBox(height: 10),
-                        Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 50),
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 10, top: 60, bottom: 20),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    user.username,
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            buttonNumber = 2;
-                                          });
-                                        },
-                                        child: Center(
-                                            child: Text(
-                                          "${((state.props[1] as List).length).toString()} Followers",
-                                          style: const TextStyle(
-                                              color: Colors.blue, fontSize: 12),
-                                        )),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            buttonNumber = 3;
-                                          });
-                                        },
-                                        child: Center(
-                                            child: Text(
-                                          '${((state.props[1] as List).length).toString()} Following',
-                                          style: const TextStyle(
-                                              color: Colors.blue, fontSize: 12),
-                                        )),
-                                      ),
-                                      if (widget.isOwner)
-                                        TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              buttonNumber = 1;
-                                            });
-                                          },
-                                          child: const Text("Posts",
-                                              style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 14)),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      if (!widget.isOwner) const FollowChip(),
-                                      if (!widget.isOwner)
-                                        TextButton(
-                                          onPressed: () {},
-                                          child: const Text("message",
-                                              style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 14)),
-                                        ),
-                                      if (!widget.isOwner)
-                                        TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              buttonNumber = 1;
-                                            });
-                                          },
-                                          child: const Text("Posts",
-                                              style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 14)),
-                                        ),
-                                    ],
-                                  )
-                                ],
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 50),
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 60, bottom: 20),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      widget.userProfile.userName,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 10),
+                                    !widget.isOwner
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Padding(
+                                                  padding: EdgeInsets.all(5)),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 8),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25)),
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(Icons.add,
+                                                        color: Colors.white,
+                                                        size: 20),
+                                                    const SizedBox(width: 2),
+                                                    TextButton(
+                                                      child: (state.props[1]
+                                                                  as List)
+                                                              .contains(snapshot
+                                                                  .data!
+                                                                  .localUserModel
+                                                                  .email
+                                                                  .toString())
+                                                          ? const Text(
+                                                              "Unfollow",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14),
+                                                            )
+                                                          : const Text(
+                                                              "Follow",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14),
+                                                            ),
+                                                      onPressed: () {
+                                                        BlocProvider.of<
+                                                                    UserProfileBloc>(
+                                                                context)
+                                                            .add(UserProfileFollowEvent(
+                                                                followerUsername:
+                                                                    snapshot
+                                                                        .data!
+                                                                        .localUserModel
+                                                                        .username,
+                                                                followedUsername: widget
+                                                                    .userProfile
+                                                                    .userName));
+
+                                                        BlocProvider.of<
+                                                                    UserProfileBloc>(
+                                                                context)
+                                                            .add(UserProfileLoadEvent(
+                                                                userEmail: widget
+                                                                    .userProfile
+                                                                    .email));
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  BlocProvider.of<ChatBloc>(
+                                                          context)
+                                                      .add(ChatCreateEvent(
+                                                          snapshot
+                                                              .data!
+                                                              .localUserModel
+                                                              .username,
+                                                          widget.userProfile
+                                                              .userName));
+                                                  GoRouter.of(context)
+                                                      .pushReplacementNamed(
+                                                    MyAppRouteConstants
+                                                        .chatRouteName,
+                                                    pathParameters: {
+                                                      "id":
+                                                          widget.userProfile.id,
+                                                      "user1": snapshot
+                                                          .data!
+                                                          .localUserModel
+                                                          .username,
+                                                      "user2": widget
+                                                          .userProfile.userName,
+                                                      "friendName": widget
+                                                          .userProfile.name,
+                                                      "friendImage": widget
+                                                          .userProfile.avatar
+                                                    },
+                                                  );
+                                                },
+                                                child: const Text(
+                                                    "Send Message",
+                                                    style: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontSize: 14)),
+                                              ),
+                                              const Padding(
+                                                  padding: EdgeInsets.all(5)),
+                                            ],
+                                          )
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    buttonNumber = 2;
+                                                  });
+                                                },
+                                                child: Center(
+                                                    child: Text(
+                                                  "${((state.props[1] as List).length).toString()} Followers",
+                                                  style: const TextStyle(
+                                                      color: Colors.blue,
+                                                      fontSize: 12),
+                                                )),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              TextButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    buttonNumber = 3;
+                                                  });
+                                                },
+                                                child: Center(
+                                                    child: Text(
+                                                  '${((state.props[2] as List).length).toString()} Following',
+                                                  style: const TextStyle(
+                                                      color: Colors.blue,
+                                                      fontSize: 12),
+                                                )),
+                                              ),
+                                              if (widget.isOwner)
+                                                TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      buttonNumber = 1;
+                                                    });
+                                                  },
+                                                  child: const Text("Posts",
+                                                      style: TextStyle(
+                                                          color: Colors.blue,
+                                                          fontSize: 14)),
+                                                ),
+                                            ],
+                                          ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundImage:
-                                  NetworkImage(widget.userProfile.avatar),
-                            ),
-                          ],
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage:
+                                    NetworkImage(widget.userProfile.avatar),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 20),
-                        buttonNumber == 1
-                            ? ShowPosts(username: user.name)
-                            : (buttonNumber == 2
-                                ? const ShowFollowers()
-                                : const ShowFollowings())
+                        widget.isOwner
+                            ? buttonNumber == 1
+                                ? ShowPosts(
+                                    username:
+                                        snapshot.data!.localUserModel.username)
+                                : (buttonNumber == 2
+                                    ? ShowFollowers(
+                                        followers: state.props[1] as List,
+                                      )
+                                    : ShowFollowings(
+                                        followings: state.props[2] as List,
+                                      ))
+                            : ShowPosts(username: widget.userProfile.userName),
                       ])));
+                } else {
+                  return const ErrorPage();
+                }
+              }));
         default:
           return const ErrorPage();
       }

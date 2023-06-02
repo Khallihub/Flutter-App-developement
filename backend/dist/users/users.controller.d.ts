@@ -30,15 +30,18 @@ export declare class UsersController {
     getUser(email: {
         email: string;
     }): Promise<import("./users.model").USER>;
+    getUsers(usersNames: {
+        users: string[];
+    }): Promise<any[]>;
     search(userName: {
         userName: string;
     }): Promise<import("./users.model").USER>;
-    updateProfile(data: {
-        email: string;
-        userName: string;
-        bio: string;
-        password: string;
-    }): Promise<import("mongoose").Document<unknown, {}, import("./users.model").USER> & Omit<import("./users.model").USER & {
+    finadByName(query: {
+        text: string;
+    }): Promise<(import("mongoose").Document<unknown, {}, import("./users.model").USER> & Omit<import("./users.model").USER & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
+    updateProfile(email: string, userName: string, bio: string, password: string, avatarUrl: string): Promise<import("mongoose").Document<unknown, {}, import("./users.model").USER> & Omit<import("./users.model").USER & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
     updateFollowers(data: {

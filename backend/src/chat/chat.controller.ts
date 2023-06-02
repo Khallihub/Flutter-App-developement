@@ -15,6 +15,11 @@ export class ChatController {
     return await this.chatService.getChat(data);
   }
 
+  @Post('getChats')
+  async getChats(@Body() data: { user: string}) {
+    return await this.chatService.getChats(data);
+  }
+
   @Put('renameChat')
   async renameChat(
     @Body()

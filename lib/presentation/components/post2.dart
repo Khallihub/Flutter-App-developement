@@ -3,14 +3,47 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:picstash/presentation/routes/app_route_constants.dart';
 import 'package:picstash/presentation/screens/error_page.dart';
-import 'package:unicons/unicons.dart';
-
 import '../../application/post_bloc/post_blocs.dart';
 import '../../application/post_bloc/post_event.dart';
 import '../../domain/entities/login/login_details.dart';
 import '../../infrastructure/data_providers/db/db.dart';
 
-class PostWidget2 extends StatefulWidget {
+class SpecialIcon extends StatelessWidget {
+  const SpecialIcon(
+      {Key? key,
+      required this.val,
+      required this.iconData,
+      required this.color,
+      required this.doFunction})
+      : super(key: key);
+  final String val;
+  final Color color;
+  final IconData iconData;
+  final VoidCallback doFunction;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0, top: 5),
+      child: InkWell(
+        onTap: doFunction,
+        child: Row(
+          children: [
+            Icon(
+              iconData,
+              color: color,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(val),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PstWidget extends StatefulWidget {
   final String id;
   final String username;
   final String name;
@@ -23,7 +56,7 @@ class PostWidget2 extends StatefulWidget {
   final List<dynamic> dislikes;
   final List<dynamic> comments;
 
-  const PostWidget2({
+  const PstWidget({
     Key? key,
     required this.id,
     required this.avatarUrl,
@@ -39,20 +72,10 @@ class PostWidget2 extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PostWidget2> createState() => _PostWidgetState();
+  State<PstWidget> createState() => _PstWidgetState();
 }
 
-class _PostWidgetState extends State<PostWidget2> {
-  late PostBloc postBloc;
-
-  @override
-  void initState() {
-    postBloc = BlocProvider.of(context);
-    super.initState();
-  }
-
-  bool more = false;
-
+class _PstWidgetState extends State<PstWidget> {
   void goComments(snapshot, context) {
     GoRouter.of(context)
         .pushNamed(MyAppRouteConstants.commentRoutName, pathParameters: {
@@ -75,144 +98,170 @@ class _PostWidgetState extends State<PostWidget2> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: fetchLocalUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            int noLikes = widget.likes.length;
-            int noDislikes = widget.dislikes.length;
-            int noComments = widget.comments.length;
-            DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
-                int.parse(widget.date) * 1000);
-            return InkWell(
-              onTap: () {
-                goComments(snapshot, context);
-              },
-              child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(children: [
-                    Row(
+      future: fetchLocalUser(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          DateTime postDate = DateTime.fromMillisecondsSinceEpoch(
+              int.parse(widget.date) * 1000);
+          return Column(children: [
+            Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.indigoAccent.withOpacity(0.25),
+                      blurRadius: 20,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                  //border: Border.all(color: kaccentColor.withOpacity(0.2), width: 2),
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white),
+              margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    child: Row(
                       children: [
-                        Container(
-                          height: 35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              image: DecorationImage(
-                                  image: NetworkImage(widget.avatarUrl),
-                                  fit: BoxFit.cover)),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.name,
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5.0, top: 5),
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.indigoAccent,
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(widget.avatarUrl),
+                              radius: 28,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              '${widget.username} • ${postDate.year} - ${postDate.month} - ${postDate.day}',
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.grey),
-                            )
-                          ],
+                          ),
                         ),
-                        const Spacer(),
-                        const SizedBox(width: 5),
-                        const Icon(Icons.more_vert),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, top: 5),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.name,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.indigo,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 2,
+                                    ),
+                                    Text(
+                                      "@${widget.username} •  ${postDate.year} - ${postDate.month} - ${postDate.day}",
+                                      style: const TextStyle(
+                                          letterSpacing: 1,
+                                          fontSize: 10,
+                                          color: Colors.black),
+                                    )
+                                  ],
+                                ),
+                              ]),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(widget.description)),
-                    const SizedBox(height: 5),
-                    Hero(
-                      tag: widget.id,
-                      child: Container(
-                        height: MediaQuery.of(context).size.width * 0.65,
-                        width: double.maxFinite,
-                        alignment: Alignment.topRight,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                                image: NetworkImage(widget.imageUrl),
-                                fit: BoxFit.cover)),
-                        child: Container(
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black.withOpacity(0.05),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                    child: Divider(color: Colors.black38),
+                  ),
+                  widget.title.isEmpty
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 5),
+                          child: Text(
+                            widget.title,
+                            style: const TextStyle(fontSize: 19),
                           ),
-                          child:
-                              const Icon(Icons.attachment, color: Colors.white),
                         ),
-                      ),
+                  Hero(
+                    tag: widget.id,
+                    child: Container(
+                      height: MediaQuery.of(context).size.width * 0.75,
+                      width: double.maxFinite,
+                      alignment: Alignment.topRight,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              image: NetworkImage(widget.imageUrl),
+                              fit: BoxFit.cover)),
                     ),
-                    const SizedBox(height: 10),
-                    Row(children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 3,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 5),
+                    child: Text(
+                      widget.description,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                    child: Divider(color: Colors.black38),
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SpecialIcon(
+                          val: widget.comments.length.toString(),
+                          iconData: Icons.comment_outlined,
+                          color: Colors.indigo,
+                          doFunction: () {
+                            goComments(snapshot, context);
+                          },
                         ),
-                        child: IconButton(
-                          icon: const Icon(UniconsLine.thumbs_up),
-                          color: Colors.white,
-                          onPressed: () {
+                        SpecialIcon(
+                          val: widget.likes.length.toString(),
+                          iconData: Icons.thumb_up,
+                          color: widget.likes.contains(
+                                  snapshot.data!.localUserModel.username)
+                              ? Colors.green
+                              : Colors.indigo,
+                          doFunction: () {
                             BlocProvider.of<PostBloc>(context).add(
                                 PostLikedEvent(widget.id,
                                     snapshot.data!.localUserModel.username));
                           },
                         ),
-                      ),
-                      Text(
-                        '$noLikes',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      IconButton(
-                        icon: const Icon(UniconsLine.thumbs_down),
-                        color: Colors.white,
-                        onPressed: () {
-                          BlocProvider.of<PostBloc>(context).add(
-                              PostDislikedEvent(widget.id,
-                                  snapshot.data!.localUserModel.username));
-                        },
-                      ),
-                      Text(
-                        '$noDislikes',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          goComments(snapshot, context);
-                        },
-                        icon: const Icon(UniconsLine.comment_lines,
-                            color: Colors.white),
-                      ),
-                      Text(
-                        '$noComments',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ])
-                  ])),
-            );
+                        SpecialIcon(
+                          val: widget.dislikes.length.toString(),
+                          iconData: Icons.thumb_down,
+                          color: widget.dislikes.contains(
+                                  snapshot.data!.localUserModel.username)
+                              ? Colors.red
+                              : Colors.indigo,
+                          doFunction: () {
+                            BlocProvider.of<PostBloc>(context).add(
+                                PostDislikedEvent(widget.id,
+                                    snapshot.data!.localUserModel.username));
+                          },
+                        ),
+                      ]),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ]);
+        } else {
+          int i = 0;
+          while (i <= 5) {
+            Future.delayed(const Duration(seconds: 2));
+            i++;
           }
           return const ErrorPage();
-        });
+        }
+      },
+    );
   }
 }

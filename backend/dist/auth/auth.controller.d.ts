@@ -62,8 +62,8 @@ export declare class AuthController {
             bio: string;
             following: string[];
             followers: string[];
-            role: string;
             createdAt: Date;
+            role: string;
         };
         access_token: string;
         refresh_token: string;

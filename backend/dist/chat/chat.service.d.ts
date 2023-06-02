@@ -31,7 +31,9 @@ export declare class ChatService {
         user1: string;
         user2: string;
         time: string;
-    }): Promise<void>;
+    }): Promise<import("mongoose").Document<unknown, {}, Chat> & Omit<Chat & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>>;
     renameChat(data: {
         user1: string;
         user2: string;
@@ -40,13 +42,7 @@ export declare class ChatService {
     }): Promise<import("mongoose").Document<unknown, {}, Chat> & Omit<Chat & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
-    updateMessage(data: {
-        user1: string;
-        user2: string;
-        sender: string;
-        time: string;
-        message: string;
-    }): Promise<import("mongoose").Document<unknown, {}, Chat> & Omit<Chat & {
+    updateMessage(data: any): Promise<import("mongoose").Document<unknown, {}, Chat> & Omit<Chat & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
     Message(data: {
@@ -69,6 +65,11 @@ export declare class ChatService {
     }): Promise<import("mongoose").Document<unknown, {}, Chat> & Omit<Chat & {
         _id: import("mongoose").Types.ObjectId;
     }, never>>;
+    getChats(data: {
+        user: string;
+    }): Promise<(import("mongoose").Document<unknown, {}, Chat> & Omit<Chat & {
+        _id: import("mongoose").Types.ObjectId;
+    }, never>)[]>;
     createChat(data: {
         user1: string;
         user2: string;

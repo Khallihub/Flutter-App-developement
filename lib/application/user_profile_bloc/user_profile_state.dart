@@ -42,4 +42,29 @@ class UserProfileError extends UserProfileState {
   List<Object?> get props => [message];
 }
 
+class FollowLoading extends UserProfileState {}
+
+class FollowLoadedSuccess extends UserProfileState {
+  final LocalUserModel followerProfile;
+  final List<dynamic> followers;
+  final List<dynamic> following;
+
+  const FollowLoadedSuccess(
+      {required this.followerProfile,
+      required this.followers,
+      required this.following});
+
+  @override
+  List<Object?> get props => [followerProfile];
+}
+
+class FollowLoadFailure extends UserProfileState {
+  final String message;
+
+  const FollowLoadFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class UserProfileLogoutSuccess extends UserProfileState {}
