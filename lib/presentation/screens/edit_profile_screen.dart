@@ -92,7 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       title: const Text('Edit Profile'),
                     ),
                     body: Container(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         color: Colors.white,
@@ -101,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -113,7 +113,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             backgroundImage: NetworkImage(
                                 snapshot.data!.localUserModel.imageUrl),
                           ),
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _nameController,
                             decoration: InputDecoration(
@@ -128,14 +128,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Colors.blue,
                                   width: 2.0,
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _bioController,
                             maxLines: null,
@@ -152,14 +152,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Colors.blue,
                                   width: 2.0,
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _passwordController,
                             obscureText: true,
@@ -175,19 +175,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                   color: Colors.blue,
                                   width: 2.0,
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 16.0),
                           ElevatedButton(
                             onPressed: () {
                               // TODO: Implement image picker functionality here
                             },
-                            child: Text(
+                            child: const Text(
                               'Add Image',
                               style: TextStyle(
                                 color: Colors.white,
