@@ -28,7 +28,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     User user = User(
       id: userDetail.id,
       avatarUrl: userDetail.imageUrl,
-      userName: userDetail.imageUrl,
+      userName: userDetail.username,
       name: userDetail.username,
     );
     return user;
@@ -80,8 +80,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
+              } else if (state is ChatDeletedState) {
+                chatBloc.add(AllChatsLoadEvent(user.userName));
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               } else if (state is AllChatsLoadOperationSuccess) {
-                final List<ChatModel> chatList = state.chats ;     
+                final List<ChatModel> chatList = state.chats;
 
                 return Scaffold(
                   appBar: CustomAppBar(
@@ -97,7 +102,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           fit: StackFit.expand,
                           children: [
                             ChatMessages(height: height, chats: chatList),
-                            CustomBottomNavBar(width: width, localUser: user.userName),
+                            CustomBottomNavBar(
+                                width: width, localUser: user.userName),
                           ],
                         ),
                       ),

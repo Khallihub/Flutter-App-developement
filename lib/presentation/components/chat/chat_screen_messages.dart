@@ -50,10 +50,16 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
       context: context,
       position: position,
       items: [
-        const PopupMenuItem(
-          value: 'edit',
-          child: Text("Edit"),
-        ),
+        message.sender == widget.chat.user1
+            ? const PopupMenuItem(
+                value: 'edit',
+                child: Text("Edit"),
+              )
+            : 
+            const PopupMenuItem(
+                value: 'n',
+                child: Text("Edit"),
+              ),
         const PopupMenuItem(
           value: 'delete',
           child: Text('Delete'),

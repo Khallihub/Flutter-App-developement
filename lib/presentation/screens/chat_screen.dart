@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:picstash/presentation/components/chat/chat_screen_messages.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
+import '../components/chat/chat_screen_messages.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_container.dart';
 
@@ -31,12 +34,14 @@ class _ChatScreenState extends State<ChatScreen> {
   ScrollController scrollController = ScrollController();
   TextEditingController textEditingController = TextEditingController();
 
+  late IO.Socket socket;
   late ChatBloc chatBloc;
   late String text;
   String time = "";
 
   @override
   void initState() {
+    connect();
     chatBloc = BlocProvider.of<ChatBloc>(context);
     chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
     // textEditingController.text = " ";
@@ -44,7 +49,48 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   @override
+  void dispose() {
+    disconnect();
+    // chatBloc.add(AllChatsLoadEvent(widget.user1));
+    super.dispose();
+  }
+
+  void connect() {
+    socket = IO.io("http://192.168.65.212:3000", <String, dynamic>{
+      "transports": ["websocket"],
+      "autoConnect": false,
+    });
+    socket.connect();
+    socket.emit("joined", {"sender": widget.user1, "receiver": widget.user2});
+    socket.onConnect((data) {
+      print(socket.connected);
+      print("connected");
+      socket.on("message", (data) {
+        
+        print("9"*99);
+        print(data);
+          chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
+      });
+    });
+  }
+
+  void disconnect() {
+    print("disconnected");
+    socket.emit("disconnect", widget.user1);
+    socket.disconnect();
+  }
+
+  void notifiy() {
+    socket.emit("message", {
+      "sender": widget.user1,
+      "receiver": widget.user2,
+      "status": "sent"
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("8" * 99);
     User friend = User(
         name: widget.friendName,
         avatarUrl: widget.friendImage,
@@ -82,7 +128,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         chat: state.chats[0],
                         scrollController: scrollController,
                       );
-                    } else if (state is ChatMessageDeletedState) {
+                    }  
+                    else if (state is ChatMessageDeletedState) {
+                      notifiy();
+                      return ChatScreenMessages(
+                        chat: state.chat,
+                        scrollController: scrollController,
+                      );
+                    } else if (state is ChatMessageUpdatedState) {
                       return ChatScreenMessages(
                         chat: state.chat,
                         scrollController: scrollController,
@@ -136,12 +189,15 @@ class _ChatScreenState extends State<ChatScreen> {
       icon: Icon(time == "" ? Icons.send : Icons.save),
       color: Theme.of(context).iconTheme.color,
       onPressed: () {
-        time == ""
-            ? chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
-                widget.user1, textEditingController.text))
-            : chatBloc.add(ChatMessageUpdateEvent(widget.user1, widget.user2,
-                widget.user1, textEditingController.text, time));
-        textEditingController.clear();
+        if (textEditingController.text.trim().isNotEmpty) {
+          time == ""
+              ? chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
+                  widget.user1, textEditingController.text))
+              : chatBloc.add(ChatMessageUpdateEvent(widget.user1, widget.user2,
+                  widget.user1, textEditingController.text, time));
+          textEditingController.clear();
+          notifiy();
+        }
       },
     );
   }
