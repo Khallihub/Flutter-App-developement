@@ -39,6 +39,8 @@ export class PostService {
   async getComments(data: { id: string }) {
     const feed = await this.post.findById(data.id);
     const comments = feed.comments;
+    console.log('comments: ');
+    console.log(comments);
     return comments;
   }
   async getLikes(data: { id: string }) {
@@ -82,8 +84,6 @@ export class PostService {
       return false;
     }
   }
-
-  async
   async update_post(data: {
     id: string;
     userName: string;
@@ -145,7 +145,6 @@ export class PostService {
     const feed = await this.post.find();
     return feed;
   }
-  
   async createPost(dto: postDto) {
     const post = new this.post({
       title: dto.title,

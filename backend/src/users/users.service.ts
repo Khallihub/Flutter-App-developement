@@ -8,7 +8,15 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel('user') private user: Model<USER>) {}
-
+  
+  async findByName(query: { text: string; }) {
+    if (query.text.trim() === '') {
+      return [];
+    }
+    const regex = new RegExp(query.text, 'i'); // Create a case-insensitive regex pattern
+    const users = await this.user.find({ Name: { $regex: regex } });
+    return users
+  }
   async addUser(dto: userDto) {
     const user = new this.user({
       Name: dto.Name,
@@ -26,42 +34,34 @@ export class UsersService {
     return result;
   }
 
+  
+
   async findByUsername(info: { userName: string }): Promise<USER | undefined> {
     return await this.user.findOne({ userName: info.userName.toLowerCase() });
+  }
+  async findByUsernames(userNames: string[]) {
+    let users = [];
+    for (const userName of userNames) {
+      let temp = await this.user.findOne({ userName: userName });
+      if (temp) {
+        users.push(temp);
+      }
+    }
+    console.log(users);
+    return users;
   }
 
   async findByemail(info: { email: string }): Promise<USER | undefined> {
     return await this.user.findOne({ email: info.email.toLowerCase() });
   }
 
-  async updateProfile(data: {
-    email: string;
-    userName: string;
-    bio: string;
-    password: string;
-  }) {
-    if ((data.password = '')) {
-      const updatedProfile = await this.user.findOneAndUpdate(
-        { email: data.email },
-        {
-          userName: data.userName,
-          //avatar: dto.avatar,
-          bio: data.bio,
-        },
-        { new: true },
-      );
-      return updatedProfile;
-    }
-    const hashed = await this.hashData(data.password);
-    data.password = hashed;
-
+  async updateProfile(dto: userDto) {
     const updatedProfile = await this.user.findOneAndUpdate(
-      { email: data.email },
+      { email: dto.email },
       {
-        userName: data.userName,
-        //avatar: dto.avatar,
-        bio: data.bio,
-        hash: data.password,
+        Name: dto.Name,
+        avatar: dto.avatar,
+        bio: dto.bio,
       },
       { new: true },
     );
