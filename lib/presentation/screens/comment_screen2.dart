@@ -271,6 +271,13 @@ class _CommentScreenWidgetState extends State<CommentScreen2> {
                                           '${widget.username} • ${postDate.year} - ${postDate.month} - ${postDate.day} ',
                                           style: const TextStyle(
                                               fontSize: 12, color: Colors.grey),
+                                        ),
+                                        Text(
+                                          res[index],
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white),
                                         )
                                       ],
                                     ),

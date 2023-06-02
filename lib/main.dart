@@ -35,7 +35,6 @@ Future<void> main() async {
       SignUpRepository(signUpDataProvider: SignUpDataProvider());
   final CommentRepository commentRepository =
       CommentRepository(commentDataProvider: CommentDataProvider());
-
   final ChatRepository chatRepository = ChatRepository(ChatDataProvider());
   Bloc.observer = SimpleBlocObserver();
 
