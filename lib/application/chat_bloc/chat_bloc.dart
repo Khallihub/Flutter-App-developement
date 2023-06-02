@@ -118,7 +118,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<SetParentTextField>(
       (event, emit) {
-        emit(SetParentTextFieldState(text: event.text, time: event.time));
+        emit(SetParentTextFieldState(text: event.text, time: event.time, chat: event.chat));
       },
     );
     on<ChatMessageSendEvent>((event, emit) async {

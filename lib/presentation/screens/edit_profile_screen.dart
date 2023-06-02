@@ -155,9 +155,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             const SizedBox(height: 16.0),
                             ElevatedButton(
-                              onPressed: () {
-                                print("hellow photo");
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(

@@ -169,7 +169,6 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   @override
   Widget build(BuildContext context) {
-    print("mera nam ${widget.userProfile.name}");
     return BlocConsumer<UserProfileBloc, UserProfileState>(
         listener: (context, state) {
       if (state is UserProfileLoading) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picstash/infrastructure/factory%20models/chat_factory.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../application/chat_bloc/blocs.dart';
@@ -63,34 +64,24 @@ class _ChatScreenState extends State<ChatScreen> {
     socket.connect();
     socket.emit("joined", {"sender": widget.user1, "receiver": widget.user2});
     socket.onConnect((data) {
-      print(socket.connected);
-      print("connected");
       socket.on("message", (data) {
-        
-        print("9"*99);
-        print(data);
-          chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
+        chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
       });
     });
   }
 
   void disconnect() {
-    print("disconnected");
     socket.emit("disconnect", widget.user1);
     socket.disconnect();
   }
 
   void notifiy() {
-    socket.emit("message", {
-      "sender": widget.user1,
-      "receiver": widget.user2,
-      "status": "sent"
-    });
+    socket.emit("message",
+        {"sender": widget.user1, "receiver": widget.user2, "status": "sent"});
   }
 
   @override
   Widget build(BuildContext context) {
-    print("8" * 99);
     User friend = User(
         name: widget.friendName,
         avatarUrl: widget.friendImage,
@@ -128,14 +119,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         chat: state.chats[0],
                         scrollController: scrollController,
                       );
-                    }  
-                    else if (state is ChatMessageDeletedState) {
+                    } else if (state is ChatMessageDeletedState) {
                       notifiy();
                       return ChatScreenMessages(
                         chat: state.chat,
                         scrollController: scrollController,
                       );
                     } else if (state is ChatMessageUpdatedState) {
+                      notifiy();
                       return ChatScreenMessages(
                         chat: state.chat,
                         scrollController: scrollController,
@@ -143,17 +134,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     } else if (state is SetParentTextFieldState) {
                       SchedulerBinding.instance.addPostFrameCallback(
                         (_) {
-                          setState(
-                            () {
-                              textEditingController.value =
-                                  TextEditingValue(text: state.text);
-                              time = state.time;
-                            },
-                          );
+                          textEditingController.value =
+                              TextEditingValue(text: state.text);
+                          time = state.time;
                         },
                       );
-
-                      return const SizedBox();
+                      return ChatScreenMessages(scrollController: scrollController, chat: state.chat);
                     } else if (state is ChatOperationFailure) {
                       return const Center(child: Text("error"));
                     } else {
