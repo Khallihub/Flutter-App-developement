@@ -1,7 +1,7 @@
 class Message {
   final String sender;
   final String text;
-  final DateTime createdAt;
+  final String createdAt;
 
   const Message({ required this.sender,
     required this.text,
