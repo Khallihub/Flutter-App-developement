@@ -4,7 +4,6 @@ import 'package:picstash/presentation/components/chat/chat_screen_messages.dart'
 
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
-import '../components/chat/chat_home_screen_message.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_container.dart';
 
@@ -86,7 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     TextFormField(
                       controller: textEditingController,
-                      
+
                       // onChanged: (value) {
                       //   setState(() {
                       //     text = value;
@@ -128,8 +127,8 @@ class _ChatScreenState extends State<ChatScreen> {
       icon: const Icon(Icons.send),
       color: Theme.of(context).iconTheme.color,
       onPressed: () {
-        chatBloc.add(ChatMessageSendEvent(
-            widget.user1, widget.user2, widget.user1, textEditingController.text));
+        chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
+            widget.user1, textEditingController.text));
       },
     );
   }
