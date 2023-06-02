@@ -116,6 +116,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<ChatMessageSendEvent>((event, emit) async {
       emit(ChatLoadingState());
+      print(event.message);
       try {
         final chats = await chatRepository.sendMessage({
           "user1": event.user1,
