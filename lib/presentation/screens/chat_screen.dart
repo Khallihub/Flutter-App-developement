@@ -63,24 +63,34 @@ class _ChatScreenState extends State<ChatScreen> {
     socket.connect();
     socket.emit("joined", {"sender": widget.user1, "receiver": widget.user2});
     socket.onConnect((data) {
+      print(socket.connected);
+      print("connected");
       socket.on("message", (data) {
-        chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
+        
+        print("9"*99);
+        print(data);
+          chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
       });
     });
   }
 
   void disconnect() {
+    print("disconnected");
     socket.emit("disconnect", widget.user1);
     socket.disconnect();
   }
 
   void notifiy() {
-    socket.emit("message",
-        {"sender": widget.user1, "receiver": widget.user2, "status": "sent"});
+    socket.emit("message", {
+      "sender": widget.user1,
+      "receiver": widget.user2,
+      "status": "sent"
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("8" * 99);
     User friend = User(
         name: widget.friendName,
         avatarUrl: widget.friendImage,
@@ -118,7 +128,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         chat: state.chats[0],
                         scrollController: scrollController,
                       );
-                    } else if (state is ChatMessageDeletedState) {
+                    }  
+                    else if (state is ChatMessageDeletedState) {
                       notifiy();
                       return ChatScreenMessages(
                         chat: state.chat,
@@ -130,20 +141,19 @@ class _ChatScreenState extends State<ChatScreen> {
                         scrollController: scrollController,
                       );
                     } else if (state is SetParentTextFieldState) {
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        textEditingController.text = state.text;
-                        time = state.time;
-                        textEditingController.selection =
-                            TextSelection.fromPosition(
-                          TextPosition(
-                              offset: textEditingController.text.length),
-                        );
-                      });
-
-                      return ChatScreenMessages(
-                        chat: state.chat,
-                        scrollController: scrollController,
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (_) {
+                          setState(
+                            () {
+                              textEditingController.value =
+                                  TextEditingValue(text: state.text);
+                              time = state.time;
+                            },
+                          );
+                        },
                       );
+
+                      return const SizedBox();
                     } else if (state is ChatOperationFailure) {
                       return const Center(child: Text("error"));
                     } else {

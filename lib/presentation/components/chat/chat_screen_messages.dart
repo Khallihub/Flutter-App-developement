@@ -69,17 +69,10 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
     switch (result) {
       case "edit":
         chatBloc.add(
-            SetParentTextField(text: message.text, time: message.createdAt, chat: widget.chat));
+            SetParentTextField(text: message.text, time: message.createdAt));
       case "delete":
         chatBloc.add(ChatMessageDeleteEvent(
             widget.chat.user1, widget.chat.user2, message.createdAt));
-      case "n":
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("You can't edit this message"),
-          ),
-        );
-        break;
     }
   }
 

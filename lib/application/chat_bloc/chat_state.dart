@@ -92,8 +92,7 @@ class ChatMessageSentState extends ChatState {
 class SetParentTextFieldState extends ChatState {
   final String text;
   final String time;
-  final Chat chat;
-  const SetParentTextFieldState({required this.text, required this.time, required this.chat});
+  const SetParentTextFieldState({required this.text, required this.time});
   @override
   List<dynamic> get props => [text];
 }

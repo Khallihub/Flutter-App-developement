@@ -103,12 +103,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<ChatMessageUpdateEvent>((event, emit) async {
       emit(ChatLoadingState());
-      print("9"*78);
-      print(event.user1);
-      print(event.user2);
-      print(event.sender);
-      print(event.newMessage);
-      print(event.time);
       try {
         final chats = await chatRepository.updateMessage({
           "user1": event.user1,
@@ -124,7 +118,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
     on<SetParentTextField>(
       (event, emit) {
-        emit(SetParentTextFieldState(text: event.text, time: event.time, chat: event.chat));
+        emit(SetParentTextFieldState(text: event.text, time: event.time));
       },
     );
     on<ChatMessageSendEvent>((event, emit) async {

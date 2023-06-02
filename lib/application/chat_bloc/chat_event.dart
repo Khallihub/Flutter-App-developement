@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../infrastructure/factory models/chat_factory.dart';
-
 abstract class ChatEvent extends Equatable {
   const ChatEvent();
 
@@ -85,9 +83,8 @@ class ChatMessageUpdateEvent extends ChatEvent {
 class SetParentTextField extends ChatEvent {
   final String text;
   final String time;
-  final Chat chat;
 
-  const SetParentTextField({required this.text, required this.time, required this.chat});
+  const SetParentTextField({required this.text, required this.time});
 
   @override 
   List<dynamic> get props => [text, time];
