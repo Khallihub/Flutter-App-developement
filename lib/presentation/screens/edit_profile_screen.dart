@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picstash/presentation/screens/error_page.dart';
@@ -21,12 +20,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? avatarUrl;
-  File? _avatarImage;
+  PickedImage? _avatarImage;
   final _formKey = GlobalKey<FormState>();
 
   Future<void> setAvatar() async {
-    setState(() async {
-      avatarUrl = await UploadImage.pickImage();
+    final temp = await UploadImage.pickImage();
+    setState(() {
+      _avatarImage = temp;
     });
   }
 
@@ -178,11 +178,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   const SizedBox(height: 16.0),
                                   const SizedBox(height: 8.0),
                                   _avatarImage != null
-                                      ? Image.file(_avatarImage!,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.7)
+                                      ? Image.memory(_avatarImage!.bytes!)
                                       : Container(
                                           width: MediaQuery.of(context)
                                                   .size
@@ -218,7 +214,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   TextButton(
                                     onPressed: () async {
                                       setState(() async {
-                                        avatarUrl =
+                                        _avatarImage =
                                             await UploadImage.pickImage();
                                       });
                                     },
@@ -227,13 +223,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   const SizedBox(height: 16.0),
                                   const SizedBox(height: 16.0),
                                   ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
                                         var username = _usernameController.text;
                                         var bio = _bioController.text;
                                         var password =
                                             _passwordController.toString();
+                                        avatarUrl =
+                                            await UploadImage.uploadImage(
+                                                _avatarImage!);
                                         BlocProvider.of<UserProfileBloc>(
                                                 context)
                                             .add(

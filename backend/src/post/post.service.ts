@@ -83,7 +83,7 @@ export class PostService {
     }
   }
 
-  async
+  async;
   async update_post(data: {
     id: string;
     userName: string;
@@ -145,7 +145,7 @@ export class PostService {
     const feed = await this.post.find();
     return feed;
   }
-  
+
   async createPost(dto: postDto) {
     const post = new this.post({
       title: dto.title,
@@ -158,6 +158,7 @@ export class PostService {
       authorAvatar: dto.authorAvatar,
     });
     const result = await post.save();
+    console.log(`post: ${result}`);
     return result;
   }
 

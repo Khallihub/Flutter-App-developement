@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -73,24 +72,8 @@ class _SignUpBodyState extends State<SignUpBody> {
   static String _password = "";
   static String _bio = "";
   static String _username = "";
-  File? _avatarImage;
-  String? _avatarImageUrl;
-
-  // Future<void> _pickAvatarImage() async {
-  //   final result = await FilePicker.platform.pickFiles(
-  //     type: FileType.image,
-  //     allowMultiple: false,
-  //   );
-
-  //   if (result != null && result.files.isNotEmpty) {
-  //     final path = result.files.first.path;
-  //     if (path != null) {
-  //       setState(() {
-  //         _avatarImage = File(path);
-  //       });
-  //     }
-  //   }
-  // }
+  PickedImage? pickedImage;
+  String? _avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -167,17 +150,16 @@ class _SignUpBodyState extends State<SignUpBody> {
                       },
                     ),
                     const SizedBox(height: 8.0),
-                    _avatarImage != null
-                        ? Image.file(_avatarImage!,
-                            height: MediaQuery.of(context).size.width * 0.7)
-                        : Container(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Column(
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: pickedImage != null
+                          ? Image.memory(pickedImage!.bytes!)
+                          : const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
@@ -195,13 +177,16 @@ class _SignUpBodyState extends State<SignUpBody> {
                                 ),
                               ],
                             ),
-                          ),
+                    ),
                     const SizedBox(height: 8.0),
                     TextButton(
                       onPressed: () async {
-                        _avatarImageUrl = await UploadImage.pickImage();
+                        final temp = await UploadImage.pickImage();
+                        setState(() {
+                          pickedImage = temp;
+                        });
                       },
-                      child: const Text('Choose Avatar'),
+                      child: const Text('Add Photo'),
                     ),
                     const SizedBox(height: 16.0),
                     TextFormField(
@@ -237,18 +222,20 @@ class _SignUpBodyState extends State<SignUpBody> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xff4c505b)),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
 
+                          _avatarUrl =
+                              await UploadImage.uploadImage(pickedImage!);
                           SignUpModel signUpModel = SignUpModel.create(
                               _name,
                               EmailAddress.crud(_emailAddress),
                               Password.crud(_password),
                               _username,
                               bio: _bio,
-                              avatar:
-                                  AvatarModel.create(_avatarImageUrl ?? ""));
+                              avatar: AvatarModel.create(
+                                  _avatarUrl ?? "https://picsum.photos/200"));
                           BlocProvider.of<SignUpBloc>(context).add(
                               SignUpButtonPressed(signUpModel: signUpModel));
                         }

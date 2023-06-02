@@ -20,6 +20,7 @@ class _AddPostWidgetState extends State<AddPostWidget> {
   final TextEditingController _descriptionController = TextEditingController();
 
   String? _postImageUrl;
+  PickedImage? postImage;
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +51,12 @@ class _AddPostWidgetState extends State<AddPostWidget> {
           child: ListView(
             children: [
               const SizedBox(height: 7.0),
-              const TextButton(
+              TextButton(
                 onPressed: null,
                 child: TextField(
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
+                  controller: _titleController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
                     fillColor: Colors.white,
                     filled: true,
                     hintText: "Title",
@@ -69,39 +71,43 @@ class _AddPostWidgetState extends State<AddPostWidget> {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cloud_upload,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Upload Image',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
+                child: postImage != null
+                    ? Image.memory(postImage!.bytes!)
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.cloud_upload,
+                            size: 40,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Upload Image',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
               ),
               const SizedBox(height: 8.0),
               TextButton(
                 onPressed: () async {
-                  setState(() async {
-                    _postImageUrl = await UploadImage.pickImage();
+                  final temp = await UploadImage.pickImage();
+                  setState(() {
+                    postImage = temp;
                   });
                 },
                 child: const Text('Add Photo'),
               ),
-              const Padding(
-                padding: EdgeInsets.all(25),
+              Padding(
+                padding: const EdgeInsets.all(25),
                 child: TextField(
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
+                  controller: _descriptionController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
                       filled: true,
                       hintText: "Description",
                       border: OutlineInputBorder(
@@ -111,9 +117,10 @@ class _AddPostWidgetState extends State<AddPostWidget> {
               ),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+                      _postImageUrl = await UploadImage.uploadImage(postImage!);
                       BlocProvider.of<PostBloc>(context).add(PostCreateEvent(
                           title: _titleController.text,
                           description: _descriptionController.text,

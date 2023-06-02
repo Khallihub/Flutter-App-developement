@@ -7,7 +7,6 @@ import 'package:picstash/infrastructure/data_providers/signup/signup_data_provid
 import 'package:picstash/infrastructure/repository/comment/comment_repository.dart';
 import 'package:picstash/infrastructure/repository/login_repository/login_repository.dart';
 import 'package:picstash/infrastructure/repository/signup_repository/sign_up_repository.dart';
-import 'package:picstash/presentation/components/theme.dart';
 import 'application/comment_bloc/comment_blocs.dart';
 import 'application/bloc_observer.dart';
 import 'application/chat_bloc/chat_bloc.dart';
@@ -96,7 +95,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        theme: darkTheme(),
+        // theme: darkTheme(),
         routeInformationParser:
             MyAppRouter.returnRouter(isLoggedIn).routeInformationParser,
         routerDelegate: MyAppRouter.returnRouter(isLoggedIn).routerDelegate,
