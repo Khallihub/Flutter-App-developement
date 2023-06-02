@@ -195,8 +195,10 @@ class ChatDataProvider {
   }
 
   Future<Chat> sendMessage(Map<String, String> data) async {
+
+    print(data);
     final response =
-        await http.post(Uri.parse("${Constants.chatBaseUrl}/sendMessage"),
+        await http.put(Uri.parse("${Constants.chatBaseUrl}/sendMessage"),
             headers: <String, String>{"Content-Type": "application/json"},
             body: jsonEncode({
               "user1": data["user1"],
@@ -204,10 +206,11 @@ class ChatDataProvider {
               "sender": data["sender"],
               "message": data["message"],
             }));
-    if (response.statusCode == 201) {
+      print(response.statusCode)  ;
+    if (response.statusCode == 200) {
       final chat = await json.decode(response.body);
       Chat decodedChat = Chat.fromJson(chat);
-
+      print(decodedChat);
       return decodedChat;
     } else {
       throw Exception("Could not fetch chat");

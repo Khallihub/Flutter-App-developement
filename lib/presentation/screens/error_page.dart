@@ -11,8 +11,7 @@ class ErrorPage extends StatefulWidget {
 class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+      return Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -27,7 +26,7 @@ class _ErrorPageState extends State<ErrorPage> {
               },
               child: const Text("go back"))
         ],
-      )),
-    );
+      ));
+
   }
 }

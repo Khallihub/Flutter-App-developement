@@ -91,7 +91,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   body: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ChatContacts(height: height, users: chatList),
+                      // ChatContacts(height: height, users: chatList),
                       Expanded(
                         child: Stack(
                           fit: StackFit.expand,

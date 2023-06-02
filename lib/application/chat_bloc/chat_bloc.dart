@@ -115,7 +115,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       }
     });
     on<ChatMessageSendEvent>((event, emit) async {
-      emit(ChatLoadingState());
       try {
         final chats = await chatRepository.sendMessage({
           "user1": event.user1,
@@ -123,17 +122,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           "sender": event.sender,
           "message": event.message
         });
+
         emit(ChatLoadOperationSuccess(chats: [chats]));
       } catch (error) {
         emit(ChatOperationFailure(error));
       }
     });
     on<ChatMessageDeleteEvent>((event, emit) async {
+      print(event.time);
       emit(ChatLoadingState());
       try {
         final chats = await chatRepository.deleteMessage(
             {"user1": event.user1, "user2": event.user2, "time": event.time});
-        emit(ChatLoadOperationSuccess(chats: [chats]));
+        emit(ChatMessageDeletedState([chats]));
       } catch (error) {
         emit(ChatOperationFailure(error));
       }

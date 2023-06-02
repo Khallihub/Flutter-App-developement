@@ -4,7 +4,6 @@ import 'package:picstash/presentation/components/chat/chat_screen_messages.dart'
 
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
-import '../components/chat/chat_home_screen_message.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_container.dart';
 
@@ -50,77 +49,67 @@ class _ChatScreenState extends State<ChatScreen> {
         id: widget.id,
         userName: widget.user2);
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.topRight,
-          colors: [
-            Theme.of(context).colorScheme.secondary,
-            Theme.of(context).colorScheme.primary,
-          ],
-        ),
-      ),
-      child: Scaffold(
-        appBar: CustomAppBar(
-          user: friend,
-          text: widget.friendName,
-        ),
-        backgroundColor: Colors.transparent,
-        body: CustomContainer(
-          height: MediaQuery.of(context).size.height,
-          child: BlocBuilder<ChatBloc, ChatState>(
-            builder: (context, state) {
-              print("state is $state");
-
-              if (state is ChatLoadingState) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is ChatLoadOperationSuccess) {
-                print("object" * 99);
-                print(state.chats[0].messages);
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ChatScreenMessages(
-                      chat: state.chats[0],
-                      scrollController: scrollController,
-                    ),
-                    TextFormField(
-                      controller: textEditingController,
-                      
-                      // onChanged: (value) {
-                      //   setState(() {
-                      //     text = value;
-                      //   });
-                      // },
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withAlpha(150),
-                        hintText: 'Type here...',
-                        hintStyle: Theme.of(context).textTheme.bodyMedium,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.all(20.0),
-                        suffixIcon: _buildIconButton(context),
-                      ),
-                    ),
-                  ],
-                );
-              } else if (state is ChatOperationFailure) {
-                return const Center(child: Text("error"));
-              } else {
-                return Container();
-              }
-            },
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.topRight,
+            colors: [
+              Theme.of(context).colorScheme.secondary,
+              Theme.of(context).colorScheme.primary,
+            ],
           ),
         ),
-      ),
-    );
+        child: Scaffold(
+          appBar: CustomAppBar(
+            user: friend,
+            text: widget.friendName,
+          ),
+          backgroundColor: Colors.transparent,
+          body: CustomContainer(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    if (state is ChatLoadingState) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is ChatLoadOperationSuccess) {
+                      return ChatScreenMessages(
+                        chat: state.chats[0],
+                        scrollController: scrollController,
+                      );
+                    } else if (state is ChatOperationFailure) {
+                      return const Center(child: Text("error"));
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+                TextFormField(
+                  controller: textEditingController,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withAlpha(150),
+                    hintText: 'Type here...',
+                    hintStyle: Theme.of(context).textTheme.bodyMedium,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.all(20.0),
+                    suffixIcon: _buildIconButton(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 
   IconButton _buildIconButton(BuildContext context) {
@@ -128,8 +117,9 @@ class _ChatScreenState extends State<ChatScreen> {
       icon: const Icon(Icons.send),
       color: Theme.of(context).iconTheme.color,
       onPressed: () {
-        chatBloc.add(ChatMessageSendEvent(
-            widget.user1, widget.user2, widget.user1, textEditingController.text));
+        chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
+            widget.user1, textEditingController.text));
+        textEditingController.clear();
       },
     );
   }
