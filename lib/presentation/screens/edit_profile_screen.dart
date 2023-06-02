@@ -71,113 +71,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 case UserProfileUpdateSuccess:
                 case UserProfileLoadSuccess:
                   return Scaffold(
-<<<<<<< HEAD
-                    appBar: AppBar(
-                      title: const Text('Edit Profile'),
-                    ),
-                    body: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          CircleAvatar(
-                            radius: 50.0,
-                            backgroundImage: NetworkImage(
-                                snapshot.data!.localUserModel.imageUrl),
-                          ),
-                          const SizedBox(height: 16.0),
-                          TextFormField(
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                              labelText: 'Name',
-                              labelStyle: TextStyle(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.blue,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                          TextFormField(
-                            controller: _bioController,
-                            maxLines: null,
-                            keyboardType: TextInputType.multiline,
-                            decoration: InputDecoration(
-                              labelText: 'Bio',
-                              labelStyle: TextStyle(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.blue,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                  color: Colors.blue,
-                                  width: 2.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              // TODO: Implement image picker functionality here
-                            },
-                            child: const Text(
-                              'Add Image',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-=======
                       appBar: AppBar(
                         title: const Text('Edit Profile'),
                         backgroundColor: Colors.grey[800],
@@ -285,7 +178,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                 ),
->>>>>>> 4886b0e7cbff90791c0a802b261626acdc440b42
                               ),
                             ),
                             const SizedBox(height: 16.0),

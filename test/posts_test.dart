@@ -22,7 +22,9 @@ void main() {
       MaterialApp(
         home: BlocProvider<PostBloc>.value(
           value: postBloc,
-          child: const ShowPosts(),
+          child: const ShowPosts(
+            username: 'amir',
+          ),
         ),
       ),
     );
