@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:picstash/domain/entities/local_user_model.dart';
 
 import '../../domain/entities/user_profile/user_profile.dart';
 
@@ -12,18 +13,23 @@ abstract class UserProfileState extends Equatable {
 class UserProfileLoading extends UserProfileState {}
 
 class UserProfileLoadSuccess extends UserProfileState {
-  final UserProfile userProfile;
+  final LocalUserModel userProfile;
+  final int followers;
+  final int following;
 
-  const UserProfileLoadSuccess(this.userProfile);
+  const UserProfileLoadSuccess(
+      {required this.userProfile,
+      required this.followers,
+      required this.following});
 
   @override
-  List<Object?> get props => [userProfile];
+  List<Object?> get props => [userProfile, followers, following];
 }
 
 class UserProfileUpdateSuccess extends UserProfileState {
   final UserProfile userProfile;
 
-  const UserProfileUpdateSuccess(this.userProfile);
+  const UserProfileUpdateSuccess({required this.userProfile});
 
   @override
   List<Object?> get props => [userProfile];

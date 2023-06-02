@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../application/login_bloc/login_blocs.dart';
 import '../../application/login_bloc/login_event.dart';
 import '../../application/login_bloc/login_state.dart';
+import '../../application/user_profile_bloc/user_bloc.dart';
+import '../../application/user_profile_bloc/user_profile_event.dart';
+import '../../application/user_profile_bloc/user_profile_state.dart';
 import '../../domain/entities/user_profile/user_profile.dart';
 import '../../presentation/components/custom_icons.dart';
 import '../../assets/constants/assets.dart';
@@ -164,121 +167,172 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimationLimiter(
-        child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            children: AnimationConfiguration.toStaggeredList(
-                duration: const Duration(milliseconds: 375),
-                childAnimationBuilder: (widget) => SlideAnimation(
-                      horizontalOffset: MediaQuery.of(context).size.width / 2,
-                      child: FadeInAnimation(child: widget),
-                    ),
-                children: [
-                  const SizedBox(height: 10),
-                  Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 50),
-                        padding: const EdgeInsets.only(
-                            left: 10, right: 10, top: 60, bottom: 20),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Column(
+    print("mera nam ${widget.userProfile.name}");
+    return BlocConsumer<UserProfileBloc, UserProfileState>(
+        listener: (context, state) {
+      if (state is UserProfileLoading) {
+        BlocProvider.of<UserProfileBloc>(context).add(UserProfileLoadEvent(
+            userEmail: widget.userProfile.email.toString()));
+      } else if (state is UserProfileError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                "something went wrong, unable to perform the selected operation"),
+          ),
+        );
+      }
+    }, builder: (context, state) {
+      if (state is UserProfileLoading) {
+        BlocProvider.of<UserProfileBloc>(context).add(UserProfileLoadEvent(
+            userEmail: widget.userProfile.email.toString()));
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+      switch (state.runtimeType) {
+        case UserProfileLoadSuccess:
+          String followingLength = state.props[2].toString();
+          String followersLength = state.props[1].toString(); 
+
+          return AnimationLimiter(
+              child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  children: AnimationConfiguration.toStaggeredList(
+                      duration: const Duration(milliseconds: 375),
+                      childAnimationBuilder: (widget) => SlideAnimation(
+                            horizontalOffset:
+                                MediaQuery.of(context).size.width / 2,
+                            child: FadeInAnimation(child: widget),
+                          ),
+                      children: [
+                        const SizedBox(height: 10),
+                        Stack(
+                          alignment: Alignment.topCenter,
                           children: [
-                            Text(
-                              widget.userProfile.name,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
+                            Container(
+                              margin: const EdgeInsets.only(top: 50),
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 60, bottom: 20),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    widget.userProfile.name,
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            buttonNumber = 2;
+                                          });
+                                        },
+                                        child: Center(
+                                            child: Text(
+                                          "$followersLength Followers",
+                                          style: TextStyle(
+                                              color: Colors.blue, fontSize: 12),
+                                        )),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            buttonNumber = 3;
+                                          });
+                                        },
+                                        child: Center(
+                                            child: Text(
+                                          '$followingLength following',
+                                          style: TextStyle(
+                                              color: Colors.blue, fontSize: 12),
+                                        )),
+                                      ),
+                                      if (widget.isOwner)
+                                        TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              buttonNumber = 1;
+                                            });
+                                          },
+                                          child: const Text("Posts",
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 14)),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      if (!widget.isOwner) const FollowChip(),
+                                      if (!widget.isOwner)
+                                        TextButton(
+                                          onPressed: () {},
+                                          child: const Text("message",
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 14)),
+                                        ),
+                                      if (!widget.isOwner)
+                                        TextButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              buttonNumber = 1;
+                                            });
+                                          },
+                                          child: const Text("Posts",
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 14)),
+                                        ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      buttonNumber = 2;
-                                    });
-                                  },
-                                  child: const Center(
-                                      child: Text(
-                                    '35.5k Followers',
-                                    style: TextStyle(
-                                        color: Colors.blue, fontSize: 12),
-                                  )),
-                                ),
-                                const SizedBox(width: 10),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      buttonNumber = 3;
-                                    });
-                                  },
-                                  child: const Center(
-                                      child: Text(
-                                    '400 Followings',
-                                    style: TextStyle(
-                                        color: Colors.blue, fontSize: 12),
-                                  )),
-                                ),
-                                if (widget.isOwner)
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        buttonNumber = 1;
-                                      });
-                                    },
-                                    child: const Text("Posts",
-                                        style: TextStyle(
-                                            color: Colors.blue, fontSize: 14)),
-                                  ),
-                              ],
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundImage:
+                                  NetworkImage(widget.userProfile.avatar),
                             ),
-                            const SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                if (!widget.isOwner) const FollowChip(),
-                                if (!widget.isOwner)
-                                  TextButton(
-                                    onPressed: () {},
-                                    child: const Text("message",
-                                        style: TextStyle(
-                                            color: Colors.blue, fontSize: 14)),
-                                  ),
-                                if (!widget.isOwner)
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        buttonNumber = 1;
-                                      });
-                                    },
-                                    child: const Text("Posts",
-                                        style: TextStyle(
-                                            color: Colors.blue, fontSize: 14)),
-                                  ),
-                              ],
-                            )
                           ],
                         ),
-                      ),
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            NetworkImage(widget.userProfile.avatar),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  buttonNumber == 1
-                      ? const ShowPosts()
-                      : (buttonNumber == 2
-                          ? const ShowFollowers()
-                          : const ShowFollowings())
-                ])));
+                        const SizedBox(height: 20),
+                        buttonNumber == 1
+                            ? const ShowPosts()
+                            : (buttonNumber == 2
+                                ? const ShowFollowers()
+                                : const ShowFollowings())
+                      ])));
+        default:
+          return Scaffold(
+            body:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Center(child: Text("something wrong happend")),
+              Center(
+                child: ElevatedButton(
+                    onPressed: () {
+                      GoRouter.of(context).pushReplacementNamed(
+                          MyAppRouteConstants.homeRouteName);
+                    },
+                    child: const Text("Go Back")),
+              )
+            ]),
+          );
+      }
+    });
   }
 }
