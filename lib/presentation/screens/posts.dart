@@ -7,7 +7,6 @@ import '../components/post_detail_page.dart';
 class ShowPosts extends StatelessWidget {
   const ShowPosts({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -23,7 +22,6 @@ class ShowPosts extends StatelessWidget {
             post: dummyPosts[index],
           );
         },
-
         separatorBuilder: (context, index) => const SizedBox(height: 10),
         itemCount: dummyPosts.length);
   }
