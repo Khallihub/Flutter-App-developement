@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:picstash/domain/entities/local_user_model.dart';
 import '../../application/login_bloc/login_blocs.dart';
 import '../../application/login_bloc/login_event.dart';
 import '../../application/login_bloc/login_state.dart';
@@ -16,6 +17,7 @@ import '../routes/app_route_constants.dart';
 import './posts.dart';
 import './followers.dart';
 import './following.dart';
+import 'error_page.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -167,7 +169,6 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   @override
   Widget build(BuildContext context) {
-    print("mera nam ${widget.userProfile.name}");
     return BlocConsumer<UserProfileBloc, UserProfileState>(
         listener: (context, state) {
       if (state is UserProfileLoading) {
@@ -194,8 +195,8 @@ class _ProfileBodyState extends State<ProfileBody> {
       switch (state.runtimeType) {
         case UserProfileLoadSuccess:
           String followingLength = state.props[2].toString();
-          String followersLength = state.props[1].toString(); 
-
+          String followersLength = state.props[1].toString();
+          LocalUserModel user = state.props[0] as LocalUserModel;
           return AnimationLimiter(
               child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -221,7 +222,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                               child: Column(
                                 children: [
                                   Text(
-                                    widget.userProfile.name,
+                                    user.username,
                                     style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 18,
@@ -240,7 +241,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                                         child: Center(
                                             child: Text(
                                           "$followersLength Followers",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.blue, fontSize: 12),
                                         )),
                                       ),
@@ -254,7 +255,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                                         child: Center(
                                             child: Text(
                                           '$followingLength following',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               color: Colors.blue, fontSize: 12),
                                         )),
                                       ),
@@ -312,26 +313,13 @@ class _ProfileBodyState extends State<ProfileBody> {
                         ),
                         const SizedBox(height: 20),
                         buttonNumber == 1
-                            ? const ShowPosts()
+                            ? ShowPosts(username: user.name)
                             : (buttonNumber == 2
                                 ? const ShowFollowers()
                                 : const ShowFollowings())
                       ])));
         default:
-          return Scaffold(
-            body:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Center(child: Text("something wrong happend")),
-              Center(
-                child: ElevatedButton(
-                    onPressed: () {
-                      GoRouter.of(context).pushReplacementNamed(
-                          MyAppRouteConstants.homeRouteName);
-                    },
-                    child: const Text("Go Back")),
-              )
-            ]),
-          );
+          return const ErrorPage();
       }
     });
   }

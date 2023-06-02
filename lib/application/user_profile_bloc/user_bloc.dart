@@ -37,10 +37,22 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
     on<UserProfileUpdateEvent>((event, emit) async {
       try {
-        await userProfileRepository.updateUserProfile(event.usermodel);
-        final user = await userProfileRepository
-            .fetchUserProfile(event.usermodel.email.toString());
-        emit(UserProfileUpdateSuccess(userProfile: user));
+        final userProfile = await userProfileRepository.updateUserProfile(
+            event.email, event.userName, event.bio, event.password);
+        LocalUserModel user = LocalUserModel(
+            id: userProfile["_id"],
+            name: userProfile["Name"],
+            email: EmailAddress.crud(userProfile["email"]),
+            username: userProfile["userName"],
+            imageUrl: userProfile["avatar"],
+            bio: userProfile["bio"]);
+        var followersInfo = userProfile["followers"].length;
+        var followingInfo = userProfile["following"].length;
+
+        emit(UserProfileLoadSuccess(
+            userProfile: user,
+            followers: followersInfo,
+            following: followingInfo));
       } catch (error) {
         emit(UserProfileError('Failed to load user profile: $error'));
       }

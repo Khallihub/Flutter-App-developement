@@ -21,12 +21,10 @@ class LoginDataProvider {
       }),
     );
 
-
     if (response.statusCode != 201) {
-      throw Exception("invalid credentials or connection problem");
+      throw Exception(response.body);
     }
     final decodedResponse = jsonDecode(response.body);
-
 
     final Token token = Token.create(
       decodedResponse['access_token'],

@@ -1,25 +1,53 @@
 import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart';
+
+import '../../domain/constants.dart';
 
 class UploadImage {
-  static Future<String> uploadImage(File imageFile) async {
-    String apiKey = "6d207e02198a847aa98d0a2a901485a5";
-    const url = 'https://freeimage.host/api/1/upload';
-    final request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['key'] = apiKey;
-    request.fields['format'] = 'json';
-    request.fields['action'] = 'upload';
-    request.files
-        .add(await http.MultipartFile.fromPath('source', imageFile.path));
+  static Future<String?> pickImage() async {
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
 
-    final response = await request.send();
-    final responseJson = json.decode(await response.stream.bytesToString());
+    if (result != null) {
+      Uint8List? uploadfile = result.files.single.bytes;
+      String filename = basename(result.files.single.name);
+      return await uploadImage(uploadfile, filename);
+    }
+    return null;
+  }
 
-    if (response.statusCode == 200 && responseJson['status'] == 'success') {
-      return responseJson['image']['url'];
+  static Future<String?> uploadImage(Uint8List? file, String filename) async {
+    if (file != null) {
+      Dio dio = Dio();
+
+      FormData formData = FormData.fromMap({
+        "key": Constants.apiKey,
+        "image": await MultipartFile.fromBytes(
+          file,
+          filename: filename,
+        ),
+        "name": filename,
+      });
+      var response = await dio.post(
+        "https://api.imgbb.com/1/upload",
+        data: formData,
+        onSendProgress: ((count, total) {
+          stdout.write("$count , $total");
+        }),
+      );
+      String avatarUrl = response.data["data"]["url"];
+      return avatarUrl;
     } else {
-      throw Exception('Failed to upload image');
+      return null;
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:picstash/domain/entities/local_user_model.dart';
 
-import '../../domain/entities/user_profile/user_profile.dart';
 
 abstract class UserProfileState extends Equatable {
   const UserProfileState();
@@ -27,7 +26,7 @@ class UserProfileLoadSuccess extends UserProfileState {
 }
 
 class UserProfileUpdateSuccess extends UserProfileState {
-  final UserProfile userProfile;
+  final LocalUserModel userProfile;
 
   const UserProfileUpdateSuccess({required this.userProfile});
 
