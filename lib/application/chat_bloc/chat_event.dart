@@ -17,7 +17,7 @@ class ChatLoadEvent extends ChatEvent {
   List<dynamic> get props => [user1, user2];
 }
 class AllChatsLoadEvent extends ChatEvent {
-  final user;
+  final String user;
    const AllChatsLoadEvent(this.user);
 
   @override
@@ -80,6 +80,16 @@ class ChatMessageUpdateEvent extends ChatEvent {
   List<dynamic> get props => [user1, user2, sender, newMessage, time];
 }
 
+class SetParentTextField extends ChatEvent {
+  final String text;
+  final String time;
+
+  const SetParentTextField({required this.text, required this.time});
+
+  @override 
+  List<dynamic> get props => [text, time];
+
+}
 class ChatMessageSendEvent extends ChatEvent {
   final String user1;
   final String user2;

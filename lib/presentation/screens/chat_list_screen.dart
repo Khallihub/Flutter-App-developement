@@ -6,7 +6,7 @@ import 'package:unicons/unicons.dart';
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
 import '../../infrastructure/data_providers/db/db.dart';
-import '../components/chat/chat_contacts.dart';
+// import '../components/chat/chat_contacts.dart';
 import '../components/chat/chat_message.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_chat_nav_bar.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:picstash/presentation/components/chat/chat_screen_messages.dart';
 
@@ -31,13 +32,14 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textEditingController = TextEditingController();
 
   late ChatBloc chatBloc;
-  // final User user = const User(id: "1", name: "khlaid", imageUrl: "imageUrl");
   late String text;
-  // late Chat chat = Chat();
+  String time = "";
+
   @override
   void initState() {
     chatBloc = BlocProvider.of<ChatBloc>(context);
     chatBloc.add(ChatLoadEvent(widget.user1, widget.user2));
+    // textEditingController.text = " ";
     super.initState();
   }
 
@@ -80,6 +82,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         chat: state.chats[0],
                         scrollController: scrollController,
                       );
+                    } else if (state is ChatMessageDeletedState) {
+                      return ChatScreenMessages(
+                        chat: state.chat,
+                        scrollController: scrollController,
+                      );
+                    } else if (state is SetParentTextFieldState) {
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (_) {
+                          setState(
+                            () {
+                              textEditingController.value =
+                                  TextEditingValue(text: state.text);
+                              time = state.time;
+                            },
+                          );
+                        },
+                      );
+
+                      return const SizedBox();
                     } else if (state is ChatOperationFailure) {
                       return const Center(child: Text("error"));
                     } else {
@@ -92,10 +113,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withAlpha(150),
+                    fillColor:
+                        Theme.of(context).colorScheme.secondary.withAlpha(150),
                     hintText: 'Type here...',
                     hintStyle: Theme.of(context).textTheme.bodyMedium,
                     border: OutlineInputBorder(
@@ -114,11 +133,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
   IconButton _buildIconButton(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.send),
+      icon: Icon(time == "" ? Icons.send : Icons.save),
       color: Theme.of(context).iconTheme.color,
       onPressed: () {
-        chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
-            widget.user1, textEditingController.text));
+        time == ""
+            ? chatBloc.add(ChatMessageSendEvent(widget.user1, widget.user2,
+                widget.user1, textEditingController.text))
+            : chatBloc.add(ChatMessageUpdateEvent(widget.user1, widget.user2,
+                widget.user1, textEditingController.text, time));
         textEditingController.clear();
       },
     );

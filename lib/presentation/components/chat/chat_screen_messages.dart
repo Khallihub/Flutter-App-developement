@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../application/chat_bloc/blocs.dart';
 import '../../../domain/entities/models/message_model.dart';
@@ -28,6 +29,12 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
   }
 
   late ChatBloc chatBloc;
+  @override
+  void initState() {
+    chatBloc = BlocProvider.of<ChatBloc>(context);
+    super.initState();
+  }
+
   Future<void> _showContextMenu(context, Message message) async {
     final RenderObject? overlay =
         Overlay.of(context).context.findRenderObject();
@@ -43,16 +50,9 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
       context: context,
       position: position,
       items: [
-         PopupMenuItem(
+        PopupMenuItem(
           value: 'edit',
-          child: Row(children: [
-            const TextField(
-              decoration: InputDecoration(
-                hintText: "Edit Message",
-              ),
-            ),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.edit))
-          ]),
+          child: Text("Edit"),
         ),
         const PopupMenuItem(
           value: 'delete',
@@ -62,6 +62,8 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
     );
     switch (result) {
       case "edit":
+        chatBloc.add(
+            SetParentTextField(text: message.text, time: message.createdAt));
       case "delete":
         chatBloc.add(ChatMessageDeleteEvent(
             widget.chat.user1, widget.chat.user2, message.createdAt));
@@ -72,6 +74,7 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
+        shrinkWrap: true,
         reverse: true,
         controller: widget.scrollController,
         itemCount: widget.chat.messages!.length,
@@ -111,9 +114,11 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
                 onDoubleTap: () {
                   _showContextMenu(context, message);
                 },
-                child: Text(
-                  message.text,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                child: ListTile(
+                  title: Text(
+                    message.text,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ),
             ),

@@ -114,6 +114,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(ChatOperationFailure(error));
       }
     });
+
+    on<SetParentTextField>(
+      (event, emit) {
+        emit(SetParentTextFieldState(text: event.text, time: event.time));
+      },
+    );
     on<ChatMessageSendEvent>((event, emit) async {
       try {
         final chats = await chatRepository.sendMessage({
@@ -132,9 +138,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       print(event.time);
       emit(ChatLoadingState());
       try {
-        final chats = await chatRepository.deleteMessage(
+        final Chat chats = await chatRepository.deleteMessage(
             {"user1": event.user1, "user2": event.user2, "time": event.time});
-        emit(ChatMessageDeletedState([chats]));
+        emit(ChatMessageDeletedState(chats));
       } catch (error) {
         emit(ChatOperationFailure(error));
       }
