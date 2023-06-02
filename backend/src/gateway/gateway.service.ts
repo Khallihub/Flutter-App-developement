@@ -23,19 +23,16 @@ export class GatewayService implements OnModuleInit, OnGatewayConnection, OnGate
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
-    console.log('texting from handleConnection');
     socket.on('joined', (users) => {
-      console.log(users);
       this.connectedUsers.set(users.sender, socket);
     });
 
     socket.on('message', (data) => {
-      console.log(data);
       console.log("message received");
       let receiver = this.connectedUsers.get(data.receiver);
-      for (let [key, value] of this.connectedUsers) {
-        console.log(key);
-      }
+      // for (let [key, value] of this.connectedUsers) {
+      //   console.log(key);
+      // }
       // console.log(receiver);
       if (receiver) {
         console.log("receiver found");
