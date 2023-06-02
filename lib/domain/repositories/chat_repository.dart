@@ -30,6 +30,8 @@ class ChatRepository {
   }
 
   dynamic sendMessage(Map<String, String> data) {
+    print("koko"*10);
+    print(data);
     return dataProvider.sendMessage(data);
   }
 

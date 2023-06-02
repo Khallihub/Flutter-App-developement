@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picstash/presentation/components/chat/chat_screen_messages.dart';
 
 import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
-import '../components/chat/chat_message.dart';
+import '../components/chat/chat_home_screen_message.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_container.dart';
 
@@ -69,47 +70,50 @@ class _ChatScreenState extends State<ChatScreen> {
           height: MediaQuery.of(context).size.height,
           child: BlocBuilder<ChatBloc, ChatState>(
             builder: (context, state) {
+              print("state is $state");
+
               if (state is ChatLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               } else if (state is ChatLoadOperationSuccess) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ChatScreenMessages(
+                      chat: state.chats[0],
+                      scrollController: scrollController,
+                    ),
+                    TextFormField(
+                      controller: textEditingController,
+                      
+                      // onChanged: (value) {
+                      //   setState(() {
+                      //     text = value;
+                      //   });
+                      // },
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context)
+                            .colorScheme
+                            .secondary
+                            .withAlpha(150),
+                        hintText: 'Type here...',
+                        hintStyle: Theme.of(context).textTheme.bodyMedium,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(20.0),
+                        suffixIcon: _buildIconButton(context),
+                      ),
+                    ),
+                  ],
+                );
               } else if (state is ChatOperationFailure) {
                 return const Center(child: Text("error"));
               } else {
                 return Container();
               }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const ChatMessages(
-                    height: 45,
-                    chats: [],
-                  ),
-                  TextFormField(
-                    controller: textEditingController,
-                    onChanged: (value) {
-                      setState(() {
-                        text = value;
-                      });
-                    },
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context)
-                          .colorScheme
-                          .secondary
-                          .withAlpha(150),
-                      hintText: 'Type here...',
-                      hintStyle: Theme.of(context).textTheme.bodyMedium,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.all(20.0),
-                      suffixIcon: _buildIconButton(context),
-                    ),
-                  ),
-                ],
-              );
             },
           ),
         ),
@@ -122,73 +126,9 @@ class _ChatScreenState extends State<ChatScreen> {
       icon: const Icon(Icons.send),
       color: Theme.of(context).iconTheme.color,
       onPressed: () {
-        // Message message = Message(
-        //   senderId: '1',
-        //   recipientId: '2',
-        //   text: text,
-        //   createdAt: DateTime.now(),
-        // );
-        // List<Message> messages = List.from(chat.messages!)..add(message);
-        // messages.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-        // setState(() {
-        //   chat = chat.copyWith(messages: messages);
-        // });
-        // scrollController.animateTo(
-        //   scrollController.position.minScrollExtent,
-        //   duration: const Duration(milliseconds: 300),
-        //   curve: Curves.easeIn,
-        // );
-        // textEditingController.clear();
+        chatBloc.add(ChatMessageSendEvent(
+            widget.user1, widget.user2, widget.user1, textEditingController.text));
       },
     );
   }
 }
-
-// class _ChatMessages extends StatelessWidget {
-//   const _ChatMessages({
-//     Key? key,
-//     required this.scrollController,
-//     required this.chat,
-//   }) : super(key: key);
-
-//   final ScrollController scrollController;
-//   final Chat chat;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: ListView.builder(
-//         reverse: true,
-//         controller: scrollController,
-//         itemCount: chat.messages!.length,
-//         itemBuilder: (context, index) {
-//           Message message = chat.messages![index];
-//           return Align(
-//             alignment: (message.senderId == '1')
-//                 ? Alignment.centerLeft
-//                 : Alignment.centerRight,
-//             child: Container(
-//               constraints: BoxConstraints(
-//                 maxWidth: MediaQuery.of(context).size.width * 0.66,
-//               ),
-//               padding: const EdgeInsets.all(10.0),
-//               margin: const EdgeInsets.symmetric(vertical: 5.0),
-//               decoration: BoxDecoration(
-//                 color: (message.senderId == '1')
-//                     ? Theme.of(context).colorScheme.primary
-//                     : Theme.of(context).colorScheme.secondary,
-//                 borderRadius: const BorderRadius.all(Radius.circular(10)),
-//               ),
-//               child: Text(
-//                 message.text,
-//                 style: Theme.of(context).textTheme.bodyMedium,
-//               ),
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-

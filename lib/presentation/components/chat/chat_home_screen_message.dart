@@ -5,8 +5,8 @@ import 'package:picstash/presentation/routes/app_route_constants.dart';
 import '../../../domain/entities/models/chat_model.dart';
 import 'custom_container.dart';
 
-class ChatMessages extends StatelessWidget {
-  const ChatMessages({
+class ChattedUsers extends StatelessWidget {
+  const ChattedUsers({
     Key? key,
     required this.height,
     required this.chats,

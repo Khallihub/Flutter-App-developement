@@ -132,7 +132,7 @@ class ChatDataProvider {
 
       return decodedChat;
     } else {
-      throw Exception("Could not fetch chat");
+      throw Exception("Could not create chat");
     }
   }
 
@@ -152,7 +152,7 @@ class ChatDataProvider {
 
       return decodedChat;
     } else {
-      throw Exception("Could not fetch chat");
+      throw Exception("Could not rename chat");
     }
   }
 
@@ -170,7 +170,7 @@ class ChatDataProvider {
 
       return decodedChat;
     } else {
-      throw Exception("Could not fetch chat");
+      throw Exception("Could not delete chat");
     }
   }
 
@@ -190,7 +190,7 @@ class ChatDataProvider {
 
       return decodedChat;
     } else {
-      throw Exception("Could not fetch chat");
+      throw Exception("Could not rename message");
     }
   }
 
@@ -210,7 +210,7 @@ class ChatDataProvider {
 
       return decodedChat;
     } else {
-      throw Exception("Could not fetch chat");
+      throw Exception("Could not send  message");
     }
   }
 
@@ -229,7 +229,7 @@ class ChatDataProvider {
 
       return decodedChat;
     } else {
-      throw Exception("Could not fetch chat");
+      throw Exception("Could not delete chat");
     }
   }
 
@@ -271,7 +271,7 @@ class ChatDataProvider {
       }
       return decodedUsers;
     } else {
-      throw Exception("Could not fetch users");
+      throw Exception("Could not fetch user search results");
     }
   }
 
