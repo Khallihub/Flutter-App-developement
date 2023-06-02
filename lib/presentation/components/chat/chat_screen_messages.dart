@@ -50,7 +50,7 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
       context: context,
       position: position,
       items: [
-        PopupMenuItem(
+        const PopupMenuItem(
           value: 'edit',
           child: Text("Edit"),
         ),

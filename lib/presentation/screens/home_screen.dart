@@ -7,6 +7,7 @@ import '../../assets/constants/assets.dart';
 import '../../domain/entities/login/login_details.dart';
 import '../../domain/entities/user_profile/user_profile.dart';
 import '../../infrastructure/data_providers/db/db.dart';
+import 'search_screen.dart';
 import 'chat_list_screen.dart';
 import 'error_page.dart';
 import 'post_adding.dart';
@@ -46,7 +47,7 @@ class _HomeState extends State<Home> {
         if (snapshot.hasData) {
           List<dynamic> pages = [
             const PostScreen(),
-            const ErrorPage(),
+            SearchScreen(localUser: snapshot.data!.userName),
             const AddPostWidget(),
             const ChatListScreen(),
             const ErrorPage(),

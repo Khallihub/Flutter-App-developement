@@ -7,7 +7,7 @@ import '../../application/chat_bloc/blocs.dart';
 import '../../domain/entities/models/user_model.dart';
 import '../../infrastructure/data_providers/db/db.dart';
 // import '../components/chat/chat_contacts.dart';
-import '../components/chat/chat_message.dart';
+import '../components/chat/chat_home_screen_message.dart';
 import '../components/chat/custom_chat_app_bar.dart';
 import '../components/chat/custom_chat_nav_bar.dart';
 
@@ -97,7 +97,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           fit: StackFit.expand,
                           children: [
                             ChatMessages(height: height, chats: chatList),
-                            CustomBottomNavBar(width: width),
+                            CustomBottomNavBar(width: width, localUser: user.userName),
                           ],
                         ),
                       ),
