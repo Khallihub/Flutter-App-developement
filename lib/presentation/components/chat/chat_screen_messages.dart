@@ -56,6 +56,7 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
                 child: Text("Edit"),
               )
             : 
+            
             const PopupMenuItem(
                 value: 'n',
                 child: Text("Edit"),
@@ -70,9 +71,9 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
       case "edit":
         chatBloc.add(
 <<<<<<< HEAD
+            
             SetParentTextField(text: message.text, time: message.createdAt));
-=======
-            SetParentTextField(text: message.text, time: message.createdAt, chat: widget.chat));
+=======SetParentTextField(text: message.text, time: message.createdAt, chat: widget.chat));
 >>>>>>> parent of a6ad256 (socket backend)
       case "delete":
         chatBloc.add(ChatMessageDeleteEvent(
