@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:picstash/infrastructure/factory%20models/chat_factory.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../application/chat_bloc/blocs.dart';
@@ -152,8 +153,12 @@ class _ChatScreenState extends State<ChatScreen> {
                           );
                         },
                       );
+<<<<<<< HEAD
 
                       return const SizedBox();
+=======
+                      return ChatScreenMessages(scrollController: scrollController, chat: state.chat);
+>>>>>>> parent of a6ad256 (socket backend)
                     } else if (state is ChatOperationFailure) {
                       return const Center(child: Text("error"));
                     } else {

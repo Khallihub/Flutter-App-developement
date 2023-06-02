@@ -69,7 +69,11 @@ class _ChatScreenMessagesState extends State<ChatScreenMessages> {
     switch (result) {
       case "edit":
         chatBloc.add(
+<<<<<<< HEAD
             SetParentTextField(text: message.text, time: message.createdAt));
+=======
+            SetParentTextField(text: message.text, time: message.createdAt, chat: widget.chat));
+>>>>>>> parent of a6ad256 (socket backend)
       case "delete":
         chatBloc.add(ChatMessageDeleteEvent(
             widget.chat.user1, widget.chat.user2, message.createdAt));
