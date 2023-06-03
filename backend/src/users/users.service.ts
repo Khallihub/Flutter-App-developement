@@ -8,23 +8,14 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel('user') private user: Model<USER>) {}
-<<<<<<< HEAD
 
   async findByName(query: { text: string }) {
-=======
-  
-  async findByName(query: { text: string; }) {
->>>>>>> main
     if (query.text.trim() === '') {
       return [];
     }
     const regex = new RegExp(query.text, 'i'); // Create a case-insensitive regex pattern
     const users = await this.user.find({ Name: { $regex: regex } });
-<<<<<<< HEAD
     return users;
-=======
-    return users
->>>>>>> main
   }
   async addUser(dto: userDto) {
     const user = new this.user({
@@ -43,8 +34,6 @@ export class UsersService {
     return result;
   }
 
-  
-
   async findByUsername(info: { userName: string }): Promise<USER | undefined> {
     return await this.user.findOne({ userName: info.userName.toLowerCase() });
   }
@@ -56,7 +45,6 @@ export class UsersService {
         users.push(temp);
       }
     }
-<<<<<<< HEAD
     return users;
   }
 
@@ -80,23 +68,6 @@ export class UsersService {
         avatar: avatarUrl,
         bio: bio,
         password: bcrypt.hash(password, 10),
-=======
-    console.log(users);
-    return users;
-  }
-
-  async findByemail(info: { email: string }): Promise<USER | undefined> {
-    return await this.user.findOne({ email: info.email.toLowerCase() });
-  }
-
-  async updateProfile(dto: userDto) {
-    const updatedProfile = await this.user.findOneAndUpdate(
-      { email: dto.email },
-      {
-        Name: dto.Name,
-        avatar: dto.avatar,
-        bio: dto.bio,
->>>>>>> main
       },
       { new: true },
     );

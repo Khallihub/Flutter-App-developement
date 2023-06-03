@@ -16,6 +16,7 @@ export class PostController {
     return this.postService.getFeed();
   }
   
+  
   @Post('getSinglePost')
   async getSinglePost(@Body() data: { id: string}) {
     return this.postService.getSinglePost(data);

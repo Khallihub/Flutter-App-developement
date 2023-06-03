@@ -16,12 +16,6 @@ export class UsersController {
     const users = usersNames['users'];
     return this.usersService.findByUsernames(users);
   }
-  
-  @Post('getUsers')
-  async getUsers(@Body() usersNames: {users: string[]}){
-    const users = usersNames["users"]
-    return this.usersService.findByUsernames(users)
-  }
 
   @Post('search')
   async search(@Body() userName: { userName: string }) {
@@ -31,13 +25,8 @@ export class UsersController {
   async finadByName(@Body() query: { text: string }) {
     return this.usersService.findByName(query);
   }
-  @Post('searchUsers')
-  async finadByName(@Body() query: {text: string}){
-    return this.usersService.findByName(query)
-  }
 
   @Post('updateProfile')
-<<<<<<< HEAD
   async updateProfile(
     @Body('email') email: string,
     @Body('userName') userName: string,
@@ -52,10 +41,6 @@ export class UsersController {
       password,
       avatarUrl,
     );
-=======
-  async updateProfile(@Body() dto: userDto){
-    return this.usersService.updateProfile(dto)
->>>>>>> main
   }
 
   @Post('updateFollowers')

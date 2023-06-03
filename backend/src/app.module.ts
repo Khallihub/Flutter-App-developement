@@ -8,16 +8,14 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { PostModule } from './post/post.module';
 import { ChatModule } from './chat/chat.module';
-import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/project'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/picstash'),
     PostModule,
     ChatModule,
-    GatewayModule,
   ],
   controllers: [AppController],
   providers: [AppService, 
