@@ -7,78 +7,7 @@ import '../../domain/entities/models/user_model.dart';
 import '../factory models/chat_factory.dart';
 
 class ChatDataProvider {
-  // Future<Post> create(Post post) async {
-  //   final http.Response response =
-  //       await http.post(Uri.parse("${Constants.chatBaseUrl}/createPost"),
-  //           headers: <String, String>{"Content-Type": "application/json"},
-  //           body: jsonEncode({
-  //             "title": post.title,
-  //             "description": post.description,
-  //             "author": post.author,
-  //             "createdAt": post.createdAt,
-  //             "categories": post.categories,
-  //             "sourceURL": post.sourceURL,
-  //           }));
 
-  //   if (response.statusCode == 201) {
-  //     return Post.fromJson(jsonDecode(response.body));
-  //   }
-  //   {
-  //     throw Exception("Failed to create post");
-  //   }
-  // }
-
-  // Future<Post> update(int id, Post post) async {
-  //   final response = await http.put(Uri.parse("${Constants.chatBaseUrl}/updatePost"),
-  //       headers: <String, String>{"Content-Type": "application/json"},
-  //       body: jsonEncode({
-  //         "id": id,
-  //         "userName": post.author,
-  //         "title": post.title,
-  //         "description": post.description,
-  //         "categories": post.categories,
-  //         "sourceURL": post.sourceURL,
-  //       }));
-
-  //   if (response.statusCode == 200) {
-  //     return Post.fromJson(jsonDecode(response.body));
-  //   } else {
-  //     throw Exception("Could not update the course");
-  //   }
-  // }
-
-  // Future<Post> likeUnlike(Map<String, String> data) async {
-  //   final http.Response response = await http.post(Uri.parse("${Constants.chatBaseUrl}/like"),
-  //       headers: <String, String>{"Content-Type": "application/json"},
-  //       body: jsonEncode({
-  //         "id": data["id"],
-  //         "userName": data["userName"],
-  //       }));
-
-  //   if (response.statusCode == 201) {
-  //     return Post.fromJson(jsonDecode(response.body));
-  //   }
-  //   {
-  //     throw Exception("Failed to like/unlike");
-  //   }
-  // }
-
-  // Future<Post> dislikeUndislike(Map<String, String> data) async {
-  //   final http.Response response =
-  //       await http.post(Uri.parse("${Constants.chatBaseUrl}/dislike"),
-  //           headers: <String, String>{"Content-Type": "application/json"},
-  //           body: jsonEncode({
-  //             "id": data["id"],
-  //             "userName": data["userName"],
-  //           }));
-
-  //   if (response.statusCode == 201) {
-  //     return Post.fromJson(jsonDecode(response.body));
-  //   }
-  //   {
-  //     throw Exception("Failed to dislike/undislike");
-  //   }
-  // }
 
   Future<Chat> fetchChat(Map<String, String> data) async {
     final response =
@@ -182,9 +111,11 @@ class ChatDataProvider {
               "user1": data["user1"],
               "user2": data["user2"],
               "sender": data["sender"],
-              "newName": data["newName"],
+              "time": data["time"],
+              "message": data["newMessage"],
+
             }));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final chat = await json.decode(response.body);
       Chat decodedChat = Chat.fromJson(chat);
 

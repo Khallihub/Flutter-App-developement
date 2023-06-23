@@ -47,7 +47,8 @@ class ChatMessages extends StatelessWidget {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: const Text('Confirmation'),
-                        content: const Text('Are you sure you want to delete this chat?'),
+                        content: const Text(
+                            'Are you sure you want to delete this chat?'),
                         actions: [
                           TextButton(
                             child: const Text('Cancel'),
@@ -62,7 +63,9 @@ class ChatMessages extends StatelessWidget {
                               style: TextStyle(color: Colors.red),
                             ),
                             onPressed: () {
-                              chatBloc.add(ChatDeleteEvent(chats[index].users[0], chats[index].users[1]));
+                              chatBloc.add(ChatDeleteEvent(
+                                  chats[index].users[0],
+                                  chats[index].users[1]));
                               Navigator.of(context).pop(true);
                             },
                           ),
@@ -94,53 +97,57 @@ class ChatMessages extends StatelessWidget {
               //     color: Colors.white,
               //   ),
               // ),
-              child: ListTile(
-                onTap: () {
-                  GoRouter.of(context).pushNamed(
-                    MyAppRouteConstants.chatRouteName,
-                    pathParameters: {
-                      "id": chats[index].id,
-                      "user1": chats[index].users[0] == chats[index].userName
-                          ? chats[index].users[1]
-                          : chats[index].users[0],
-                      "user2": chats[index].userName,
-                      "friendImage": chats[index].image,
-                      "friendName": chats[index].name,
-                    },
-                  );
-                },
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(chats[index].image),
-                ),
-                title: Text(
-                  chats[index].name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  chats[index].lastMessage[2],
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                trailing: Text(DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(chats[index].lastMessage[0]))
-                        .isAfter(
-                  DateTime.now().add(
-                    const Duration(days: 1),
+              child: InkWell(
+                splashColor: Colors.grey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(30),
+                child: ListTile(
+                  onTap: () {
+                    GoRouter.of(context).pushNamed(
+                      MyAppRouteConstants.chatRouteName,
+                      pathParameters: {
+                        "id": chats[index].id,
+                        "user1": chats[index].users[0] == chats[index].userName
+                            ? chats[index].users[1]
+                            : chats[index].users[0],
+                        "user2": chats[index].userName,
+                        "friendImage": chats[index].image,
+                        "friendName": chats[index].name,
+                      },
+                    );
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(chats[index].image),
                   ),
-                )
-                    ? DateFormat('MMM d').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(chats[index].lastMessage[0])),
-                      )
-                    : DateFormat('HH:mm').format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(chats[index].lastMessage[0])),
-                      )),
+                  title: Text(
+                    chats[index].name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    chats[index].lastMessage[2],
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  trailing: Text(DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(chats[index].lastMessage[0]))
+                          .isAfter(
+                    DateTime.now().add(
+                      const Duration(days: 1),
+                    ),
+                  )
+                      ? DateFormat('MMM d').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(chats[index].lastMessage[0])),
+                        )
+                      : DateFormat('HH:mm').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(chats[index].lastMessage[0])),
+                        )),
+                ),
               ),
             ),
           );

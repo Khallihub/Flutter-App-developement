@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:picstash/infrastructure/factory%20models/chat_factory.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../application/chat_bloc/blocs.dart';
@@ -57,7 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void connect() {
-    socket = IO.io("http://192.168.65.212:3000", <String, dynamic>{
+    socket = IO.io("http://192.168.57.158:3000", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });
@@ -139,7 +136,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           time = state.time;
                         },
                       );
-                      return ChatScreenMessages(scrollController: scrollController, chat: state.chat);
+                      return ChatScreenMessages(
+                          scrollController: scrollController, chat: state.chat);
                     } else if (state is ChatOperationFailure) {
                       return const Center(child: Text("error"));
                     } else {
@@ -182,6 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
               : chatBloc.add(ChatMessageUpdateEvent(widget.user1, widget.user2,
                   widget.user1, textEditingController.text, time));
           textEditingController.clear();
+          time = "";
           notifiy();
         }
       },
